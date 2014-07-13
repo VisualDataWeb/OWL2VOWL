@@ -1,4 +1,4 @@
-package de.uni_stuttgart.vis.vowl.owl2vowl_converter;
+package de.uni_stuttgart.vis.vowl.owl2vowl;
 
 /**
  * Hello world!
