@@ -1,0 +1,54 @@
+/*
+ * Constants.java
+ *
+ */
+
+package de.uni_stuttgart.vis.vowl.owl2vowl.model;
+
+/**
+ * @author Vincent Link, Eduard Marbach
+ */
+public class Constants {
+
+	/* TYPES */
+	public static final String TYPE_CLASS = "owl:Class";
+	public static final String TYPE_RDFSCLASS = "rdfs:Class";
+	public static final String TYPE_EQUIVALENT = "owl:equivalentClass";
+	public static final String TYPE_EXTERNALCLASS = "externalclass";
+	public static final String TYPE_DEPRECTAEDCLASS = "owl:DeprecatedClass";
+	public static final String TYPE_THING = "owl:Thing";
+	public static final String TYPE_NOTHING = "owl:Nothing";
+	public static final String TYPE_RDFSRESOURCE = "rdfs:Resource";
+	public static final String TYPE_UNION = "owl:unionOf";
+	public static final String TYPE_INTERSECTION = "owl:intersectionOf";
+	public static final String TYPE_COMPLEMENT = "owl:complementOf";
+	public static final String TYPE_DATATYPE = "rdfs:Literal";
+	public static final String TYPE_LITERAL = "rdfs:Datatype";
+
+	/* SAMPLE ONTOLOGIES */
+	public static final String PATH_VARIABLE =
+			System.getProperty("user.dir") + "/OWL2VOWL/ontologies/";
+	public static final String IMARINE = PATH_VARIABLE + "marinetloimarine.owl";
+	public static final String MARINE = PATH_VARIABLE + "marinetlo.owl";
+	public static final String MUSIC = PATH_VARIABLE + "musicontology.rdfs";
+	public static final String SIOC = PATH_VARIABLE + "ns";
+	public static final String GR = PATH_VARIABLE + "v1.owl";
+	public static final String MUTO = PATH_VARIABLE + "muto.rdf";
+	public static final String FOAF = PATH_VARIABLE + "index.rdf";
+	public static final String PERSONAS = PATH_VARIABLE + "personasonto.owl";
+	public static final String RDFS_LABEL = "rdfs:label";
+	
+	/* ANNOTATIONS */
+	public static final String RDFS_COMMENT = "rdfs:comment";
+	public static final String RDFS_DEFINED_BY = "rdfs:isDefinedBy";
+	public static final String OWL_VERSIONINFO = "owl:versionInfo";
+	public static final String RDFS_SUBCLASS = "rdfs:subClassOf";
+	public static final String RDFS_DOMAIN = "rdfs:domain";
+	public static final String RDFS_RANGE = "rdfs:range";
+	public static final String OWL_DEPRECATED = "owl:deprecated";
+	
+	/* STANDARD IRIS */
+	public static final String GENERIC_LITERAL_URI =
+		"http://www.w3.org/2000/01/rdf-schema#Literal";
+	public static final String OWL_THING_CLASS_URI = "http://www.w3.org/2002/07/owl#Thing";
+}
