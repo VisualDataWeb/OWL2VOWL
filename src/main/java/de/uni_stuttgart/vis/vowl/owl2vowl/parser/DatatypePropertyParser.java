@@ -16,8 +16,6 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -62,7 +60,6 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 			BaseDatatype rangeNode;
 			String resourceName = extractNameFromIRI(rdfsRange);
-			System.out.println(resourceName);
 			boolean isGeneric = false;
 
 			if (resourceName.isEmpty()) {
@@ -83,10 +80,10 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 			rangeNode.setName(resourceName);
 			mapData.getDatatypeMap().put(rangeNode.getId(), rangeNode);
 
-			if(domainNode == null) {
+			if (domainNode == null) {
 				domainNode = getDisconnectedThing();
 
-				if(domainNode == null) {
+				if (domainNode == null) {
 					OwlThing newThing = new OwlThing();
 					newThing.setId("thing" + mapData.getThingMap().size() + 1);
 					mapData.getThingMap().put(newThing.getId(), newThing);
@@ -96,11 +93,11 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 			OwlDatatypeProperty property = new OwlDatatypeProperty();
 
-			if(isImported(iri)) {
+			if (isImported(iri)) {
 				property.getAttributes().add(Constants.PROP_ATTR_IMPORT);
 			}
 
-			if(isFuntionalDataProperty(currentProperty)) {
+			if (isFuntionalDataProperty(currentProperty)) {
 				property.getAttributes().add(Constants.PROP_ATTR_FUNCT);
 			}
 
