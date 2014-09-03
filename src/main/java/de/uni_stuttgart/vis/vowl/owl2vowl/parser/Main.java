@@ -57,8 +57,9 @@ public class Main {
 		}
 
 		if (DEBUG_EXPORT) {
+			String filePath = System.getProperty("user.dir") + "\\WebVOWL\\src\\js\\data\\benchmark.json";
 			JsonExporter exporter =
-					new JsonExporter(new File("C:\\Users\\Eduard\\Documents\\benchmark.json"));
+					new JsonExporter(new File(filePath));
 
 			try {
 				exporter.processNamespace();
