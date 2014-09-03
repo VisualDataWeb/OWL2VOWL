@@ -37,6 +37,12 @@ public class ClassParser extends GeneralNodeParser {
 			rdfsIsDefinedBy = "";
 			owlVersionInfo = "";
 			iri = currentClass.getIRI().toString();
+
+			// If thing is found skip it! It only gets created where necessary.
+			if (iri.equals(Constants.OWL_THING_CLASS_URI)) {
+				continue;
+			}
+
 			Set<OWLAnnotation> currentClassAnnotations = currentClass.getAnnotations(GeneralParser.ontology);
 
 			TypeFinder finder = new TypeFinder(GeneralParser.ontology, GeneralParser.factory);
