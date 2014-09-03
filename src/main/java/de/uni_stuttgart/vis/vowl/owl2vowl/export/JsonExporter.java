@@ -5,11 +5,13 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.export;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.BaseEntity;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.classes.BaseClass;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.classes.OwlEquivalentClass;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.datatypes.BaseDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.OwlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlDatatypeProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlEquivalentClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -79,17 +81,17 @@ public class JsonExporter {
 	public void processHeader() {
 		// Apply header
 		header.put("title", "test")
-			.put("url", "test")
-			.put("version", "test")
-			.put("author", "test")
-			.put("description", "test");
+				.put("url", "test")
+				.put("version", "test")
+				.put("author", "test")
+				.put("description", "test");
 	}
 
 	public void processObjectProperties(Map<String, OwlObjectProperty> properties) {
 		for (Map.Entry<String, OwlObjectProperty> baseProperty : properties.entrySet()) {
 			OwlObjectProperty currentProperty = baseProperty.getValue();
 
-			if(currentProperty.getDomain().isEmpty() || currentProperty.getRange().isEmpty()) {
+			if (currentProperty.getDomain() == null || currentProperty.getRange() == null) {
 				System.out.println("Skip " + currentProperty.getName() + " property.");
 				continue;
 			}
@@ -112,8 +114,9 @@ public class JsonExporter {
 			objectAttrJson.put("label", currentProperty.getName());
 			objectAttrJson.put("uri", currentProperty.getIri());
 			objectAttrJson.put("comment", currentProperty.getComment());
-			objectAttrJson.put("domain", currentProperty.getDomain());
-			objectAttrJson.put("range", currentProperty.getRange());
+			objectAttrJson.put("domain", currentProperty.getDomain().getId());
+			objectAttrJson.put("range", currentProperty.getRange().getId());
+			objectAttrJson.put("inverse", currentProperty.getInverseID());
 			// TODO not implemented yet
 			objectAttrJson.put("instances", 0);
 
@@ -130,12 +133,12 @@ public class JsonExporter {
 			}
 
 			// Apply sub classes
-			for (BaseEntity entity : currentProperty.getSubClasses()) {
+			for (BaseNode entity : currentProperty.getSubClasses()) {
 				subClasses.put(entity.getId());
 			}
 
 			// Apply super classes
-			for (BaseEntity entity : currentProperty.getSuperClasses()) {
+			for (BaseNode entity : currentProperty.getSuperClasses()) {
 				superClasses.put(entity.getId());
 			}
 
@@ -183,7 +186,7 @@ public class JsonExporter {
 			if (currentClass.getClass() == OwlEquivalentClass.class) {
 				OwlEquivalentClass equivalentClass = (OwlEquivalentClass) currentClass;
 
-				for (BaseEntity entity : equivalentClass.getEquivalentClasses()) {
+				for (BaseNode entity : equivalentClass.getEquivalentClasses()) {
 					equivalent.put(entity.getId());
 				}
 			}
@@ -194,12 +197,12 @@ public class JsonExporter {
 			}
 
 			// Apply sub classes
-			for (BaseEntity entity : currentClass.getSubClasses()) {
+			for (BaseNode entity : currentClass.getSubClasses()) {
 				subClasses.put(entity.getId());
 			}
 
 			// Apply super classes
-			for (BaseEntity entity : currentClass.getSuperClasses()) {
+			for (BaseNode entity : currentClass.getSuperClasses()) {
 				superClasses.put(entity.getId());
 			}
 
@@ -243,18 +246,39 @@ public class JsonExporter {
 			}
 
 			// Apply sub classes
-			for (BaseEntity entity : currentDatatype.getSubClasses()) {
+			for (BaseNode entity : currentDatatype.getSubClasses()) {
 				subClasses.put(entity.getId());
 			}
 
 			// Apply super classes
-			for (BaseEntity entity : currentDatatype.getSuperClasses()) {
+			for (BaseNode entity : currentDatatype.getSuperClasses()) {
 				superClasses.put(entity.getId());
 			}
 
 			datatypeAttribute.put(datatypeAttrJson);
 		}
 
+	}
+
+	public void processThings(Map<String, OwlThing> things) {
+		for (Map.Entry<String, OwlThing> baseClass : things.entrySet()) {
+			BaseClass currentClass = baseClass.getValue();
+
+			JSONObject classJson = new JSONObject();
+
+			classJson.put("id", currentClass.getId());
+			classJson.put("type", currentClass.getType());
+
+			_class.put(classJson);
+
+			JSONObject classAttrJson = new JSONObject();
+
+			classAttrJson.put("id", currentClass.getId());
+			classAttrJson.put("label", currentClass.getName());
+			classAttrJson.put("uri", currentClass.getIri());
+
+			classAttribute.put(classAttrJson);
+		}
 	}
 
 	private void processData() {
@@ -270,18 +294,77 @@ public class JsonExporter {
 
 		// Sets root
 		root.put("namespace", namespace)
-			.put("header", header)
-			.put("class", _class)
-			.put("classAttribute", classAttribute)
-			.put("datatype", datatype)
-			.put("datatypeAttribute", datatypeAttribute)
-			.put("property", objectProperty)
-			.put("propertyAttribute", objectPropertyAttribute);
+				.put("header", header)
+				.put("class", _class)
+				.put("classAttribute", classAttribute)
+				.put("datatype", datatype)
+				.put("datatypeAttribute", datatypeAttribute)
+				.put("property", objectProperty)
+				.put("propertyAttribute", objectPropertyAttribute);
 	}
 
 	public void close() throws IOException {
 		FileWriter writer = new FileWriter(outputFile);
 		writer.write(root.toString());
 		writer.close();
+	}
+
+	public void processDatatypeProperties(Map<String, OwlDatatypeProperty> datatypePropertyMap) {
+		for (Map.Entry<String, OwlDatatypeProperty> baseProperty : datatypePropertyMap.entrySet()) {
+			OwlDatatypeProperty currentProperty = baseProperty.getValue();
+
+			if (currentProperty.getDomain() == null || currentProperty.getRange() == null) {
+				System.out.println("Skip " + currentProperty.getName() + " property.");
+				continue;
+			}
+
+			JSONObject propertyJson = new JSONObject();
+
+			JSONArray equivalent = new JSONArray();
+			JSONArray attributes = new JSONArray();
+			JSONArray subClasses = new JSONArray();
+			JSONArray superClasses = new JSONArray();
+
+			propertyJson.put("id", currentProperty.getId());
+			propertyJson.put("type", currentProperty.getType());
+
+			objectProperty.put(propertyJson);
+
+			JSONObject dataAttrJson = new JSONObject();
+
+			dataAttrJson.put("id", currentProperty.getId());
+			dataAttrJson.put("label", currentProperty.getName());
+			dataAttrJson.put("uri", currentProperty.getIri());
+			dataAttrJson.put("comment", currentProperty.getComment());
+			dataAttrJson.put("domain", currentProperty.getDomain().getId());
+			dataAttrJson.put("range", currentProperty.getRange().getId());
+			dataAttrJson.put("inverse", currentProperty.getInverseID());
+			// TODO not implemented yet
+			dataAttrJson.put("instances", 0);
+
+			dataAttrJson.put("equivalent", equivalent);
+			dataAttrJson.put("attributes", attributes);
+			dataAttrJson.put("subClasses", subClasses);
+			dataAttrJson.put("superClasses", superClasses);
+
+			// TODO equivalents durchgehen
+
+			// Apply attributes
+			for (String attribute : currentProperty.getAttributes()) {
+				attributes.put(attribute);
+			}
+
+			// Apply sub classes
+			for (BaseNode entity : currentProperty.getSubClasses()) {
+				subClasses.put(entity.getId());
+			}
+
+			// Apply super classes
+			for (BaseNode entity : currentProperty.getSuperClasses()) {
+				superClasses.put(entity.getId());
+			}
+
+			objectPropertyAttribute.put(dataAttrJson);
+		}
 	}
 }

@@ -5,11 +5,16 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.BaseEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.classes.BaseClass;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.classes.OwlEquivalentClass;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.datatypes.BaseDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlDatatypeProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.SubClassProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlEquivalentClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.List;
@@ -22,22 +27,17 @@ import java.util.Set;
 public class ProcessUnit {
 
 	private OWLDataFactory factory;
+	private MapData mapData;
 	private OWLOntology ontology;
-	private Map<String, BaseClass> theMap;
-	private Map<String, OWLClass> owlClasses;
-	private Map<String, BaseDatatype> datatypeMap;
-	private Map<String, OWLDatatype> owlDatatypes;
 
-	public ProcessUnit(OWLOntology ontology, OWLDataFactory factory) {
+	public ProcessUnit(OWLOntology ontology, OWLDataFactory factory, MapData mapData) {
 		this.ontology = ontology;
 		this.factory = factory;
+		this.mapData = mapData;
 	}
 
-	public void processClasses(Map<String, BaseClass> theMap, Map<String, OWLClass> owlClasses) {
-		this.theMap = theMap;
-		this.owlClasses = owlClasses;
-
-		for (Map.Entry<String, BaseClass> i : this.theMap.entrySet()) {
+	public void processClasses() {
+		for (Map.Entry<String, BaseClass> i : this.mapData.getClassMap().entrySet()) {
 			BaseClass currentClass = i.getValue();
 			processAttributes(currentClass);
 			processEquivalents(currentClass);
@@ -47,11 +47,8 @@ public class ProcessUnit {
 
 	}
 
-	public void processDatatypes(Map<String, BaseDatatype> theMap, Map<String, OWLDatatype> owlDatatypes) {
-		datatypeMap = theMap;
-		this.owlDatatypes = owlDatatypes;
-
-		for(Map.Entry<String, BaseDatatype> currentElement : this.datatypeMap.entrySet()) {
+	public void processDatatypes() {
+		for (Map.Entry<String, BaseDatatype> currentElement : this.mapData.getDatatypeMap().entrySet()) {
 			BaseDatatype currentDatatype = currentElement.getValue();
 			// TODO later
 		}
@@ -62,15 +59,15 @@ public class ProcessUnit {
 			return;
 		}
 
-		OWLClass theClass = owlClasses.get(base.getIri());
+		OWLClass theClass = mapData.getOwlClasses().get(base.getIri());
 		OwlEquivalentClass newBase = (OwlEquivalentClass) base;
-		List<BaseEntity> equivalents = newBase.getEquivalentClasses();
+		List<BaseNode> equivalents = newBase.getEquivalentClasses();
 
 
 		for (OWLClassExpression equiClassExpression : theClass.getEquivalentClasses(ontology)) {
 			if (!equiClassExpression.isAnonymous()) {
 				BaseClass equivClass =
-						theMap.get(equiClassExpression.asOWLClass().getIRI().toString());
+						mapData.getClassMap().get(equiClassExpression.asOWLClass().getIRI().toString());
 
 				if (equivClass != null) {
 					equivalents.add(equivClass);
@@ -80,7 +77,7 @@ public class ProcessUnit {
 
 				for (OWLEntity owl_class_entity : equiClassExpressionSignatureSet) {
 					String equiClassIRI = owl_class_entity.getIRI().toString();
-					BaseClass equivClass = theMap.get(equiClassIRI);
+					BaseClass equivClass = mapData.getClassMap().get(equiClassIRI);
 
 					if (equivClass != null) {
 						equivalents.add(equivClass);
@@ -91,7 +88,7 @@ public class ProcessUnit {
 	}
 
 	private void processAttributes(BaseClass base) {
-		OWLClass theClass = owlClasses.get(base.getIri());
+		OWLClass theClass = mapData.getOwlClasses().get(base.getIri());
 		List<String> attributes = base.getAttributes();
 
 		if (isExternal(theClass)) {
@@ -104,6 +101,49 @@ public class ProcessUnit {
 
 		if (isEquivalentClass(theClass)) {
 			attributes.add("equivalent");
+		}
+	}
+
+	private void processSubClasses(BaseClass base) {
+		OWLClass theClass = mapData.getOwlClasses().get(base.getIri());
+		List<BaseNode> subClasses = base.getSubClasses();
+
+		for (OWLClassExpression subClassExpression : theClass.getSubClasses(ontology)) {
+			if (!subClassExpression.isAnonymous()) {
+				String subClassURI = subClassExpression.asOWLClass().getIRI().toString();
+				// ignore subclass with the namespace of OWLClass Thing
+				if (!Constants.OWL_THING_CLASS_URI.equals(subClassURI)) {
+					BaseClass sub = mapData.getClassMap().get(subClassURI);
+
+					if (sub != null) {
+						subClasses.add(sub);
+						SubClassProperty property = new SubClassProperty(sub, base);
+						property.setId("SubClassProp" + mapData.getObjectPropertyMap().size());
+						mapData.getObjectPropertyMap().put(property.getId(), property);
+					}
+				}
+
+			}
+		}
+	}
+
+	private void processSuperClasses(BaseClass base) {
+		OWLClass theClass = mapData.getOwlClasses().get(base.getIri());
+		List<BaseNode> superClasses = base.getSuperClasses();
+
+		for (OWLClassExpression superClassExpression : theClass.getSuperClasses(ontology)) {
+			if (!superClassExpression.isAnonymous()) {
+				String superClassURI = superClassExpression.asOWLClass().getIRI().toString();
+				// ignore subclass with the namespace of OWLClass Thing
+				if (!Constants.OWL_THING_CLASS_URI.equals(superClassURI)) {
+					BaseClass sub = mapData.getClassMap().get(superClassURI);
+
+					if (sub != null) {
+						superClasses.add(sub);
+					}
+				}
+
+			}
 		}
 	}
 
@@ -123,14 +163,6 @@ public class ProcessUnit {
 		return this.hasDifferentNamespace(theClass.getIRI().toString(), ontoIRI);
 	}
 
-	/**
-	 * TODO
-	 * NOT SURE HOW TO CHECK THIS DIRECTLY.
-	 * NOT USABLE YET!
-	 *
-	 * @param theClass
-	 * @return
-	 */
 	private boolean isDeprected(OWLClass theClass) {
 		return false;
 	}
@@ -155,43 +187,40 @@ public class ProcessUnit {
 		return !(elementNamespace.contains(ontologyNamespace));
 	}
 
-	private void processSubClasses(BaseClass base) {
-		OWLClass theClass = owlClasses.get(base.getIri());
-		List<BaseEntity> subClasses = base.getSubClasses();
+	public void processProperties() {
+		processObjectProperty();
+		processDatatypeProperty();
+	}
 
-		for (OWLClassExpression subClassExpression : theClass.getSubClasses(ontology)) {
-			if (!subClassExpression.isAnonymous()) {
-				String subClassURI = subClassExpression.asOWLClass().getIRI().toString();
-				// ignore subclass with the namespace of OWLClass Thing
-				if (!Constants.OWL_THING_CLASS_URI.equals(subClassURI)) {
-					BaseClass sub = theMap.get(subClassURI);
+	private void processObjectProperty() {
+		Map<String, OwlObjectProperty> objectPropertyMap = mapData.getObjectPropertyMap();
 
-					if (sub != null) {
-						subClasses.add(sub);
-					}
-				}
-
-			}
+		for (Map.Entry<String, OwlObjectProperty> i : objectPropertyMap.entrySet()) {
+			OwlObjectProperty currentProperty = i.getValue();
+			processInverseID(currentProperty);
 		}
 	}
 
-	private void processSuperClasses(BaseClass base) {
-		OWLClass theClass = owlClasses.get(base.getIri());
-		List<BaseEntity> superClasses = base.getSuperClasses();
+	private void processInverseID(BaseProperty property) {
+		Map<String, OwlObjectProperty> objectPropertyMap = mapData.getObjectPropertyMap();
+		Map<String, OwlDatatypeProperty> datatypePropertyMap = mapData.getDatatypePropertyMap();
 
-		for (OWLClassExpression superClassExpression : theClass.getSuperClasses(ontology)) {
-			if (!superClassExpression.isAnonymous()) {
-				String superClassURI = superClassExpression.asOWLClass().getIRI().toString();
-				// ignore subclass with the namespace of OWLClass Thing
-				if (!Constants.OWL_THING_CLASS_URI.equals(superClassURI)) {
-					BaseClass sub = theMap.get(superClassURI);
+		String iri = property.getInverseIRI();
 
-					if (sub != null) {
-						superClasses.add(sub);
-					}
-				}
-
-			}
+		if (iri == null || iri.isEmpty()) {
+			return;
 		}
+
+		if (objectPropertyMap.containsKey(iri)) {
+			property.setInverseID(objectPropertyMap.get(iri).getId());
+		} else if (datatypePropertyMap.containsKey(iri)) {
+			property.setInverseID(datatypePropertyMap.get(iri).getId());
+		} else {
+			System.out.println("Missing inverse IRI: " + iri);
+		}
+	}
+
+	private void processDatatypeProperty() {
+
 	}
 }

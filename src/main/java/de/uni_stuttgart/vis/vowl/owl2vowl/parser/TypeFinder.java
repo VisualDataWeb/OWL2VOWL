@@ -1,10 +1,10 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.classes.*;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.datatypes.BaseDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.datatypes.RdfsDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.datatypes.RdfsLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsLiteral;
 import org.semanticweb.owlapi.model.*;
 
 public class TypeFinder {
@@ -15,13 +15,13 @@ public class TypeFinder {
 		this.ontology = ontology;
 		this.factory = factory;
 	}
-	
+
 	public BaseClass findVowlClass(OWLClass theClass) {
 		if (isThing(theClass)) {
 			return new OwlThing();
 		} else if (isEquivalentClass(theClass)) {
 			return new OwlEquivalentClass();
-		} else if(isExternal(theClass)){
+		} else if (isExternal(theClass)) {
 			return new ExternalClass();
 		} else {
 			return new OwlClass();
@@ -30,6 +30,7 @@ public class TypeFinder {
 
 	/**
 	 * .
+	 *
 	 * @param theDatatype the OWL datatype.
 	 * @return The correct datatype object
 	 */
@@ -47,7 +48,7 @@ public class TypeFinder {
 
 	private boolean isThing(OWLClass theClass) {
 		return Constants.OWL_THING_CLASS_URI.equals(theClass.getIRI().toString()) || theClass
-			.isOWLThing();
+				.isOWLThing();
 	}
 
 	private boolean isExternal(OWLClass theClass) {

@@ -3,15 +3,15 @@
  *
  */
 
-package de.uni_stuttgart.vis.vowl.owl2vowl.model.classes;
+package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.BaseEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
 /**
  * @author Eduard Marbach
  */
-public class BaseClass extends BaseEntity {
+public class BaseClass extends BaseNode {
 
 	public BaseClass() {
 		setType(Constants.TYPE_CLASS);
@@ -32,7 +32,8 @@ public class BaseClass extends BaseEntity {
 		System.out.println("   disjoints=" + getDisjoints() + ",");
 	}
 
-	@Override public String toString() {
+	@Override
+	public String toString() {
 		return getName();
 	}
 }

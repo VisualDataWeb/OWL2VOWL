@@ -1,23 +1,29 @@
+/*
+ * BaseEntity.java
+ *
+ */
+
 package de.uni_stuttgart.vis.vowl.owl2vowl.model;
+
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.classes.BaseClass;
-
-
-public abstract class BaseEntity {
+/**
+ * @author Vincent Link, Eduard Marbach
+ */
+public class BaseEntity {
 	private String name;
 	private String comment;
 	private String type;
 	private String iri;
-	private String id;
+	protected String id;
 	private String definedBy;
 	private String owlVersion;
 	private List<String> attributes;
-	private List<BaseEntity> subClasses;
-	private List<BaseEntity> superClasses;
-	private List<BaseEntity> disjoints;
+	private List<BaseNode> subClasses;
+	private List<BaseNode> superClasses;
 
 	/**
 	 * Creates a new class object in owl form.
@@ -27,7 +33,6 @@ public abstract class BaseEntity {
 		attributes = new ArrayList<>();
 		subClasses = new ArrayList<>();
 		superClasses = new ArrayList<>();
-		disjoints = new ArrayList<>();
 	}
 
 	public String getName() {
@@ -70,28 +75,20 @@ public abstract class BaseEntity {
 		this.attributes = attributes;
 	}
 
-	public List<BaseEntity> getSubClasses() {
+	public List<BaseNode> getSubClasses() {
 		return subClasses;
 	}
 
-	public void setSubClasses(List<BaseEntity> subClasses) {
+	public void setSubClasses(List<BaseNode> subClasses) {
 		this.subClasses = subClasses;
 	}
 
-	public List<BaseEntity> getSuperClasses() {
+	public List<BaseNode> getSuperClasses() {
 		return superClasses;
 	}
 
-	public void setSuperClasses(List<BaseEntity> superClasses) {
+	public void setSuperClasses(List<BaseNode> superClasses) {
 		this.superClasses = superClasses;
-	}
-
-	public List<BaseEntity> getDisjoints() {
-		return disjoints;
-	}
-
-	public void setDisjoints(List<BaseEntity> disjoints) {
-		this.disjoints = disjoints;
 	}
 
 	public String getId() {
@@ -118,19 +115,19 @@ public abstract class BaseEntity {
 		this.definedBy = definedBy;
 	}
 
-	@Override public String toString() {
+	@Override
+	public String toString() {
 		return "BaseEntity{" +
-			"name='" + name + '\'' +
-			", comment='" + comment + '\'' +
-			", type='" + type + '\'' +
-			", iri='" + iri + '\'' +
-			", id='" + id + '\'' +
-			", definedBy='" + definedBy + '\'' +
-			", owlVersion='" + owlVersion + '\'' +
-			", attributes=" + attributes +
-			", subClasses=" + subClasses +
-			", superClasses=" + superClasses +
-			", disjoints=" + disjoints +
-			'}';
+				"name='" + name + '\'' +
+				", comment='" + comment + '\'' +
+				", type='" + type + '\'' +
+				", iri='" + iri + '\'' +
+				", id='" + id + '\'' +
+				", definedBy='" + definedBy + '\'' +
+				", owlVersion='" + owlVersion + '\'' +
+				", attributes=" + attributes +
+				", subClasses=" + subClasses +
+				", superClasses=" + superClasses +
+				'}';
 	}
 }
