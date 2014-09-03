@@ -42,9 +42,9 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		String rangeIRI;
 
 		for (OWLDataRange range : currentProperty.getRanges(GeneralParser.ontology)) {
-				rangeIRI = range.asOWLDatatype().getIRI().toString();
+			rangeIRI = range.asOWLDatatype().getIRI().toString();
 
-			if(!rangeIRI.isEmpty()) {
+			if (!rangeIRI.isEmpty()) {
 				return rangeIRI;
 			}
 		}

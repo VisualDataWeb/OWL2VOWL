@@ -14,11 +14,11 @@ import java.util.List;
  * @author Vincent Link, Eduard Marbach
  */
 public class BaseEntity {
+	protected String id;
 	private String name;
 	private String comment;
 	private String type;
 	private String iri;
-	protected String id;
 	private String definedBy;
 	private String owlVersion;
 	private List<String> attributes;
