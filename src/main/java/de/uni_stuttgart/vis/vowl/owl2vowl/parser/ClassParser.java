@@ -59,7 +59,6 @@ public class ClassParser extends GeneralNodeParser {
 			theClass.setName(FormatText.cutQuote(rdfsLabel));
 			theClass.setComment(FormatText.cutQuote(rdfsComment));
 			theClass.setIri(iri);
-			theClass.setId("class" + indexCounter);
 			theClass.setDefinedBy(FormatText.cutQuote(rdfsIsDefinedBy));
 			theClass.setOwlVersion(FormatText.cutQuote(owlVersionInfo));
 

@@ -4,10 +4,15 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
 
 public class OwlThing extends BaseClass {
+	protected static int indexCounter = 1;
+
 	public OwlThing() {
+		super();
 		setType(Constants.TYPE_THING);
 		setIri(Constants.OWL_THING_CLASS_URI);
 		setName("Thing");
+		setId("thing" + indexCounter);
+		indexCounter++;
 	}
 
 	/**

@@ -13,9 +13,13 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.BaseEdge;
 public class BaseProperty extends BaseEdge {
 	private String inverseIRI;
 	private String inverseID;
+	protected static int indexCounter = 1;
 
 	public BaseProperty() {
+		super();
 		setType("rdfs:Property");
+		setId("property" + indexCounter);
+		indexCounter++;
 	}
 
 	public String getInverseIRI() {

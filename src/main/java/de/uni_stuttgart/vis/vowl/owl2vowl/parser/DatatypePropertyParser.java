@@ -85,7 +85,6 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 				if (domainNode == null) {
 					OwlThing newThing = new OwlThing();
-					newThing.setId("thing" + mapData.getThingMap().size() + 1);
 					mapData.getThingMap().put(newThing.getId(), newThing);
 					domainNode = newThing;
 				}
@@ -106,7 +105,6 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 			property.setIri(iri);
 			property.setDefinedBy(rdfsIsDefinedBy);
 			property.setOwlVersion(owlVersionInfo);
-			property.setId("datatypeProperty" + indexCounter);
 			domainNode.getOutGoingEdges().add(property);
 			rangeNode.getInGoingEdges().add(property);
 

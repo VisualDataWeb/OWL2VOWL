@@ -11,6 +11,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties;
 public class OwlDatatypeProperty extends BaseProperty {
 
 	public OwlDatatypeProperty() {
+		super();
 		setType("owl:datatypeProperty");
 	}
 }

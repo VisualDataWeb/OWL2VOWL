@@ -11,6 +11,7 @@ public class OwlEquivalentClass extends BaseClass {
 	private List<BaseNode> equivalentClasses;
 
 	public OwlEquivalentClass() {
+		super();
 		equivalentClasses = new ArrayList<>();
 		setType(Constants.TYPE_EQUIVALENT);
 	}

@@ -50,7 +50,6 @@ public class DatatypeParser extends GeneralNodeParser {
 			theDatatype.setIri(iri);
 			theDatatype.setDefinedBy(rdfsIsDefinedBy);
 			theDatatype.setOwlVersion(owlVersionInfo);
-			theDatatype.setId("datatype" + indexCounter);
 
 			indexCounter++;
 

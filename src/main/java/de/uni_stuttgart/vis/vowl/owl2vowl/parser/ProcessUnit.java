@@ -118,7 +118,6 @@ public class ProcessUnit {
 					if (sub != null) {
 						subClasses.add(sub);
 						SubClassProperty property = new SubClassProperty(sub, base);
-						property.setId("SubClassProp" + mapData.getObjectPropertyMap().size());
 						mapData.getObjectPropertyMap().put(property.getId(), property);
 					}
 				}

@@ -28,7 +28,7 @@ public class Main {
 	private static OWLDataFactory factory;
 
 	public static void main(String[] args) {
-		File ont = new File(Constants.MUTO);
+		File ont = new File(Constants.FOAF);
 		manager = OWLManager.createOWLOntologyManager();
 		factory = manager.getOWLDataFactory();
 		mapData = new MapData();

@@ -160,7 +160,6 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 
 					if (sourceNodeID == null) {
 						OwlThing newThing = new OwlThing();
-						newThing.setId("thing" + thingMap.size() + 1);
 						thingMap.put(newThing.getId(), newThing);
 						sourceNodeID = newThing;
 					}
@@ -175,7 +174,6 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 						// no OWLClassThing connected to this class foudn, we have to create one
 						if (sourceNodeID == null) {
 							OwlThing newThing = new OwlThing();
-							newThing.setId("thing" + thingMap.size() + 1);
 							thingMap.put(newThing.getId(), newThing);
 							sourceNodeID = newThing;
 						}
@@ -188,7 +186,6 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 
 						if (targetNodeID == null) {
 							OwlThing newThing = new OwlThing();
-							newThing.setId("thing" + thingMap.size() + 1);
 							thingMap.put(newThing.getId(), newThing);
 							targetNodeID = newThing;
 						}
@@ -201,7 +198,6 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			theProperty.setIri(iri);
 			theProperty.setDefinedBy(rdfsIsDefinedBy);
 			theProperty.setOwlVersion(owlVersionInfo);
-			theProperty.setId("objectProperty" + indexCounter);
 			theProperty.setInverseIRI(rdfsInversOf);
 
 			BaseNode domain = findDomain(sourceNodeID);
