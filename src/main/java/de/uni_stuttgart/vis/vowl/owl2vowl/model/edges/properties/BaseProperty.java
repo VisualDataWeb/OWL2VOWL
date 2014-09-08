@@ -7,19 +7,49 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.BaseEdge;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Vincent Link, Eduard Marbach
  */
 public class BaseProperty extends BaseEdge {
-	private String inverseIRI;
-	private String inverseID;
 	protected static int indexCounter = 1;
+	protected List<String> subProperties = new ArrayList<>();
+	protected List<String> disjoints = new ArrayList<>();
+	protected List<String> equivalents = new ArrayList<>();
+	protected String inverseIRI;
+	protected String inverseID;
 
 	public BaseProperty() {
 		super();
 		setType("rdfs:Property");
 		setId("property" + indexCounter);
 		indexCounter++;
+	}
+
+	public List<String> getEquivalents() {
+		return equivalents;
+	}
+
+	public void setEquivalents(List<String> equivalents) {
+		this.equivalents = equivalents;
+	}
+
+	public List<String> getDisjoints() {
+		return disjoints;
+	}
+
+	public void setDisjoints(List<String> disjoints) {
+		this.disjoints = disjoints;
+	}
+
+	public List<String> getSubProperties() {
+		return subProperties;
+	}
+
+	public void setSubProperties(List<String> subProperties) {
+		this.subProperties = subProperties;
 	}
 
 	public String getInverseIRI() {
