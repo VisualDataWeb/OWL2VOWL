@@ -30,5 +30,10 @@
 			<artifactId>owlapi-distribution</artifactId>
 			<version>3.5.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.servicemix.bundles</groupId>
+			<artifactId>org.apache.servicemix.bundles.collections-generic</artifactId>
+			<version>4.01_1</version>
+		</dependency>
 	</dependencies>
 </project>
