@@ -213,6 +213,44 @@ public class ProcessUnit {
 		}
 	}
 
+	/**
+	 * Converts the property fields: equivalents, disjoints and subProperties from the IRI to the
+	 * correct ID of the property.
+	 *
+	 * @param currentProperty The property to process.
+	 */
+	private void processPropFieldConvert(BaseProperty currentProperty) {
+		List<String> disjoints = new ArrayList<>();
+		List<String> equivalents = new ArrayList<>();
+		List<String> subProperties = new ArrayList<>();
+
+		Map<String, BaseProperty> test = new HashMap<>();
+		test.putAll(mapData.getDatatypePropertyMap());
+		test.putAll(mapData.getObjectPropertyMap());
+
+		for (String currentIRI : currentProperty.getDisjoints()) {
+			if (test.containsKey(currentIRI)) {
+				disjoints.add(test.get(currentIRI).getId());
+			}
+		}
+
+		for (String currentIRI : currentProperty.getEquivalents()) {
+			if (test.containsKey(currentIRI)) {
+				equivalents.add(test.get(currentIRI).getId());
+			}
+		}
+
+		for (String currentIRI : currentProperty.getSubProperties()) {
+			if (test.containsKey(currentIRI)) {
+				subProperties.add(test.get(currentIRI).getId());
+			}
+		}
+
+		currentProperty.setSubProperties(subProperties);
+		currentProperty.setEquivalents(equivalents);
+		currentProperty.setDisjoints(disjoints);
+	}
+
 	private void processInverseID(BaseProperty property) {
 		Map<String, OwlObjectProperty> objectPropertyMap = mapData.getObjectPropertyMap();
 		Map<String, OwlDatatypeProperty> datatypePropertyMap = mapData.getDatatypePropertyMap();
@@ -233,6 +271,11 @@ public class ProcessUnit {
 	}
 
 	private void processDatatypeProperty() {
+		Map<String, OwlDatatypeProperty> objectPropertyMap = mapData.getDatatypePropertyMap();
 
+		for (Map.Entry<String, OwlDatatypeProperty> i : objectPropertyMap.entrySet()) {
+			OwlDatatypeProperty currentProperty = i.getValue();
+			processPropFieldConvert(currentProperty);
+		}
 	}
 }
