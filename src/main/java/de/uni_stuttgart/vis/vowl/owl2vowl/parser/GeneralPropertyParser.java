@@ -11,6 +11,8 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import org.semanticweb.owlapi.model.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -101,5 +103,56 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		}
 
 		return null;
+	}
+
+	protected List<String> retrieveSubProperties(OWLPropertyExpression property) {
+		Set subProperties = property.getSubProperties(ontology);
+		List<String> iriList = new ArrayList<>();
+
+		if (subProperties.isEmpty()) {
+			return iriList;
+		}
+
+
+		for (Object curSub : subProperties) {
+			OWLNamedObject definedSub = (OWLNamedObject) curSub;
+			iriList.add(definedSub.getIRI().toString());
+		}
+
+		return iriList;
+	}
+
+	protected List<String> retrieveDisjoints(OWLPropertyExpression property) {
+		Set subProperties = property.getDisjointProperties(ontology);
+		List<String> iriList = new ArrayList<>();
+
+		if (subProperties.isEmpty()) {
+			return iriList;
+		}
+
+
+		for (Object curSub : subProperties) {
+			OWLNamedObject definedSub = (OWLNamedObject) curSub;
+			iriList.add(definedSub.getIRI().toString());
+		}
+
+		return iriList;
+	}
+
+	protected List<String> retrieveEquivalents(OWLPropertyExpression property) {
+		Set subProperties = property.getEquivalentProperties(ontology);
+		List<String> iriList = new ArrayList<>();
+
+		if (subProperties.isEmpty()) {
+			return iriList;
+		}
+
+
+		for (Object curSub : subProperties) {
+			OWLNamedObject definedSub = (OWLNamedObject) curSub;
+			iriList.add(definedSub.getIRI().toString());
+		}
+
+		return iriList;
 	}
 }
