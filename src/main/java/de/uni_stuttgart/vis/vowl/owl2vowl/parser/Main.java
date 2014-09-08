@@ -66,8 +66,8 @@ public class Main {
 				exporter.processHeader();
 				exporter.processClasses(mapData.getClassMap());
 				exporter.processDatatypes(mapData.getDatatypeMap());
-				exporter.processObjectProperties(mapData.getObjectPropertyMap());
-				exporter.processDatatypeProperties(mapData.getDatatypePropertyMap());
+				exporter.processProperties(mapData.getObjectPropertyMap());
+				exporter.processProperties(mapData.getDatatypePropertyMap());
 				exporter.processThings(mapData.getThingMap());
 				exporter.close();
 			} catch (IOException e) {
