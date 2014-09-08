@@ -193,6 +193,10 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 				}
 			}
 
+			theProperty.setDisjoints(retrieveDisjoints(currentProperty));
+			theProperty.setEquivalents(retrieveEquivalents(currentProperty));
+			theProperty.setSubProperties(retrieveSubProperties(currentProperty));
+
 			theProperty.setName(FormatText.cutQuote(rdfsLabel));
 			theProperty.setComment(FormatText.cutQuote(rdfsComment));
 			theProperty.setIri(iri);

@@ -100,6 +100,10 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 				property.getAttributes().add(Constants.PROP_ATTR_FUNCT);
 			}
 
+			property.setDisjoints(retrieveDisjoints(currentProperty));
+			property.setEquivalents(retrieveEquivalents(currentProperty));
+			property.setSubProperties(retrieveSubProperties(currentProperty));
+
 			property.setName(FormatText.cutQuote(rdfsLabel));
 			property.setComment(FormatText.cutQuote(rdfsComment));
 			property.setIri(iri);
