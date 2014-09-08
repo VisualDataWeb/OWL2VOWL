@@ -17,9 +17,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Vincent Link, Eduard Marbach
@@ -61,26 +59,41 @@ public class ProcessUnit {
 
 		OWLClass theClass = mapData.getOwlClasses().get(base.getIri());
 		OwlEquivalentClass newBase = (OwlEquivalentClass) base;
-		List<BaseNode> equivalents = newBase.getEquivalentClasses();
+		List<OwlEquivalentClass> equivalents = newBase.getEquivalentClasses();
 
+		// Ignore class if not basis TODO is probably not correct yet. Because there could be equivalent
+		// classes without a base in the equal namespace.
+		if (hasDifferentNamespace(newBase.getIri(), ontology.getOntologyID().getOntologyIRI())) {
+			return;
+		}
 
 		for (OWLClassExpression equiClassExpression : theClass.getEquivalentClasses(ontology)) {
 			if (!equiClassExpression.isAnonymous()) {
-				BaseClass equivClass =
-						mapData.getClassMap().get(equiClassExpression.asOWLClass().getIRI().toString());
+				String iri = equiClassExpression.asOWLClass().getIRI().toString();
+				OwlEquivalentClass equivClass = (OwlEquivalentClass) mapData.getClassMap().get(iri);
 
 				if (equivClass != null) {
-					equivalents.add(equivClass);
+					// Move class to first position if the namespace is same with ontology.
+					if (!hasDifferentNamespace(iri, ontology.getOntologyID().getOntologyIRI())) {
+						equivalents.add(0, equivClass);
+					} else {
+						equivalents.add(equivClass);
+					}
 				}
 			} else {
 				Set<OWLEntity> equiClassExpressionSignatureSet = equiClassExpression.getSignature();
 
 				for (OWLEntity owl_class_entity : equiClassExpressionSignatureSet) {
 					String equiClassIRI = owl_class_entity.getIRI().toString();
-					BaseClass equivClass = mapData.getClassMap().get(equiClassIRI);
+					OwlEquivalentClass equivClass = (OwlEquivalentClass) mapData.getClassMap().get(equiClassIRI);
 
 					if (equivClass != null) {
-						equivalents.add(equivClass);
+						// Move class to first position if the namespace is same with ontology.
+						if (!hasDifferentNamespace(equiClassIRI, ontology.getOntologyID().getOntologyIRI())) {
+							equivalents.add(0, equivClass);
+						} else {
+							equivalents.add(equivClass);
+						}
 					}
 				}
 			}
