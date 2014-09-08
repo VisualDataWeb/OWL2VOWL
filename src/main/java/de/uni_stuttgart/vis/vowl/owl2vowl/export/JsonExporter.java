@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.export;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
@@ -322,8 +323,8 @@ public class JsonExporter {
 
 			JSONArray equivalent = new JSONArray();
 			JSONArray attributes = new JSONArray();
-			JSONArray subClasses = new JSONArray();
-			JSONArray superClasses = new JSONArray();
+			JSONArray subProperty = new JSONArray();
+			JSONArray disjoints = new JSONArray();
 
 			propertyJson.put("id", currentProperty.getId());
 			propertyJson.put("type", currentProperty.getType());
@@ -344,8 +345,8 @@ public class JsonExporter {
 
 			dataAttrJson.put("equivalent", equivalent);
 			dataAttrJson.put("attributes", attributes);
-			dataAttrJson.put("subClasses", subClasses);
-			dataAttrJson.put("superClasses", superClasses);
+			dataAttrJson.put("subProperty", subProperty);
+			dataAttrJson.put("disjoint", disjoints);
 
 			// TODO equivalents durchgehen
 
@@ -355,13 +356,82 @@ public class JsonExporter {
 			}
 
 			// Apply sub classes
-			for (BaseNode entity : currentProperty.getSubClasses()) {
-				subClasses.put(entity.getId());
+			for (String entity : currentProperty.getSubProperties()) {
+				subProperty.put(entity);
 			}
 
-			// Apply super classes
-			for (BaseNode entity : currentProperty.getSuperClasses()) {
-				superClasses.put(entity.getId());
+			// Apply sub classes
+			for (String entity : currentProperty.getEquivalents()) {
+				equivalent.put(entity);
+			}
+
+			// Apply sub classes
+			for (String entity : currentProperty.getDisjoints()) {
+				disjoints.put(entity);
+			}
+
+			objectPropertyAttribute.put(dataAttrJson);
+		}
+	}
+
+	public <V extends BaseProperty> void processProperties(Map<String, V> propertyMap) {
+		for (Map.Entry<String, V> baseProperty : propertyMap.entrySet()) {
+			BaseProperty currentProperty = baseProperty.getValue();
+
+			if (currentProperty.getDomain() == null || currentProperty.getRange() == null) {
+				System.out.println("Skip " + currentProperty.getName() + " property.");
+				continue;
+			}
+
+			JSONObject propertyJson = new JSONObject();
+
+			JSONArray equivalent = new JSONArray();
+			JSONArray attributes = new JSONArray();
+			JSONArray subProperty = new JSONArray();
+			JSONArray disjoints = new JSONArray();
+
+			propertyJson.put("id", currentProperty.getId());
+			propertyJson.put("type", currentProperty.getType());
+
+			objectProperty.put(propertyJson);
+
+			JSONObject dataAttrJson = new JSONObject();
+
+			dataAttrJson.put("id", currentProperty.getId());
+			dataAttrJson.put("label", currentProperty.getName());
+			dataAttrJson.put("uri", currentProperty.getIri());
+			dataAttrJson.put("comment", currentProperty.getComment());
+			dataAttrJson.put("domain", currentProperty.getDomain().getId());
+			dataAttrJson.put("range", currentProperty.getRange().getId());
+			dataAttrJson.put("inverse", currentProperty.getInverseID());
+			// TODO not implemented yet
+			dataAttrJson.put("instances", 0);
+
+			dataAttrJson.put("equivalent", equivalent);
+			dataAttrJson.put("attributes", attributes);
+			dataAttrJson.put("subproperty", subProperty);
+			dataAttrJson.put("disjoint", disjoints);
+
+			// TODO equivalents durchgehen
+
+			// Apply attributes
+			for (String attribute : currentProperty.getAttributes()) {
+				attributes.put(attribute);
+			}
+
+			// Apply sub classes
+			for (String entity : currentProperty.getSubProperties()) {
+				subProperty.put(entity);
+			}
+
+			// Apply sub classes
+			for (String entity : currentProperty.getEquivalents()) {
+				equivalent.put(entity);
+			}
+
+			// Apply sub classes
+			for (String entity : currentProperty.getDisjoints()) {
+				disjoints.put(entity);
 			}
 
 			objectPropertyAttribute.put(dataAttrJson);
