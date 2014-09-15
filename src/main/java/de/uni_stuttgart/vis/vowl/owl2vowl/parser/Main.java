@@ -7,6 +7,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
@@ -28,7 +29,7 @@ public class Main {
 	private static OWLDataFactory factory;
 
 	public static void main(String[] args) {
-		File ont = new File(Constants.FOAF);
+		File ont = new File(Constants.MUTO);
 		manager = OWLManager.createOWLOntologyManager();
 		factory = manager.getOWLDataFactory();
 		mapData = new MapData();
@@ -43,11 +44,19 @@ public class Main {
 			ProcessUnit processor = new ProcessUnit(ontology, factory, mapData);
 			parser = new GeneralParser(ontology, factory, mapData);
 
+			/*
+			Parsing of the raw data gained from the OWL API. Will be transformed to useable data
+			for WebVOWL.
+			 */
+			//parseOntoInfo();
 			parseClasses(classes);
 			//parseDatatypes(datatypes);
 			parseObjectProperty(objectProperties);
 			parseDatatypeProperties(dataProperties);
 
+			/*
+			Further processing of the gained data. Eq. IRIs will be transformed to IDs where necessary
+			 */
 			processor.processClasses();
 			//processor.processDatatypes();
 			processor.processProperties();
@@ -74,6 +83,13 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	private static void parseOntoInfo() {
+		OntologyInfo info = mapData.getOntologyInfo();
+
+		info.setIri(ontology.getOntologyID().getOntologyIRI().toString());
+		info.setVersion(ontology.getOntologyID().getVersionIRI().toString());
 	}
 
 	private static void parseDatatypeProperties(Set<OWLDataProperty> dataProperties) {
