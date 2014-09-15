@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.container;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
@@ -40,8 +41,13 @@ public class MapData {
 	private Map<String, OWLDatatype> owlDatatypes = new HashMap<>();
 	private Map<String, OWLObjectProperty> owlObjectProperties = new HashMap<>();
 	private Map<String, OWLDataProperty> owlDatatypeProperties = new HashMap<>();
+	private OntologyInfo ontologyInfo = new OntologyInfo();
 
 	public MapData() {
+	}
+
+	public OntologyInfo getOntologyInfo() {
+		return ontologyInfo;
 	}
 
 	public Map<String, BaseClass> getClassMap() {
