@@ -39,10 +39,11 @@ public class Constants {
 	public static final String MUTO = PATH_VARIABLE + "muto.rdf";
 	public static final String FOAF = PATH_VARIABLE + "index.rdf";
 	public static final String PERSONAS = PATH_VARIABLE + "personasonto.owl";
-	public static final String RDFS_LABEL = "rdfs:label";
+	public static final String GEONAMES = PATH_VARIABLE + "geonames.rdf";
 
 	/* ANNOTATIONS */
 	public static final String RDFS_COMMENT = "rdfs:comment";
+	public static final String RDFS_LABEL = "rdfs:label";
 	public static final String RDFS_DEFINED_BY = "rdfs:isDefinedBy";
 	public static final String OWL_VERSIONINFO = "owl:versionInfo";
 	public static final String RDFS_SUBCLASS = "rdfs:subClassOf";
@@ -62,7 +63,7 @@ public class Constants {
 	public static final String PROP_ATTR_DEPR = "deprecated";
 	public static final String PROP_ATTR_RDF = "rdf";
 	public static final String PROP_ATTR_TRANS = "transitive";
-	public static final String PROP_ATTR_INV_FUNCT = "inverseFunctional";
+	public static final String PROP_ATTR_INV_FUNCT = "inverse functional";
 	public static final String PROP_ATTR_SUB = "subclass";
 	public static final String PROP_ATTR_DISJOINT = "disjoint";
 	public static final String PROP_ATTR_SYM = "symmetric";
