@@ -210,6 +210,7 @@ public class ProcessUnit {
 		for (Map.Entry<String, OwlObjectProperty> i : objectPropertyMap.entrySet()) {
 			OwlObjectProperty currentProperty = i.getValue();
 			processInverseID(currentProperty);
+			processPropFieldConvert(currentProperty);
 		}
 	}
 
