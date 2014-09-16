@@ -14,9 +14,45 @@ public class OntologyInfo {
 	private String version;
 	private String title;
 	private String description;
+	private String seeAlso;
+	private String issued;
+	private String license;
+	private String rdfsLabel;
 
 	public OntologyInfo() {
 		super();
+	}
+
+	public String getSeeAlso() {
+		return seeAlso;
+	}
+
+	public void setSeeAlso(String seeAlso) {
+		this.seeAlso = seeAlso;
+	}
+
+	public String getIssued() {
+		return issued;
+	}
+
+	public void setIssued(String issued) {
+		this.issued = issued;
+	}
+
+	public String getLicense() {
+		return license;
+	}
+
+	public void setLicense(String license) {
+		this.license = license;
+	}
+
+	public String getRdfsLabel() {
+		return rdfsLabel;
+	}
+
+	public void setRdfsLabel(String rdfsLabel) {
+		this.rdfsLabel = rdfsLabel;
 	}
 
 	public String getAuthor() {
