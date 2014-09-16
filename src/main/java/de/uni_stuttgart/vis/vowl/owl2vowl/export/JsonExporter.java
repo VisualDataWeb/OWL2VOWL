@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.export;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProperty;
@@ -78,14 +79,13 @@ public class JsonExporter {
 
 	}
 
-	// TODO
-	public void processHeader() {
+	public void processHeader(OntologyInfo info) {
 		// Apply header
-		header.put("title", "test")
-				.put("url", "test")
-				.put("version", "test")
-				.put("author", "test")
-				.put("description", "test");
+		header.put("title", info.getTitle())
+				.put("uri", info.getIri())
+				.put("version", info.getVersion())
+				.put("author", info.getAuthor())
+				.put("description", info.getDescription());
 	}
 
 	public void processObjectProperties(Map<String, OwlObjectProperty> properties) {
