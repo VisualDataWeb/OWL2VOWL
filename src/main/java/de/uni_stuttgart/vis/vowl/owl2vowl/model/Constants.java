@@ -68,4 +68,15 @@ public class Constants {
 	public static final String PROP_ATTR_DISJOINT = "disjoint";
 	public static final String PROP_ATTR_SYM = "symmetric";
 	public static final String PROP_ATTR_IMPORT = "external";
+
+	/* Ontology info annotations */
+	public static final String INFO_TITLE = "<http://purl.org/dc/elements/1.1/title>";
+	public static final String INFO_SEE_ALSO = "rdfs:seeAlso";
+	public static final String INFO_ISSUED = "<http://purl.org/dc/terms/issued>";
+	public static final String INFO_CREATOR = "<http://purl.org/dc/elements/1.1/creator>";
+	public static final String INFO_LICENSE = "<http://purl.org/dc/terms/licence>";
+	public static final String INFO_DESCRIPTION = "<http://purl.org/dc/elements/1.1/description>";
+	public static final String INFO_VERSION_INFO = "owl:versionInfo";
+	public static final String INFO_RDFS_LABEL = "rdfs:label";
+
 }
