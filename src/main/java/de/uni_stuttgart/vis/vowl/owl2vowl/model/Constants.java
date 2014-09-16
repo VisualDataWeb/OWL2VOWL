@@ -34,10 +34,10 @@ public class Constants {
 	public static final String IMARINE = PATH_VARIABLE + "marinetloimarine.owl";
 	public static final String MARINE = PATH_VARIABLE + "marinetlo.owl";
 	public static final String MUSIC = PATH_VARIABLE + "musicontology.rdfs";
-	public static final String SIOC = PATH_VARIABLE + "ns";
+	public static final String SIOC = PATH_VARIABLE + "sioc.rdf";
 	public static final String GR = PATH_VARIABLE + "v1.owl";
 	public static final String MUTO = PATH_VARIABLE + "muto.rdf";
-	public static final String FOAF = PATH_VARIABLE + "index.rdf";
+	public static final String FOAF = PATH_VARIABLE + "foaf.rdf";
 	public static final String PERSONAS = PATH_VARIABLE + "personasonto.owl";
 	public static final String GEONAMES = PATH_VARIABLE + "geonames.rdf";
 
