@@ -8,15 +8,16 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.apache.commons.io.FilenameUtils;
 import org.semanticweb.owlapi.apibinding.OWLManager;
+import org.semanticweb.owlapi.metrics.*;
 import org.semanticweb.owlapi.model.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Set;
 
 /**
@@ -105,6 +106,38 @@ public class Main {
 		parser.handleClass(classes);
 	}
 
+	/**
+	 * Save the metrics of the current loaded ontology.
+	 */
+	public static void parseMetrics() {
+		OntologyMetric ontologyMetric = mapData.getOntologyMetric();
+
+		OWLMetric metric = new ReferencedClassCount(ontology.getOWLOntologyManager());
+		metric.setOntology(ontology);
+		ontologyMetric.setClassCount(Integer.parseInt(metric.getValue().toString()));
+
+		metric = new ReferencedObjectPropertyCount(ontology.getOWLOntologyManager());
+		metric.setOntology(ontology);
+		ontologyMetric.setObjectPropertyCount(Integer.parseInt(metric.getValue().toString()));
+
+		metric = new ReferencedDataPropertyCount(ontology.getOWLOntologyManager());
+		metric.setOntology(ontology);
+		ontologyMetric.setDataPropertyCount(Integer.parseInt(metric.getValue().toString()));
+
+		metric = new ReferencedIndividualCount(ontology.getOWLOntologyManager());
+		metric.setOntology(ontology);
+		ontologyMetric.setIndividualCount(Integer.parseInt(metric.getValue().toString()));
+
+		metric = new AxiomCount(ontology.getOWLOntologyManager());
+		metric.setOntology(ontology);
+		ontologyMetric.setAxiomCount(Integer.parseInt(metric.getValue().toString()));
+
+		// metric = new DLExpressivity(ontology.getOWLOntologyManager());
+		// metric.setOntology(ontology);
+
+		ontologyMetric.calculateSums();
+	}
+
 	public void startConvertion(File theOntology) {
 		manager = OWLManager.createOWLOntologyManager();
 		factory = manager.getOWLDataFactory();
@@ -129,6 +162,7 @@ public class Main {
 			//parseDatatypes(datatypes);
 			parseObjectProperty(objectProperties);
 			parseDatatypeProperties(dataProperties);
+			parseMetrics();
 
 			/*
 			Further processing of the gained data. Eq. IRIs will be transformed to IDs where necessary
@@ -147,14 +181,7 @@ public class Main {
 			JsonExporter exporter = new JsonExporter(exportFile);
 
 			try {
-				exporter.processNamespace();
-				exporter.processHeader(mapData.getOntologyInfo());
-				exporter.processClasses(mapData.getClassMap());
-				exporter.processDatatypes(mapData.getDatatypeMap());
-				exporter.processProperties(mapData.getObjectPropertyMap());
-				exporter.processProperties(mapData.getDatatypePropertyMap());
-				exporter.processThings(mapData.getThingMap());
-				exporter.close();
+				exporter.execute(mapData);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
