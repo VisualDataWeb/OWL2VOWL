@@ -40,6 +40,9 @@ public class Constants {
 	public static final String FOAF = PATH_VARIABLE + "foaf.rdf";
 	public static final String PERSONAS = PATH_VARIABLE + "personasonto.owl";
 	public static final String GEONAMES = PATH_VARIABLE + "geonames.rdf";
+	public static final String BENCHMARK1 = PATH_VARIABLE + "BenchmarkOntology.ttl";
+	public static final String BENCHMARK2 = PATH_VARIABLE + "BenchmarkOntologyModule.ttl";
+	public static final String PROV = PATH_VARIABLE + "prov.owl";
 
 	/* ANNOTATIONS */
 	public static final String RDFS_COMMENT = "rdfs:comment";
