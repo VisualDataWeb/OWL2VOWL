@@ -145,15 +145,7 @@ public class GeneralParser {
 	}
 
 	protected BaseNode findNode(String nodeIRI) {
-		if (mapData.getClassMap().containsKey(nodeIRI)) {
-			return mapData.getClassMap().get(nodeIRI);
-		} else if (mapData.getDatatypeMap().containsKey(nodeIRI)) {
-			return mapData.getDatatypeMap().get(nodeIRI);
-		} else if (mapData.getThingMap().containsKey(nodeIRI)) {
-			return mapData.getThingMap().get(nodeIRI);
-		}
-
-		return null;
+		return mapData.findNode(nodeIRI);
 	}
 
 	/**
