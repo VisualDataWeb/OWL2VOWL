@@ -82,4 +82,8 @@ public class Constants {
 	public static final String INFO_VERSION_INFO = "owl:versionInfo";
 	public static final String INFO_RDFS_LABEL = "rdfs:label";
 
+	/* Annotations used for axioms. */
+	public static final String AXIOM_OBJ_PROP_DOMAIN = "ObjectPropertyDomain";
+	public static final String AXIOM_OBJ_PROP_RANGE = "ObjectPropertyRange";
+	public static final String AXIOM_OBJ_UNION = "ObjectUnionOf";
 }
