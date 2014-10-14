@@ -8,7 +8,7 @@ import java.util.List;
 
 
 public class OwlEquivalentClass extends BaseClass {
-	private List<OwlEquivalentClass> equivalentClasses;
+	private List<BaseClass> equivalentClasses;
 
 	public OwlEquivalentClass() {
 		super();
@@ -16,14 +16,14 @@ public class OwlEquivalentClass extends BaseClass {
 		setType(Constants.TYPE_EQUIVALENT);
 	}
 
-	public List<OwlEquivalentClass> getEquivalentClasses() {
+	public List<BaseClass> getEquivalentClasses() {
 		return equivalentClasses;
 	}
 
-	public void setEquivalentClasses(Collection<OwlEquivalentClass> equivalentClasses) {
-		List<OwlEquivalentClass> bufList = new ArrayList<>();
+	public void setEquivalentClasses(Collection<BaseClass> equivalentClasses) {
+		List<BaseClass> bufList = new ArrayList<>();
 
-		for (OwlEquivalentClass node : equivalentClasses) {
+		for (BaseClass node : equivalentClasses) {
 			bufList.add(node);
 		}
 

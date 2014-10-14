@@ -24,7 +24,7 @@ public class TypeFinder {
 		} else if (isExternal(theClass)) {
 			return new ExternalClass();
 		} else {
-			return new OwlClass();
+			return new BaseClass();
 		}
 	}
 
