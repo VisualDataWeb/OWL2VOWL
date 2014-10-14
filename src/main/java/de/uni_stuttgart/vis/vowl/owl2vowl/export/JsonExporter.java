@@ -12,6 +12,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlEquivalentClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import org.json.JSONArray;
@@ -303,6 +304,7 @@ public class JsonExporter {
 	}
 
 	public void execute(MapData mapData) throws IOException {
+		System.out.println("Start Export...");
 		processNamespace();
 		processHeader(mapData.getOntologyInfo());
 		processMetrics(mapData.getOntologyMetric());
@@ -311,6 +313,45 @@ public class JsonExporter {
 		processProperties(mapData.getObjectPropertyMap());
 		processProperties(mapData.getDatatypePropertyMap());
 		processThings(mapData.getThingMap());
+		processUnions(mapData.getUnionMap());
 		close();
+		System.out.println("Export finished!");
+	}
+
+	private void processUnions(Map<String, OwlUnionOf> unionMap) {
+		for (Map.Entry<String, OwlUnionOf> baseClass : unionMap.entrySet()) {
+			OwlUnionOf currentClass = baseClass.getValue();
+
+			JSONObject classJson = new JSONObject();
+
+			JSONArray attributes = new JSONArray();
+			JSONArray union = new JSONArray();
+
+			classJson.put("id", currentClass.getId());
+			classJson.put("type", currentClass.getType());
+			classJson.put("label", "Union");
+
+			_class.put(classJson);
+
+			JSONObject classAttrJson = new JSONObject();
+
+			classAttrJson.put("id", currentClass.getId());
+			classAttrJson.put("uri", currentClass.getIri());
+			classAttrJson.put("comment", currentClass.getComment());
+
+			classAttrJson.put("attributes", attributes);
+			classAttrJson.put("union", union);
+
+			// Apply attributes
+			for (String attribute : currentClass.getAttributes()) {
+				attributes.put(attribute);
+			}
+
+			for (BaseNode entity : currentClass.getUnions()) {
+				union.put(entity.getId());
+			}
+
+			classAttribute.put(classAttrJson);
+		}
 	}
 }
