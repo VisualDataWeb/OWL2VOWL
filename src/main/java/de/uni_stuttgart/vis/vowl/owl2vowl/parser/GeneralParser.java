@@ -18,6 +18,7 @@ import java.util.Set;
  *
  */
 public class GeneralParser {
+	private static final boolean LOG_ANNOTATIONS = false;
 	protected static OWLOntology ontology;
 	protected static OWLDataFactory factory;
 	protected static MapData mapData;
@@ -106,7 +107,7 @@ public class GeneralParser {
 				rdfsIsDefinedBy = annotationValue.toString();
 			} else if (annotationProperty.toString().equals(Constants.OWL_VERSIONINFO)) {
 				owlVersionInfo = annotationValue.toString();
-			} else {
+			} else if(LOG_ANNOTATIONS){
 				System.out.println("Not used annotation: " + owlPropAno);
 			}
 		}
