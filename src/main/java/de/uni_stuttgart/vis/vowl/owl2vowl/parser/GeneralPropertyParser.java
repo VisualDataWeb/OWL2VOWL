@@ -8,7 +8,9 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.UnionParser;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.ArrayList;
@@ -22,6 +24,11 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	protected String rdfsDomain = "";
 	protected String rdfsRange = "";
 	protected String rdfsInversOf = "";
+	private UnionParser unionParser = new UnionParser();
+
+	public static void reset() {
+
+	}
 
 	protected String retrieveRange(OWLObjectProperty currentProperty) {
 		for (OWLClassExpression range : currentProperty.getRanges(GeneralParser.ontology)) {
@@ -154,5 +161,13 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		}
 
 		return iriList;
+	}
+
+	protected OwlUnionOf getUnionDomain(OWLProperty property) {
+		return unionParser.searchUnion(property, true);
+	}
+
+	protected OwlUnionOf getUnionRange(OWLProperty property) {
+		return unionParser.searchUnion(property, false);
 	}
 }
