@@ -59,7 +59,7 @@ public class ProcessUnit {
 
 		OWLClass theClass = mapData.getOwlClasses().get(base.getIri());
 		OwlEquivalentClass newBase = (OwlEquivalentClass) base;
-		List<OwlEquivalentClass> equivalents = newBase.getEquivalentClasses();
+		List<BaseClass> equivalents = newBase.getEquivalentClasses();
 
 		// Ignore class if not basis TODO is probably not correct yet. Because there could be equivalent
 		// classes without a base in the equal namespace.
@@ -70,7 +70,7 @@ public class ProcessUnit {
 		for (OWLClassExpression equiClassExpression : theClass.getEquivalentClasses(ontology)) {
 			if (!equiClassExpression.isAnonymous()) {
 				String iri = equiClassExpression.asOWLClass().getIRI().toString();
-				OwlEquivalentClass equivClass = (OwlEquivalentClass) mapData.getClassMap().get(iri);
+				BaseClass equivClass = mapData.getClassMap().get(iri);
 
 				if (equivClass != null) {
 					// Move class to first position if the namespace is same with ontology.
@@ -85,7 +85,7 @@ public class ProcessUnit {
 
 				for (OWLEntity owl_class_entity : equiClassExpressionSignatureSet) {
 					String equiClassIRI = owl_class_entity.getIRI().toString();
-					OwlEquivalentClass equivClass = (OwlEquivalentClass) mapData.getClassMap().get(equiClassIRI);
+					BaseClass equivClass = mapData.getClassMap().get(equiClassIRI);
 
 					if (equivClass != null) {
 						// Move class to first position if the namespace is same with ontology.
