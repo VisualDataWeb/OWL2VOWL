@@ -1,0 +1,251 @@
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+@prefix this: <http://purl.org/BenchmarkOntology#> .
+@prefix other: <http://purl.org/BenchmarkOntologyModule#> .
+
+<http://purl.org/BenchmarkOntology> a owl:Ontology ;
+	owl:versionIRI <http://purl.org/BenchmarkOntology> ;
+	owl:imports <http://purl.org/BenchmarkOntologyModule> ;
+	<http://purl.org/dc/elements/1.1/title> "Benchmark Ontology, Main Module" .
+
+# classes
+
+this:PlainClass a owl:Class .
+
+this:DeprecatedClass a owl:Class ;
+	owl:deprecated true .
+
+this:Class1 a owl:Class ;
+	rdfs:subClassOf [
+		owl:onProperty this:classToClassProperty ;
+		owl:cardinality 3
+	].
+
+this:ComplementClass a owl:Class ;
+	owl:complementOf this:Class1 .
+
+this:UnionClass a owl:Class ;
+	owl:unionOf ( this:Class1 this:DeprecatedClass ).
+
+this:LargeUnionClass a owl:Class ;
+	owl:unionOf ( this:UnionClass other:ImportedClass this:PropertyOwner ).
+
+this:IntersectionClass a owl:Class ;
+	owl:intersectionOf ( this:Class1 this:DeprecatedClass ).
+
+this:LargeIntersectionClass a owl:Class ;
+	owl:intersectionOf ( this:UnionClass other:ImportedClass this:PropertyOwner ).
+
+this:DisjointUnionClass a owl:Class ;
+	owl:disjointUnionOf ( this:Class1 this:UnionClass ).
+
+this:LargeDisjointUnionClass a owl:Class ;
+	owl:disjointUnionOf ( this:ComplementClass this:IntersectionClass other:DeprecatedImportedClass ).
+
+this:PropertyOwnerType a owl:Class .
+
+this:PropertyOwner a owl:Class ;
+	a this:PropertyOwnerType ;
+	rdfs:subClassOf [
+		owl:onProperty this:customTypeDatatypeProperty ;
+		owl:cardinality 2
+	];
+	rdfs:subClassOf [
+		owl:onProperty this:dummyProperty ;
+		owl:minQualifiedCardinality 3 ;
+		owl:onClass this:Subclass
+	].
+
+this:MultiPropertyOwner a owl:Class ;
+	a this:PropertyOwnerType ;
+	rdfs:label "multi-property owner" .
+
+this:DisjointClass a owl:Class ;
+	owl:disjointWith this:LargeUnionClass ;
+	rdfs:label "disjoint class"@en ;
+	rdfs:label "disjunkte Klasse"@de ;
+	rdfs:subClassOf [
+		owl:onProperty this:dummyProperty ;
+		owl:minCardinality 5 ;
+		owl:maxCardinality 15
+	].
+
+_:DisjointClassGroup a owl:AllDisjointClasses ;
+	owl:members ( this:MultiPropertyOwner this:Class1 this:LargeUnionClass ) .
+
+this:Subclass a owl:Class ;
+	rdfs:subClassOf this:DisjointClass .
+
+this:MultiSubclass a owl:Class ;
+	rdfs:subClassOf this:DisjointClass ;
+	rdfs:subClassOf other:DeprecatedImportedClass .
+
+# datatypes
+
+this:DivisibleByTwoEnumeration a rdfs:Datatype ;
+	owl:equivalentClass [
+		a rdfs:Datatype ;
+		owl:oneOf ( 2 4 6 8 10 12 14 16 18 20 )
+	].
+
+this:DivisibleByFiveEnumeration a rdfs:Datatype ;
+	owl:equivalentClass [
+		a rdfs:Datatype ;
+		owl:oneOf ( 5 10 15 20 )
+	].
+
+this:UnionDatatype a rdfs:Datatype ;
+	owl:unionOf ( this:DivisibleByTwoEnumeration this:DivisibleByFiveEnumeration ).
+
+this:IntersectionDatatype a rdfs:Datatype ;
+	owl:intersectionOf ( this:DivisibleByTwoEnumeration this:DivisibleByFiveEnumeration ).
+
+this:ComplementDatatype a rdfs:Datatype ;
+	owl:complementOf this:DivisibleByTwoEnumeration .
+
+# properties
+
+this:untypedDatatypeProperty a owl:DatatypeProperty ;
+	rdfs:domain this:PropertyOwner .
+
+this:standardTypeDatatypeProperty a owl:DatatypeProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range xsd:integer .
+
+this:customTypeDatatypeProperty a owl:DatatypeProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range this:DivisibleByFiveEnumeration .
+
+this:unionTypeDatatypeProperty a owl:DatatypeProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range this:UnionDatatype .
+
+this:intersectionTypeDatatypeProperty a owl:DatatypeProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range this:IntersectionDatatype .
+
+this:complementTypeDatatypeProperty a owl:DatatypeProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range this:ComplementDatatype ;
+	rdfs:label "complement-type datatype property" .
+	
+this:importedTypeDatatypeProperty a owl:DatatypeProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range other:DivisibleByThreeEnumeration ;
+	rdfs:label "imported type datatype property"@en ;
+	rdfs:label "propri\u00E9t\u00E9 d'un type de donn\u00E9es import\u00E9"@fr ;
+	rdfs:label "\u4E00\u79CD\u5BFC\u5165\u7C7B\u578B\u7684\u6570\u636E\u7C7B\u578B\u6027\u8D28"@zh-Hans .
+
+this:classToClassProperty a owl:ObjectProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range this:Class1 .
+
+this:classToUntypedClassProperty a owl:SymmetricProperty ;
+	rdfs:domain this:PropertyOwner .
+
+this:untypedClassToClassProperty a owl:AsymmetricProperty ;
+	rdfs:range this:PropertyOwner .
+
+this:EquivalentToPropertyOwner a owl:Class ;
+	owl:equivalentClass this:PropertyOwner .
+
+this:EquivalentToSubclass a owl:Class ;
+	owl:equivalentClass this:Subclass .
+
+this:AlsoEquivalentToSubclass a owl:Class ;
+	owl:equivalentClass this:Subclass .
+
+this:cyclicProperty a owl:ObjectProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range this:PropertyOwner .
+
+this:cyclicProperty1 a owl:ObjectProperty ;
+	rdfs:domain this:MultiPropertyOwner ;
+	rdfs:range this:MultiPropertyOwner .
+
+_:HasSelfRestriction a owl:Restriction ;
+	owl:onProperty this:cyclicProperty1 ;
+	owl:hasSelf true .
+
+this:cyclicProperty2 a owl:ReflexiveProperty ;
+	rdfs:domain this:MultiPropertyOwner ;
+	rdfs:range this:MultiPropertyOwner .
+
+this:cyclicProperty3 a owl:ObjectProperty ;
+	rdfs:domain this:MultiPropertyOwner ;
+	rdfs:range this:MultiPropertyOwner .
+
+this:classToClassProperty1 a owl:ObjectProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range this:MultiPropertyOwner .
+
+this:classToClassProperty2 a owl:IrreflexiveProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range this:MultiPropertyOwner .
+
+this:deprecatedDatatypeProperty a owl:DatatypeProperty ;
+	owl:deprecated true ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range xsd:date .
+
+this:deprecatedObjectProperty a owl:ObjectProperty ;
+	owl:deprecated true ;
+	rdfs:domain this:PropertyOwner .
+
+this:dummyProperty a owl:ObjectProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range this:DisjointClass .
+
+this:oppositeDummyProperty a owl:ObjectProperty ;
+	rdfs:domain this:DisjointClass ;
+	rdfs:range this:PropertyOwner .
+
+this:equivalentObjectProperty a owl:ObjectProperty ;
+	owl:equivalentProperty this:dummyProperty .
+
+this:subproperty a owl:ObjectProperty ;
+	rdfs:subPropertyOf this:deprecatedObjectProperty .
+
+this:realProperty a owl:DatatypeProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range owl:real .
+
+this:equivalentDataProperty a owl:DatatypeProperty ;
+	owl:equivalentProperty this:realProperty .
+
+this:anotherEquivalentDataProperty a owl:DatatypeProperty ;
+	owl:equivalentProperty this:equivalentDataProperty .
+
+this:rationalProperty a owl:DatatypeProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range owl:rational .
+
+this:FunctionalAnchor a owl:Class .
+
+this:functionalProperty a owl:FunctionalProperty , owl:ObjectProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range this:FunctionalAnchor .
+
+this:inverseFunctionalProperty a owl:InverseFunctionalProperty ;
+	rdfs:domain this:FunctionalAnchor ;
+	rdfs:range this:PropertyOwner .
+
+this:functionalPropertyAsInverse a owl:FunctionalProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range this:FunctionalAnchor ;
+	owl:inverseOf this:inverseFunctionalProperty .
+
+this:functionalDatatypeProperty a owl:FunctionalProperty , owl:DatatypeProperty ;
+	rdfs:domain this:FunctionalAnchor ;
+	rdfs:range xsd:hexBinary .
+
+this:disjointProperty a owl:ObjectProperty ;
+	owl:propertyDisjointWith this:functionalProperty ;
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range this:FunctionalAnchor .
+
+_:DisjointPropertyGroup a owl:AllDisjointProperties ;
+	owl:members ( this:rationalProperty this:realProperty this:deprecatedDatatypeProperty ).
