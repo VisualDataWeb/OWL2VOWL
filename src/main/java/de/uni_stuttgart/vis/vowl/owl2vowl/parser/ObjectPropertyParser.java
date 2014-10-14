@@ -144,6 +144,14 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			BaseNode sourceNodeID = findNode(rdfsDomain);
 			BaseNode targetNodeID = findNode(rdfsRange);
 
+			if (sourceNodeID == null) {
+				sourceNodeID = getUnionDomain(currentProperty);
+			}
+
+			if (targetNodeID == null) {
+				targetNodeID = getUnionRange(currentProperty);
+			}
+
 			if (Constants.OWL_THING_CLASS_URI.equals(rdfsDomain)) {
 				sourceNodeID = null;
 			}
@@ -204,13 +212,13 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			theProperty.setOwlVersion(owlVersionInfo);
 			theProperty.setInverseIRI(rdfsInversOf);
 
-			BaseNode domain = findDomain(sourceNodeID);
-			BaseNode range = findRange(targetNodeID);
+			BaseNode domain = sourceNodeID;
+			BaseNode range = targetNodeID;
 
 			domain.getOutGoingEdges().add(theProperty);
-			range.getInGoingEdges().add(theProperty);
-
 			theProperty.setDomain(domain);
+
+			range.getInGoingEdges().add(theProperty);
 			theProperty.setRange(range);
 
 			indexCounter++;
