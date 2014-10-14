@@ -33,6 +33,16 @@ public class Main {
 	private static OWLDataFactory factory;
 
 	public static void main(String[] args) {
+		File quickExport = new File(Constants.BENCHMARK1);
+		File nec = new File(Constants.BENCHMARK2);
+		File prov = new File(Constants.PERSONAS);
+
+		new Main().startConvertion(prov, null);
+		System.exit(0);
+
+		new Main().startConvertion(quickExport, nec);
+
+		System.exit(0);
 		File test = new File(Constants.PATH_VARIABLE);
 		File[] children = test.listFiles();
 
@@ -41,7 +51,7 @@ public class Main {
 		}
 
 		for(File file : children){
-			new Main().startConvertion(file);
+			new Main().startConvertion(file, null);
 		}
 	}
 
@@ -138,12 +148,16 @@ public class Main {
 		ontologyMetric.calculateSums();
 	}
 
-	public void startConvertion(File theOntology) {
+	public void startConvertion(File theOntology, File furtherOntologies) {
 		manager = OWLManager.createOWLOntologyManager();
 		factory = manager.getOWLDataFactory();
 		mapData = new MapData();
 
 		try {
+			if(furtherOntologies != null) {
+				manager.loadOntologyFromOntologyDocument(furtherOntologies);
+			}
+			//ontology = manager.loadOntology(IRI.create("http://ontovibe.visualdataweb.org/ontovibe.ttl"));
 			ontology = manager.loadOntologyFromOntologyDocument(IRI.create(theOntology));
 			Set<OWLClass> classes = ontology.getClassesInSignature();
 			Set<OWLDatatype> datatypes = ontology.getDatatypesInSignature();
