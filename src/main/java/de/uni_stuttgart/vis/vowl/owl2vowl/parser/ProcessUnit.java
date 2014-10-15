@@ -108,10 +108,6 @@ public class ProcessUnit {
 			attributes.add("external");
 		}
 
-		if (isDeprected(theClass)) {
-			attributes.add("deprecated");
-		}
-
 		if (isEquivalentClass(theClass)) {
 			attributes.add("equivalent");
 		}
@@ -173,10 +169,6 @@ public class ProcessUnit {
 		}
 
 		return this.hasDifferentNamespace(theClass.getIRI().toString(), ontoIRI);
-	}
-
-	private boolean isDeprected(OWLClass theClass) {
-		return false;
 	}
 
 	private boolean isEquivalentClass(OWLClass theClass) {
