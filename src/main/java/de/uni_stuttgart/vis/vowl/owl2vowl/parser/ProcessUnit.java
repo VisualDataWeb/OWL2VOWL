@@ -216,6 +216,7 @@ public class ProcessUnit {
 		List<String> disjoints = new ArrayList<>();
 		List<String> equivalents = new ArrayList<>();
 		List<String> subProperties = new ArrayList<>();
+		List<String> superProperties = new ArrayList<>();
 
 		Map<String, BaseProperty> test = new HashMap<>();
 		test.putAll(mapData.getDatatypePropertyMap());
@@ -239,6 +240,13 @@ public class ProcessUnit {
 			}
 		}
 
+		for (String currentIRI : currentProperty.getSuperProperties()) {
+			if (test.containsKey(currentIRI)) {
+				superProperties.add(test.get(currentIRI).getId());
+			}
+		}
+
+		currentProperty.setSuperProperties(superProperties);
 		currentProperty.setSubProperties(subProperties);
 		currentProperty.setEquivalents(equivalents);
 		currentProperty.setDisjoints(disjoints);

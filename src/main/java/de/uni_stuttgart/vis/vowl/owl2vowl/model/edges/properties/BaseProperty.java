@@ -16,6 +16,7 @@ import java.util.List;
 public class BaseProperty extends BaseEdge {
 	protected static int indexCounter = 1;
 	protected List<String> subProperties = new ArrayList<>();
+	protected List<String> superProperties = new ArrayList<>();
 	protected List<String> disjoints = new ArrayList<>();
 	protected List<String> equivalents = new ArrayList<>();
 	protected String inverseIRI;
@@ -26,6 +27,14 @@ public class BaseProperty extends BaseEdge {
 		setType("rdfs:Property");
 		setId("property" + indexCounter);
 		indexCounter++;
+	}
+
+	public List<String> getSuperProperties() {
+		return superProperties;
+	}
+
+	public void setSuperProperties(List<String> superProperties) {
+		this.superProperties = superProperties;
 	}
 
 	public List<String> getEquivalents() {
