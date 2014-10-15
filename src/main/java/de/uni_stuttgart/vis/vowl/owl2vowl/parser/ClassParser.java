@@ -9,7 +9,9 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassExpression;
 
 import java.util.Map;
 import java.util.Set;
@@ -41,6 +43,15 @@ public class ClassParser extends GeneralNodeParser {
 			// If thing is found skip it! It only gets created where necessary.
 			if (iri.equals(Constants.OWL_THING_CLASS_URI)) {
 				continue;
+			}
+
+			Main.logger.info("Class: " + currentClass);
+			for(OWLAxiom currentAxiom : currentClass.getReferencingAxioms(ontology)){
+				Main.logger.info("\tAxiom: " + currentAxiom);
+
+				for(OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
+					Main.logger.info("\t\tNested: " + nestExpr);
+				}
 			}
 
 			Set<OWLAnnotation> currentClassAnnotations = currentClass.getAnnotations(GeneralParser.ontology);
