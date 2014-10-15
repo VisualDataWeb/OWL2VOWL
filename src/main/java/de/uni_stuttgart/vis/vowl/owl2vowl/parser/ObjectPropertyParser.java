@@ -92,12 +92,12 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 				rdfsLabel = extractNameFromIRI(iri);
 			}
 
-			Main.logger.info(currentProperty);
+			Main.logger.info("ObjectProperty: " + currentProperty);
 			for(OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)){
-				Main.logger.info("\t" + currentAxiom);
+				Main.logger.info("\tAxiom: " + currentAxiom);
 
 				for(OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
-					Main.logger.info("\t\t" + nestExpr);
+					Main.logger.info("\t\tNested: " + nestExpr);
 				}
 			}
 
@@ -223,6 +223,10 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 
 			range.getInGoingEdges().add(theProperty);
 			theProperty.setRange(range);
+
+			if (isDeprecated) {
+				theProperty.getAttributes().add(Constants.PROP_ATTR_DEPR);
+			}
 
 			indexCounter++;
 

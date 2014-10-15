@@ -74,7 +74,7 @@ public class ClassParser extends GeneralNodeParser {
 			theClass.setOwlVersion(FormatText.cutQuote(owlVersionInfo));
 
 			if (isDeprecated) {
-				theClass.getAttributes().add(Constants.TYPE_DEPRECTAEDCLASS);
+				theClass.getAttributes().add(Constants.PROP_ATTR_DEPR);
 			}
 
 			owlClasses.put(currentClass.getIRI().toString(), currentClass);

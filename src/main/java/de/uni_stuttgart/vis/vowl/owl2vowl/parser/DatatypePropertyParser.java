@@ -50,6 +50,16 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 			Set<OWLAnnotation> annotations = currentProperty.getAnnotations(ontology);
 			parseAnnotations(annotations);
 
+
+			Main.logger.info("DatatypeProperty: " + currentProperty);
+			for(OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)){
+				Main.logger.info("\tAxiom: " + currentAxiom);
+
+				for(OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
+					Main.logger.info("\t\tNested: " + nestExpr);
+				}
+			}
+
 			if (rdfsLabel.isEmpty()) {
 				rdfsLabel = extractNameFromIRI(iri);
 			}
@@ -125,6 +135,10 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 			property.setDomain(domainNode);
 			property.setRange(rangeNode);
+
+			if (isDeprecated) {
+				property.getAttributes().add(Constants.PROP_ATTR_DEPR);
+			}
 
 			indexCounter++;
 
