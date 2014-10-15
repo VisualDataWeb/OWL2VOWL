@@ -9,6 +9,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import org.apache.logging.log4j.core.Logger;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.Map;

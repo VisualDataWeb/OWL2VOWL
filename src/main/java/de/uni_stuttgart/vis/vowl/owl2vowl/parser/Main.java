@@ -12,6 +12,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.LogManager;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.metrics.*;
 import org.semanticweb.owlapi.model.*;
@@ -25,6 +26,7 @@ import java.util.Set;
  */
 public class Main {
 	private static final boolean DEBUG_EXPORT = true;
+	public static org.apache.logging.log4j.Logger logger = LogManager.getRootLogger();
 	private static MapData mapData;
 	private static GeneralParser parser;
 
