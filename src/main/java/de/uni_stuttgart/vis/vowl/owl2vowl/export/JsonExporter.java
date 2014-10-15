@@ -289,12 +289,17 @@ public class JsonExporter {
 				subProperty.put(entity);
 			}
 
-			// Apply sub classes
+			for (String entity : currentProperty.getSuperProperties()) {
+				subProperty.put(entity);
+			}
+
+
+			// Apply equivalents
 			for (String entity : currentProperty.getEquivalents()) {
 				equivalent.put(entity);
 			}
 
-			// Apply sub classes
+			// Apply disjoints
 			for (String entity : currentProperty.getDisjoints()) {
 				disjoints.put(entity);
 			}
