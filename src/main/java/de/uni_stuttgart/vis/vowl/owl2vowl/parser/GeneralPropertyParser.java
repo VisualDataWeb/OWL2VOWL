@@ -7,9 +7,11 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.IntersectionParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.UnionParser;
 import org.semanticweb.owlapi.model.*;
 
@@ -25,6 +27,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	protected String rdfsRange = "";
 	protected String rdfsInversOf = "";
 	private UnionParser unionParser = new UnionParser();
+	private IntersectionParser intersectionParser = new IntersectionParser();
 
 	public static void reset() {
 
@@ -44,7 +47,16 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 			}
 		}
 
-		return "";
+		BaseClass union = unionParser.searchUnion(currentProperty, false);
+		BaseClass intersection = intersectionParser.searchIntersection(currentProperty, false);
+
+		if(union != null){
+			return union.getId();
+		} else if(intersection != null) {
+			return intersection.getId();
+		} else {
+			return "";
+		}
 	}
 
 	protected String retrieveRange(OWLDataProperty currentProperty) {
@@ -58,7 +70,16 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 			}
 		}
 
-		return "";
+		BaseClass union = unionParser.searchUnion(currentProperty, false);
+		BaseClass intersection = intersectionParser.searchIntersection(currentProperty, false);
+
+		if(union != null){
+			return union.getId();
+		} else if(intersection != null) {
+			return intersection.getId();
+		} else {
+			return "";
+		}
 	}
 
 	protected String retrieveDomain(OWLPropertyExpression currentProperty) {
@@ -77,7 +98,16 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 			}
 		}
 
-		return "";
+		BaseClass union = unionParser.searchUnion((OWLEntity) currentProperty, true);
+		BaseClass intersection = intersectionParser.searchIntersection((OWLProperty) currentProperty, true);
+
+		if(union != null){
+			return union.getId();
+		} else if(intersection != null) {
+			return intersection.getId();
+		} else {
+			return "";
+		}
 	}
 
 	protected BaseNode findDomain(BaseNode rdfsDomain) {
@@ -163,11 +193,11 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		return iriList;
 	}
 
-	protected OwlUnionOf getUnionDomain(OWLProperty property) {
+	protected OwlUnionOf getUnionDomain(OWLEntity property) {
 		return unionParser.searchUnion(property, true);
 	}
 
-	protected OwlUnionOf getUnionRange(OWLProperty property) {
+	protected OwlUnionOf getUnionRange(OWLEntity property) {
 		return unionParser.searchUnion(property, false);
 	}
 }

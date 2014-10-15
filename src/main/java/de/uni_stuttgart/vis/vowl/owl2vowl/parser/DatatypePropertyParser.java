@@ -14,6 +14,8 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLAxiom;
+import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 
 import java.util.Map;
@@ -61,6 +63,15 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 			BaseDatatype rangeNode;
 			String resourceName = extractNameFromIRI(rdfsRange);
 			boolean isGeneric = false;
+
+			Main.logger.info(currentProperty);
+			for(OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)){
+				Main.logger.info("\t" + currentAxiom);
+
+				for(OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
+					Main.logger.info("\t\t" + nestExpr);
+				}
+			}
 
 			if (resourceName.isEmpty()) {
 				resourceName = "Literal";

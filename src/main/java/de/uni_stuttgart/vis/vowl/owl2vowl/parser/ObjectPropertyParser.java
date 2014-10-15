@@ -9,7 +9,9 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
+import org.apache.logging.log4j.core.Logger;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.Map;
@@ -90,6 +92,15 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 				rdfsLabel = extractNameFromIRI(iri);
 			}
 
+			Main.logger.info(currentProperty);
+			for(OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)){
+				Main.logger.info("\t" + currentAxiom);
+
+				for(OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
+					Main.logger.info("\t\t" + nestExpr);
+				}
+			}
+
 			// get the domain of the property
 			rdfsDomain = retrieveDomain(currentProperty);
 
@@ -143,14 +154,6 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			// TODO
 			BaseNode sourceNodeID = findNode(rdfsDomain);
 			BaseNode targetNodeID = findNode(rdfsRange);
-
-			if (sourceNodeID == null) {
-				sourceNodeID = getUnionDomain(currentProperty);
-			}
-
-			if (targetNodeID == null) {
-				targetNodeID = getUnionRange(currentProperty);
-			}
 
 			if (Constants.OWL_THING_CLASS_URI.equals(rdfsDomain)) {
 				sourceNodeID = null;
