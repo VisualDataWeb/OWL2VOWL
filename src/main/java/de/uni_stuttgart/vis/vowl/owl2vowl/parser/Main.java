@@ -19,8 +19,6 @@ import org.semanticweb.owlapi.model.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -53,8 +51,9 @@ public class Main {
 		}
 
 		try {
+			mainO.loadOntologies(new File(Constants.MUTO));
 			//mainO.loadOntologies(quickExport, Arrays.asList(nec));
-			mainO.loadOntologies(Constants.EXT_ONTOVIBE);
+			//mainO.loadOntologies(Constants.EXT_ONTOVIBE);
 			mainO.startConvertion();
 		} catch (OWLOntologyCreationException e) {
 			e.printStackTrace();
@@ -174,6 +173,14 @@ public class Main {
 		ontology = manager.loadOntologyFromOntologyDocument(mainOnto);
 
 		logger.info("Ontologies loaded! Main Ontolgy: " + ontology.getOntologyID().getOntologyIRI());
+	}
+
+	public void loadOntologies(File mainOnto) throws OWLOntologyCreationException {
+		logger.info("Loading ontology ...");
+
+		ontology = manager.loadOntologyFromOntologyDocument(mainOnto);
+
+		logger.info("Ontology loaded! Main Ontolgy: " + ontology.getOntologyID().getOntologyIRI());
 	}
 
 	public void loadOntologies(String linkToOntology) throws OWLOntologyCreationException {
