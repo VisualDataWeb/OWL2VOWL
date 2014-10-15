@@ -19,6 +19,9 @@ import org.semanticweb.owlapi.model.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -35,16 +38,13 @@ public class Main {
 	private static OWLDataFactory factory;
 
 	public static void main(String[] args) {
+		Main mainO = new Main();
+		mainO.initializeAPI();
+
 		File quickExport = new File(Constants.BENCHMARK1);
 		File nec = new File(Constants.BENCHMARK2);
 		File prov = new File(Constants.PERSONAS);
 
-		new Main().startConvertion(prov, null);
-		System.exit(0);
-
-		new Main().startConvertion(quickExport, nec);
-
-		System.exit(0);
 		File test = new File(Constants.PATH_VARIABLE);
 		File[] children = test.listFiles();
 
@@ -52,8 +52,13 @@ public class Main {
 			throw new IllegalStateException("Directory doesn't contain files.");
 		}
 
-		for(File file : children){
-			new Main().startConvertion(file, null);
+		try {
+			//mainO.loadOntologies(quickExport, Arrays.asList(nec));
+			mainO.loadOntologies(Constants.EXT_ONTOVIBE);
+			mainO.startConvertion();
+		} catch (OWLOntologyCreationException e) {
+			e.printStackTrace();
+			logger.error("FAILED TO LOAD ONTOLOGIES!");
 		}
 	}
 
@@ -150,17 +155,36 @@ public class Main {
 		ontologyMetric.calculateSums();
 	}
 
-	public void startConvertion(File theOntology, File furtherOntologies) {
+	public void initializeAPI() {
+		logger.info("Initializing OWL API ...");
 		manager = OWLManager.createOWLOntologyManager();
 		factory = manager.getOWLDataFactory();
+		logger.info("OWL API initialized!");
+	}
+
+	public void loadOntologies(File mainOnto, List<File> necessaryExternals) throws OWLOntologyCreationException {
+		logger.info("Loading ontologies ... [" + mainOnto + ",  " + necessaryExternals + "]");
+
+		for (File current : necessaryExternals) {
+			manager.loadOntologyFromOntologyDocument(current);
+		}
+
+		logger.info("External ontologies loaded!");
+
+		ontology = manager.loadOntologyFromOntologyDocument(mainOnto);
+
+		logger.info("Ontologies loaded! Main Ontolgy: " + ontology.getOntologyID().getOntologyIRI());
+	}
+
+	public void loadOntologies(String linkToOntology) throws OWLOntologyCreationException {
+		logger.info("Loading ontologies ...");
+		ontology = manager.loadOntology(IRI.create(linkToOntology));
+		logger.info("Ontologies loaded! Main Ontolgy: " + ontology.getOntologyID().getOntologyIRI().getFragment());
+	}
+
+	public void startConvertion() {
 		mapData = new MapData();
 
-		try {
-			if(furtherOntologies != null) {
-				manager.loadOntologyFromOntologyDocument(furtherOntologies);
-			}
-			//ontology = manager.loadOntology(IRI.create("http://ontovibe.visualdataweb.org/ontovibe.ttl"));
-			ontology = manager.loadOntologyFromOntologyDocument(IRI.create(theOntology));
 			Set<OWLClass> classes = ontology.getClassesInSignature();
 			Set<OWLDatatype> datatypes = ontology.getDatatypesInSignature();
 			Set<OWLObjectProperty> objectProperties = ontology.getObjectPropertiesInSignature();
@@ -187,13 +211,10 @@ public class Main {
 			//processor.processDatatypes();
 			processor.processProperties();
 
-		} catch (OWLOntologyCreationException e) {
-			e.printStackTrace();
-		}
 
 		if (DEBUG_EXPORT) {
 			String filePath = System.getProperty("user.dir") + "\\WebVOWL\\src\\js\\data\\";
-			File exportFile = new File(filePath, FilenameUtils.removeExtension(theOntology.getName()) + ".json");
+			File exportFile = new File(filePath, FilenameUtils.removeExtension(ontology.getOntologyID().getOntologyIRI().getFragment()) + ".json");
 			JsonExporter exporter = new JsonExporter(exportFile);
 
 			try {
