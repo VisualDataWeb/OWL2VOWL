@@ -7,17 +7,11 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OwlIntersectionOf extends BaseClass {
-	private List<BaseNode> intersections;
+public class OwlIntersectionOf extends SpecialClass {
 
 	public OwlIntersectionOf() {
 		super();
 		setType(Constants.TYPE_INTERSECTION);
-		intersections = new ArrayList<>();
-	}
-
-	public List<BaseNode> getIntersections() {
-		return intersections;
 	}
 
 	public void addIntersection(BaseNode node) {
@@ -26,10 +20,6 @@ public class OwlIntersectionOf extends BaseClass {
 		}
 
 		intersections.add(node);
-	}
-
-	public void setIntersections(List<BaseNode> unions) {
-		this.intersections = unions;
 	}
 
 	public boolean equalsIntersections(List<BaseNode> classes) {

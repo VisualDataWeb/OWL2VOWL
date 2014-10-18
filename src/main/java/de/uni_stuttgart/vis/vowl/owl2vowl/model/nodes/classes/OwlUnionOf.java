@@ -7,17 +7,10 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OwlUnionOf extends BaseClass {
-	private List<BaseNode> unions;
-
+public class OwlUnionOf extends SpecialClass {
 	public OwlUnionOf() {
 		super();
 		setType(Constants.TYPE_UNION);
-		unions = new ArrayList<>();
-	}
-
-	public List<BaseNode> getUnions() {
-		return unions;
 	}
 
 	public void addUnion(BaseNode node) {
@@ -26,10 +19,6 @@ public class OwlUnionOf extends BaseClass {
 		}
 
 		unions.add(node);
-	}
-
-	public void setUnions(List<BaseNode> unions) {
-		this.unions = unions;
 	}
 
 	public boolean equalsUnion(List<BaseNode> classes) {
