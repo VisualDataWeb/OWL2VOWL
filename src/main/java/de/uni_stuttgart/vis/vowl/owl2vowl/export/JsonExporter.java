@@ -9,10 +9,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlEquivalentClass;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import org.json.JSONArray;
@@ -130,6 +127,22 @@ public class JsonExporter {
 
 				for (BaseNode entity : equivalentClass.getEquivalentClasses()) {
 					equivalent.put(entity.getId());
+				}
+			}
+
+			if (currentClass instanceof SpecialClass) {
+				SpecialClass equivalentClass = (SpecialClass) currentClass;
+
+				for (BaseNode entity : equivalentClass.getUnions()) {
+					union.put(entity.getId());
+				}
+
+				for (BaseNode entity : equivalentClass.getIntersections()) {
+					intersection.put(entity.getId());
+				}
+
+				for (BaseNode entity : equivalentClass.getComplements()) {
+					complement.put(entity.getId());
 				}
 			}
 
