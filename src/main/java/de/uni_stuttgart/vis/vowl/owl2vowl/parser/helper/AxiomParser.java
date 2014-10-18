@@ -39,6 +39,22 @@ public class AxiomParser extends GeneralParser {
 		return null;
 	}
 
+	public List<Set<OWLClass>> searchInEquivalents(OWLEntity entity, String axiom) {
+		List<Set<OWLClass>> listOfNested = new ArrayList<>();
+
+		for (OWLAxiom currentAxiom : entity.getReferencingAxioms(ontology)) {
+			// TODO if directly axiom is a logical axiom.
+
+			for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
+				if (nestExpr.getClassExpressionType().toString().equals(axiom)) {
+					listOfNested.add(nestExpr.getClassesInSignature());
+				}
+			}
+		}
+
+		return listOfNested;
+	}
+
 	public Set<OWLClass> search(OWLEntity property, String axiom, boolean direction) {
 		List<String> searchString = new ArrayList<>();
 
