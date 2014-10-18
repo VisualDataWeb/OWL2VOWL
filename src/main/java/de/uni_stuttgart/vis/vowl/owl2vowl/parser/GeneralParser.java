@@ -87,6 +87,35 @@ public class GeneralParser {
 		this.isDeprecated = isDeprecated;
 	}
 
+	public void parseAnnotations(OWLEntity entity) {
+		rdfsLabel = "";
+		rdfsComment = "";
+		isDeprecated = false;
+		rdfsIsDefinedBy = "";
+		owlVersionInfo = "";
+
+
+		for(OWLOntology currentOntology : Main.manager.getOntologies()) {
+			for (OWLAnnotation owlPropAno : entity.getAnnotations(currentOntology)) {
+				OWLAnnotationProperty annotationProperty = owlPropAno.getProperty();
+				OWLAnnotationValue annotationValue = owlPropAno.getValue();
+
+				if (annotationProperty.isComment()) {
+					rdfsComment = annotationValue.toString();
+				} else if (annotationProperty.isDeprecated()) {
+					isDeprecated = true;
+				} else if (annotationProperty.isLabel()) {
+					rdfsLabel = annotationValue.toString();
+				} else if (annotationProperty.toString().equals(Constants.RDFS_DEFINED_BY)) {
+					rdfsIsDefinedBy = annotationValue.toString();
+				} else if (annotationProperty.toString().equals(Constants.OWL_VERSIONINFO)) {
+					owlVersionInfo = annotationValue.toString();
+				} else if(LOG_ANNOTATIONS){
+					System.out.println("Not used annotation: " + owlPropAno);
+				}
+			}
+		}
+	}
 	public void parseAnnotations(Set<OWLAnnotation> owlPropAnoSet) {
 		rdfsLabel = "";
 		rdfsComment = "";
