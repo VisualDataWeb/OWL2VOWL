@@ -19,6 +19,7 @@ import org.semanticweb.owlapi.model.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -31,7 +32,7 @@ public class Main {
 	private static MapData mapData;
 	private static GeneralParser parser;
 
-	private static OWLOntologyManager manager;
+	public static OWLOntologyManager manager;
 	private static OWLOntology ontology;
 	private static OWLDataFactory factory;
 
@@ -50,15 +51,33 @@ public class Main {
 			throw new IllegalStateException("Directory doesn't contain files.");
 		}
 
-		try {
-			mainO.loadOntologies(new File(Constants.MUTO));
-			//mainO.loadOntologies(quickExport, Arrays.asList(nec));
-			//mainO.loadOntologies(Constants.EXT_ONTOVIBE);
-			mainO.startConvertion();
-		} catch (OWLOntologyCreationException e) {
-			e.printStackTrace();
-			logger.error("FAILED TO LOAD ONTOLOGIES!");
+		for (File curr : children) {
+			if(curr.isDirectory()) {
+				continue;
+			}
+
+			try {
+				/*
+				mainO.loadOntologies(curr);
+				mainO.startConvertion();
+				mainO.reset();
+				*/
+				//mainO.loadOntologies(new File(Constants.MUTO));
+				//mainO.loadOntologies(quickExport, Arrays.asList(nec));
+				mainO.loadOntologies(Constants.EXT_ONTOVIBE);
+				mainO.startConvertion();
+				mainO.reset();
+
+			} catch (OWLOntologyCreationException e) {
+				e.printStackTrace();
+				logger.error("FAILED TO LOAD ONTOLOGIES!");
+			}
+			break;
 		}
+	}
+
+	private void reset() {
+		manager.removeOntology(ontology);
 	}
 
 	private static void parseOntoInfo() {
@@ -176,7 +195,7 @@ public class Main {
 	}
 
 	public void loadOntologies(File mainOnto) throws OWLOntologyCreationException {
-		logger.info("Loading ontology ...");
+		logger.info("Loading ontology ... " + mainOnto);
 
 		ontology = manager.loadOntologyFromOntologyDocument(mainOnto);
 
@@ -184,7 +203,7 @@ public class Main {
 	}
 
 	public void loadOntologies(String linkToOntology) throws OWLOntologyCreationException {
-		logger.info("Loading ontologies ...");
+		logger.info("Loading ontologies ... " + linkToOntology);
 		ontology = manager.loadOntology(IRI.create(linkToOntology));
 		logger.info("Ontologies loaded! Main Ontolgy: " + ontology.getOntologyID().getOntologyIRI().getFragment());
 	}
