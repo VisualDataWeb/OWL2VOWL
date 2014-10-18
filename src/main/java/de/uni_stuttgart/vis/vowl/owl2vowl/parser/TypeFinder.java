@@ -7,18 +7,25 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsLiteral;
 import org.semanticweb.owlapi.model.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class TypeFinder {
 	private OWLOntology ontology;
 	private OWLDataFactory factory;
+	private List<String> specialAxioms;
 
 	public TypeFinder(OWLOntology ontology, OWLDataFactory factory) {
 		this.ontology = ontology;
 		this.factory = factory;
+		specialAxioms = Arrays.asList(Constants.AXIOM_OBJ_INTERSECTION, Constants.AXIOM_OBJ_UNION, Constants.AXIOM_OBJ_COMPLEMENT);
 	}
 
 	public BaseClass findVowlClass(OWLClass theClass) {
 		if (isThing(theClass)) {
 			return new OwlThing();
+		} else if (isSpecialClass(theClass)) {
+			return new SpecialClass();
 		} else if (isEquivalentClass(theClass)) {
 			return new OwlEquivalentClass();
 		} else if (isExternal(theClass)) {
@@ -26,6 +33,20 @@ public class TypeFinder {
 		} else {
 			return new BaseClass();
 		}
+	}
+
+	private boolean isSpecialClass(OWLClass theClass) {
+		for (OWLAxiom baseAxiom : theClass.getReferencingAxioms(ontology)) {
+			if (baseAxiom.getAxiomType().isAxiomType("EquivalentClasses")) {
+				for (OWLClassExpression nestedClasses : baseAxiom.getNestedClassExpressions()) {
+					if (specialAxioms.contains(nestedClasses.getClassExpressionType().toString())) {
+						return true;
+					}
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**

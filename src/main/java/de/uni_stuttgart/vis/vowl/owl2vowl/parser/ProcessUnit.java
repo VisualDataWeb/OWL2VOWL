@@ -13,8 +13,11 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.SubClassPropert
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlEquivalentClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.SpecialClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.AxiomParser;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.*;
@@ -27,11 +30,13 @@ public class ProcessUnit {
 	private OWLDataFactory factory;
 	private MapData mapData;
 	private OWLOntology ontology;
+	private AxiomParser axiomParser;
 
 	public ProcessUnit(OWLOntology ontology, OWLDataFactory factory, MapData mapData) {
 		this.ontology = ontology;
 		this.factory = factory;
 		this.mapData = mapData;
+		axiomParser = new AxiomParser();
 	}
 
 	public void processClasses() {
@@ -41,8 +46,50 @@ public class ProcessUnit {
 			processEquivalents(currentClass);
 			processSubClasses(currentClass);
 			processSuperClasses(currentClass);
+			processSpecialBehaviour(currentClass);
 		}
 
+	}
+
+	private void processSpecialBehaviour(BaseClass currentClass) {
+		if(!(currentClass instanceof SpecialClass)) {
+			return;
+		}
+
+		OWLClass theClass = mapData.getOwlClasses().get(currentClass.getIri());
+		SpecialClass working = (SpecialClass) currentClass;
+
+		List<Set<OWLClass>> unions = axiomParser.searchInEquivalents(theClass, Constants.AXIOM_OBJ_UNION);
+		List<Set<OWLClass>> intersections = axiomParser.searchInEquivalents(theClass, Constants.AXIOM_OBJ_INTERSECTION);
+		List<Set<OWLClass>> complements = axiomParser.searchInEquivalents(theClass, Constants.AXIOM_OBJ_COMPLEMENT);
+
+
+		for(OWLClass currentUnion : retrieveMainUnit(unions, theClass)) {
+			working.getUnions().add(mapData.getClassMap().get(currentUnion.getIRI().toString()));
+			working.setType(Constants.TYPE_UNION);
+		}
+
+		for(OWLClass currentUnion : retrieveMainUnit(intersections, theClass)) {
+			working.getIntersections().add(mapData.getClassMap().get(currentUnion.getIRI().toString()));
+			working.setType(Constants.TYPE_INTERSECTION);
+		}
+
+		for(OWLClass currentUnion : retrieveMainUnit(complements, theClass)) {
+			working.getComplements().add(mapData.getClassMap().get(currentUnion.getIRI().toString()));
+			working.setType(Constants.TYPE_COMPLEMENT);
+		}
+	}
+
+	private Set<OWLClass> retrieveMainUnit(List<Set<OWLClass>> elementList, OWLEntity entity) {
+		Set<OWLClass> merged = new TreeSet<>();
+
+		for(Set<OWLClass> currentSet : elementList) {
+			if(!currentSet.contains(entity.asOWLClass())) {
+				merged.addAll(currentSet);
+			}
+		}
+
+		return merged;
 	}
 
 	public void processDatatypes() {
@@ -188,7 +235,9 @@ public class ProcessUnit {
 			return false;
 		}
 
-		return !(elementNamespace.contains(ontologyNamespace));
+		return !(elementNamespace.substring(0, elementNamespace.lastIndexOf("/") + 1).equals(ontologyNamespace.toString()));
+
+		//return !(elementNamespace.contains(ontologyNamespace));
 	}
 
 	public void processProperties() {
