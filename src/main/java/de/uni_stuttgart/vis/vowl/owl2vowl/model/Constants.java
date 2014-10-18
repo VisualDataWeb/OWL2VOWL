@@ -40,11 +40,11 @@ public class Constants {
 	public static final String FOAF = PATH_VARIABLE + "foaf.rdf";
 	public static final String PERSONAS = PATH_VARIABLE + "personasonto.owl";
 	public static final String GEONAMES = PATH_VARIABLE + "geonames.rdf";
-	public static final String BENCHMARK1 = PATH_VARIABLE + "BenchmarkOntology.ttl";
-	public static final String BENCHMARK2 = PATH_VARIABLE + "BenchmarkOntologyModule.ttl";
+	public static final String BENCHMARK1 = PATH_VARIABLE + "ontovibe/BenchmarkOntology.ttl";
+	public static final String BENCHMARK2 = PATH_VARIABLE + "ontovibe/BenchmarkOntologyModule.ttl";
 	public static final String PROV = PATH_VARIABLE + "prov.owl";
 	public static final String EXT_PIZZA = "http://130.88.198.11/co-ode-files/ontologies/pizza.owl";
-	public static final String EXT_ONTOVIBE = "http://ontovibe.visualdataweb.org/ontovibe.ttl";
+	public static final String EXT_ONTOVIBE = "http://ontovibe.visualdataweb.org/1.0/";
 
 
 	/* ANNOTATIONS */
@@ -92,4 +92,5 @@ public class Constants {
 	public static final String AXIOM_DATA_PROP_RANGE = "DataPropertyRange";
 	public static final String AXIOM_OBJ_UNION = "ObjectUnionOf";
 	public static final String AXIOM_OBJ_INTERSECTION = "ObjectIntersectionOf";
+	public static final String AXIOM_OBJ_COMPLEMENT = "ObjectComplementOf";
 }
