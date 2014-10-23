@@ -27,8 +27,6 @@ public class ClassParser extends GeneralNodeParser {
 		Map<String, BaseClass> classMap = mapData.getClassMap();
 		Map<String, OWLClass> owlClasses = mapData.getOwlClasses();
 
-		int indexCounter = classMap.size();
-
 		for (OWLClass currentClass : classes) {
 			rdfsLabel = "";
 			rdfsComment = "";
@@ -62,7 +60,6 @@ public class ClassParser extends GeneralNodeParser {
 				rdfsLabel = extractNameFromIRI(iri);
 			}
 
-
 			// Setting data in VOWLClass
 			theClass.setName(FormatText.cutQuote(rdfsLabel));
 			theClass.setComment(FormatText.cutQuote(rdfsComment));
@@ -76,8 +73,6 @@ public class ClassParser extends GeneralNodeParser {
 
 			owlClasses.put(currentClass.getIRI().toString(), currentClass);
 			classMap.put(theClass.getIri(), theClass);
-
-			indexCounter++;
 		}
 	}
 }

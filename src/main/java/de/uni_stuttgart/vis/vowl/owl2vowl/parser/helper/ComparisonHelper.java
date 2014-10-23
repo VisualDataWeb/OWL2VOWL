@@ -26,11 +26,6 @@ public class ComparisonHelper {
 			newOntology = newOntology.substring(0, ontologyIn);
 		}
 
-		System.out.println(newElement);
-		System.out.println(newOntology);
-		System.out.println(!(newElement.equals(newOntology)));
-		System.out.println();
-
 		return !(newElement.equals(newOntology));
 	}
 }

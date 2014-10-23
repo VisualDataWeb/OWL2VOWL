@@ -63,7 +63,6 @@ public class ProcessUnit {
 		List<Set<OWLClass>> intersections = axiomParser.searchInEquivalents(theClass, Constants.AXIOM_OBJ_INTERSECTION);
 		List<Set<OWLClass>> complements = axiomParser.searchInEquivalents(theClass, Constants.AXIOM_OBJ_COMPLEMENT);
 
-
 		for(OWLClass currentUnion : retrieveMainUnit(unions, theClass)) {
 			working.getUnions().add(mapData.getClassMap().get(currentUnion.getIRI().toString()));
 			working.setType(Constants.TYPE_UNION);
