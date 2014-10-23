@@ -266,6 +266,7 @@ public class JsonExporter {
 			JSONArray equivalent = new JSONArray();
 			JSONArray attributes = new JSONArray();
 			JSONArray subProperty = new JSONArray();
+			JSONArray superProperty = new JSONArray();
 			JSONArray disjoints = new JSONArray();
 
 			propertyJson.put("id", currentProperty.getId());
@@ -288,6 +289,7 @@ public class JsonExporter {
 			dataAttrJson.put("equivalent", equivalent);
 			dataAttrJson.put("attributes", attributes);
 			dataAttrJson.put("subproperty", subProperty);
+			dataAttrJson.put("superproperty", superProperty);
 			dataAttrJson.put("disjoint", disjoints);
 
 			// TODO equivalents durchgehen
@@ -303,7 +305,7 @@ public class JsonExporter {
 			}
 
 			for (String entity : currentProperty.getSuperProperties()) {
-				subProperty.put(entity);
+				superProperty.put(entity);
 			}
 
 
