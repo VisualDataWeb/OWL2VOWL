@@ -9,7 +9,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
-import org.apache.logging.log4j.core.Logger;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.Map;
@@ -163,15 +163,11 @@ public class GeneralParser {
 	}
 
 	protected boolean isImported(String elementNamespace) {
-		return hasDifferentNamespace(elementNamespace, ontology.getOntologyID().getOntologyIRI());
+		return ComparisonHelper.hasDifferentNamespace(elementNamespace, ontology.getOntologyID().getOntologyIRI());
 	}
 
 	protected boolean hasDifferentNamespace(String elementNamespace, IRI ontologyNamespace) {
-		if (elementNamespace == null || ontologyNamespace == null) {
-			return false;
-		}
-
-		return !(elementNamespace.contains(ontologyNamespace));
+		return ComparisonHelper.hasDifferentNamespace(elementNamespace, ontologyNamespace);
 	}
 
 	protected BaseNode findNode(String nodeIRI) {

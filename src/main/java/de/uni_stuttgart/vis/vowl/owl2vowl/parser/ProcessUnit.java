@@ -13,11 +13,11 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.SubClassPropert
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlEquivalentClass;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.SpecialClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.AxiomParser;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.*;
@@ -231,13 +231,7 @@ public class ProcessUnit {
 	 * @return true, if the namespace is different
 	 */
 	private boolean hasDifferentNamespace(String elementNamespace, IRI ontologyNamespace) {
-		if (elementNamespace == null || ontologyNamespace == null) {
-			return false;
-		}
-
-		return !(elementNamespace.substring(0, elementNamespace.lastIndexOf("/") + 1).equals(ontologyNamespace.toString()));
-
-		//return !(elementNamespace.contains(ontologyNamespace));
+		return ComparisonHelper.hasDifferentNamespace(elementNamespace, ontologyNamespace);
 	}
 
 	public void processProperties() {
