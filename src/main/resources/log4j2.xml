@@ -4,7 +4,7 @@
 		<Property name="log-path">logs</Property>
 	</Properties>
 	<Appenders>
-		<RollingFile name="console-log" fileName="${log-path}/mycuteblog-info.log"
+		<RollingFile name="console-log" fileName="${log-path}/ontology_structre.log"
 		             filePattern="${log-path}/mycuteblog-trace-%d{yyyy-MM-dd}.log" append="false">
 			<PatternLayout>
 				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
@@ -13,7 +13,7 @@
 				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
 			</Policies>
 		</RollingFile>
-		<RollingFile name="trace-log" fileName="${log-path}/mycuteblog-trace.log"
+		<!--<RollingFile name="trace-log" fileName="${log-path}/mycuteblog-trace.log"
 		             filePattern="${log-path}/mycuteblog-trace-%d{yyyy-MM-dd}.log" append="false">
 			<PatternLayout>
 				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
@@ -30,17 +30,17 @@
 			<Policies>
 				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
 			</Policies>
-		</RollingFile>
+		</RollingFile>-->
 	</Appenders>
 	<Loggers>
 		<Logger name="com.mycuteblog.log4j2" level="debug" additivity="false">
-			<appender-ref ref="trace-log" level="debug"/>
-			<appender-ref ref="error-log" level="error"/>
+			<!-- <appender-ref ref="trace-log" level="debug"/> -->
+			<!--<appender-ref ref="error-log" level="error"/>-->
 			<appender-ref ref="console-log" level="debug"/>
 		</Logger>
 		<Root level="info" additivity="false">
-			<appender-ref ref="trace-log" level="debug"/>
-			<appender-ref ref="error-log" level="error"/>
+			<!--<appender-ref ref="trace-log" level="debug"/>-->
+			<!--<appender-ref ref="error-log" level="error"/>-->
 			<appender-ref ref="console-log" level="debug"/>
 		</Root>
 	</Loggers>
