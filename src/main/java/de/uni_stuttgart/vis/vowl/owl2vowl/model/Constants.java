@@ -44,7 +44,7 @@ public class Constants {
 	public static final String BENCHMARK2 = PATH_VARIABLE + "ontovibe/BenchmarkOntologyModule.ttl";
 	public static final String PROV = PATH_VARIABLE + "TODO";
 	public static final String EXT_PIZZA = "http://130.88.198.11/co-ode-files/ontologies/pizza.owl";
-	public static final String EXT_ONTOVIBE = "http://ontovibe.visualdataweb.org/1.0/";
+	public static final String EXT_ONTOVIBE = "http://ontovibe.visualdataweb.org/1.0";
 
 
 	/* ANNOTATIONS */
