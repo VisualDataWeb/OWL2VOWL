@@ -19,7 +19,6 @@ import org.semanticweb.owlapi.model.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -29,10 +28,9 @@ import java.util.Set;
 public class Main {
 	private static final boolean DEBUG_EXPORT = true;
 	public static org.apache.logging.log4j.Logger logger = LogManager.getRootLogger();
+	public static OWLOntologyManager manager;
 	private static MapData mapData;
 	private static GeneralParser parser;
-
-	public static OWLOntologyManager manager;
 	private static OWLOntology ontology;
 	private static OWLDataFactory factory;
 
@@ -57,27 +55,19 @@ public class Main {
 			}
 
 			try {
-				/*
-				mainO.loadOntologies(curr);
-				mainO.startConvertion();
-				mainO.reset();
-				*/
-				//mainO.loadOntologies(new File(Constants.MUTO));
+				//mainO.loadOntologies(curr);
+				mainO.loadOntologies(new File(Constants.SIOC));
 				//mainO.loadOntologies(quickExport, Arrays.asList(nec));
-				mainO.loadOntologies(Constants.EXT_ONTOVIBE);
+				//mainO.loadOntologies(Constants.EXT_ONTOVIBE);
 				mainO.startConvertion();
 				mainO.reset();
-
+				break;
 			} catch (OWLOntologyCreationException e) {
-				e.printStackTrace();
-				logger.error("FAILED TO LOAD ONTOLOGIES!");
+				//e.printStackTrace();
+				System.out.println("FAILED TO LOAD " + curr.getName());
+				logger.error("FAILED TO LOAD " + curr.getName());
 			}
-			break;
 		}
-	}
-
-	private void reset() {
-		manager.removeOntology(ontology);
 	}
 
 	private static void parseOntoInfo() {
@@ -171,6 +161,10 @@ public class Main {
 		// metric.setOntology(ontology);
 
 		ontologyMetric.calculateSums();
+	}
+
+	private void reset() {
+		manager.removeOntology(ontology);
 	}
 
 	public void initializeAPI() {
