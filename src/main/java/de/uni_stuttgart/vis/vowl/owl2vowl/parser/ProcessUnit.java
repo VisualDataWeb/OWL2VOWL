@@ -133,6 +133,10 @@ public class ProcessUnit {
 				BaseClass equivClass = mapData.getClassMap().get(iri);
 
 				if (equivClass != null) {
+					if (equivalents.contains(equivClass)) {
+						continue;
+					}
+
 					// Move class to first position if the namespace is same with ontology.
 					if (!hasDifferentNamespace(iri, ontology.getOntologyID().getOntologyIRI())) {
 						equivalents.add(0, equivClass);
@@ -157,6 +161,21 @@ public class ProcessUnit {
 					}
 				}
 			}
+		}
+
+		for (BaseClass element : equivalents) {
+			if (element.getClass() != OwlEquivalentClass.class) {
+				return;
+			}
+
+			OwlEquivalentClass equivalentClass = (OwlEquivalentClass) element;
+
+			Set<BaseClass> test = new HashSet<>(equivalentClass.getEquivalentClasses());
+
+			test.addAll(equivalents);
+			test.add(base);
+			test.remove(element);
+			equivalentClass.setEquivalentClasses(test);
 		}
 	}
 
@@ -217,6 +236,10 @@ public class ProcessUnit {
 
 	// TODO duplicated code
 	private boolean isExternal(OWLClass theClass) {
+		if (true) {
+			boolean b = ComparisonHelper.hasDifferentNameSpace(theClass, ontology);
+			return b;
+		}
 		IRI ontoIRI = ontology.getOntologyID().getOntologyIRI();
 		String definedBy = null;
 
