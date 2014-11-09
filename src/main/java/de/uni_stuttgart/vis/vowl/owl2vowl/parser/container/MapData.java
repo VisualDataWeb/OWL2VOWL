@@ -26,32 +26,32 @@ public class MapData {
 	/*
 		 * Data with own created objects.
 		 */
-	private Map<String, BaseNode> mergedMap = new HashMap<>();
-	private Map<String, BaseClass> classMap = new MergeNodeMap<>(mergedMap);
-	private Map<String, BaseDatatype> datatypeMap = new MergeNodeMap<>(mergedMap);
+	private Map<String, BaseNode> mergedMap = new HashMap<String, BaseNode>();
+	private Map<String, BaseClass> classMap = new MergeNodeMap<String, BaseClass>(mergedMap);
+	private Map<String, BaseDatatype> datatypeMap = new MergeNodeMap<String, BaseDatatype>(mergedMap);
 	/**
 	 * The key value of this map is an ID not a IRI!
 	 */
-	private Map<String, OwlThing> thingMap = new MergeNodeMap<>(mergedMap);
-	private Map<String, OwlUnionOf> unionMap = new MergeNodeMap<>(mergedMap);
-	private Map<String, OwlIntersectionOf> intersectionMap = new MergeNodeMap<>(mergedMap);
-	private Map<String, OwlComplementOf> complementMap = new MergeNodeMap<>(mergedMap);
-	private Map<String, BaseProperty> mergedProperties = new HashMap<>();
+	private Map<String, OwlThing> thingMap = new MergeNodeMap<String, OwlThing>(mergedMap);
+	private Map<String, OwlUnionOf> unionMap = new MergeNodeMap<String, OwlUnionOf>(mergedMap);
+	private Map<String, OwlIntersectionOf> intersectionMap = new MergeNodeMap<String, OwlIntersectionOf>(mergedMap);
+	private Map<String, OwlComplementOf> complementMap = new MergeNodeMap<String, OwlComplementOf>(mergedMap);
+	private Map<String, BaseProperty> mergedProperties = new HashMap<String, BaseProperty>();
 	private Map<String, OwlObjectProperty> objectPropertyMap = new MergePropertyMap<String, OwlObjectProperty>(mergedProperties);
 	private Map<String, OwlDatatypeProperty> datatypePropertyMap = new MergePropertyMap<String, OwlDatatypeProperty>(mergedProperties);
 	private Map<String, DisjointProperty> disjointPropertyMap = new MergePropertyMap<String, DisjointProperty>(mergedProperties);
 	/* Helper collections */
-	private Set<DisjointUnion> disjointUnions = new HashSet<>();
+	private Set<DisjointUnion> disjointUnions = new HashSet<DisjointUnion>();
 	/*
 	 * IRI as key and the owl objects as value.
 	 */
-	private Map<String, OWLClass> owlClasses = new HashMap<>();
-	private Map<String, OWLDatatype> owlDatatypes = new HashMap<>();
-	private Map<String, OWLObjectProperty> owlObjectProperties = new HashMap<>();
-	private Map<String, OWLDataProperty> owlDatatypeProperties = new HashMap<>();
+	private Map<String, OWLClass> owlClasses = new HashMap<String, OWLClass>();
+	private Map<String, OWLDatatype> owlDatatypes = new HashMap<String, OWLDatatype>();
+	private Map<String, OWLObjectProperty> owlObjectProperties = new HashMap<String, OWLObjectProperty>();
+	private Map<String, OWLDataProperty> owlDatatypeProperties = new HashMap<String, OWLDataProperty>();
 	private OntologyInfo ontologyInfo = new OntologyInfo();
 	private OntologyMetric ontologyMetric = new OntologyMetric();
-	private Map<String, Map<String, List<OWLAxiom>>> entityToAxiom = new HashMap<>();
+	private Map<String, Map<String, List<OWLAxiom>>> entityToAxiom = new HashMap<String, Map<String, List<OWLAxiom>>>();
 
 	public MapData() {
 	}

@@ -63,7 +63,7 @@ public class IntersectionParser extends AxiomParser {
 	private OwlIntersectionOf getExistingIntersectionClass(Set<OWLClass> classes) {
 		for (Map.Entry<String, OwlIntersectionOf> entry : intersectionNodes.entrySet()) {
 			OwlIntersectionOf currentClass = entry.getValue();
-			List<String> test = new ArrayList<>();
+			List<String> test = new ArrayList<String>();
 
 			for (OWLClass curIri : classes) {
 				test.add(curIri.getIRI().toString());

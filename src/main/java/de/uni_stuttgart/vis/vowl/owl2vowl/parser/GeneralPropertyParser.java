@@ -144,7 +144,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 
 	protected List<String> retrieveSubProperties(OWLPropertyExpression property) {
 		Set subProperties = property.getSubProperties(ontology);
-		List<String> iriList = new ArrayList<>();
+		List<String> iriList = new ArrayList<String>();
 
 		if (subProperties.isEmpty()) {
 			return iriList;
@@ -161,7 +161,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 
 	protected List<String> retrieveSuperProperties(OWLPropertyExpression property) {
 		Set subProperties = property.getSuperProperties(ontology);
-		List<String> iriList = new ArrayList<>();
+		List<String> iriList = new ArrayList<String>();
 
 		if (subProperties.isEmpty()) {
 			return iriList;
@@ -178,7 +178,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 
 	protected List<String> retrieveDisjoints(OWLPropertyExpression property) {
 		Set subProperties = property.getDisjointProperties(ontology);
-		List<String> iriList = new ArrayList<>();
+		List<String> iriList = new ArrayList<String>();
 
 		if (subProperties.isEmpty()) {
 			return iriList;
@@ -195,7 +195,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 
 	protected List<String> retrieveEquivalents(OWLPropertyExpression property) {
 		Set subProperties = property.getEquivalentProperties(ontology);
-		List<String> iriList = new ArrayList<>();
+		List<String> iriList = new ArrayList<String>();
 
 		if (subProperties.isEmpty()) {
 			return iriList;

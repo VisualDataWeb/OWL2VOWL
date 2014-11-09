@@ -88,7 +88,7 @@ public class ProcessUnit {
 				currentNode.setUnions(new ArrayList<BaseNode>(currentDisUn.getDisjointness()));
 
 				int i = 0;
-				List<BaseNode> baseNodeList = new ArrayList<>(currentDisUn.getDisjointness());
+				List<BaseNode> baseNodeList = new ArrayList<BaseNode>(currentDisUn.getDisjointness());
 
 				while (i < baseNodeList.size()) {
 					DisjointProperty prop;
@@ -152,7 +152,7 @@ public class ProcessUnit {
 	}
 
 	private Set<OWLClass> retrieveMainUnit(List<Set<OWLClass>> elementList, OWLEntity entity) {
-		Set<OWLClass> merged = new TreeSet<>();
+		Set<OWLClass> merged = new TreeSet<OWLClass>();
 
 		for(Set<OWLClass> currentSet : elementList) {
 			if(!currentSet.contains(entity.asOWLClass())) {
@@ -228,7 +228,7 @@ public class ProcessUnit {
 
 			OwlEquivalentClass equivalentClass = (OwlEquivalentClass) element;
 
-			Set<BaseClass> test = new HashSet<>(equivalentClass.getEquivalentClasses());
+			Set<BaseClass> test = new HashSet<BaseClass>(equivalentClass.getEquivalentClasses());
 
 			test.addAll(equivalents);
 			test.add(base);
@@ -350,12 +350,12 @@ public class ProcessUnit {
 	 * @param currentProperty The property to process.
 	 */
 	private void processPropFieldConvert(BaseProperty currentProperty) {
-		List<String> disjoints = new ArrayList<>();
-		List<String> equivalents = new ArrayList<>();
-		List<String> subProperties = new ArrayList<>();
-		List<String> superProperties = new ArrayList<>();
+		List<String> disjoints = new ArrayList<String>();
+		List<String> equivalents = new ArrayList<String>();
+		List<String> subProperties = new ArrayList<String>();
+		List<String> superProperties = new ArrayList<String>();
 
-		Map<String, BaseProperty> test = new HashMap<>();
+		Map<String, BaseProperty> test = new HashMap<String, BaseProperty>();
 		test.putAll(mapData.getDatatypePropertyMap());
 		test.putAll(mapData.getObjectPropertyMap());
 

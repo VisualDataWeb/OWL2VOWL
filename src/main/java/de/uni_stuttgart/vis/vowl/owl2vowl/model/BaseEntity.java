@@ -30,9 +30,9 @@ public class BaseEntity {
 	 * Used for converting the RDF/XML and OWL/XML to the WebVOWL format.
 	 */
 	public BaseEntity() {
-		attributes = new ArrayList<>();
-		subClasses = new ArrayList<>();
-		superClasses = new ArrayList<>();
+		attributes = new ArrayList<String>();
+		subClasses = new ArrayList<BaseNode>();
+		superClasses = new ArrayList<BaseNode>();
 	}
 
 	public String getName() {

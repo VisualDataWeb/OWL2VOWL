@@ -96,6 +96,7 @@ public class Constants {
 	public static final String AXIOM_OBJ_INTERSECTION = "ObjectIntersectionOf";
 	public static final String AXIOM_OBJ_COMPLEMENT = "ObjectComplementOf";
 	public static final String AXIOM_DISJOINT = "DisjointClasses";
+	public static final String AXIOM_DISJOINTUNION = "DisjointUnion";
 	public static final String AXIOM_SUBCLASS = "SubClassOf";
 	public static final String AXIOM_CARD_MIN = "ObjectMinCardinality";
 	public static final String AXIOM_CARD_EXACT = "ObjectExactCardinality";

@@ -19,7 +19,7 @@ public class DisjointUnion extends BaseEntity {
 	private Set<BaseNode> disjointness;
 
 	public DisjointUnion() {
-		disjointness = new HashSet<>();
+		disjointness = new HashSet<BaseNode>();
 
 	}
 

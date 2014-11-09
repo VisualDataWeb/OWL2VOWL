@@ -9,9 +9,9 @@ import java.util.List;
 
 
 public abstract class BaseNode extends BaseEntity {
-	private List<BaseNode> disjoints = new ArrayList<>();
-	private List<BaseProperty> outGoingEdges = new ArrayList<>();
-	private List<BaseProperty> inGoingEdges = new ArrayList<>();
+	private List<BaseNode> disjoints = new ArrayList<BaseNode>();
+	private List<BaseProperty> outGoingEdges = new ArrayList<BaseProperty>();
+	private List<BaseProperty> inGoingEdges = new ArrayList<BaseProperty>();
 
 	public BaseNode() {
 	}

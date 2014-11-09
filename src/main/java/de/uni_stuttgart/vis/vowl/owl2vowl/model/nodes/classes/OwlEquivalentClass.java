@@ -12,7 +12,7 @@ public class OwlEquivalentClass extends BaseClass {
 
 	public OwlEquivalentClass() {
 		super();
-		equivalentClasses = new ArrayList<>();
+		equivalentClasses = new ArrayList<BaseClass>();
 		setType(Constants.TYPE_EQUIVALENT);
 	}
 
@@ -21,7 +21,7 @@ public class OwlEquivalentClass extends BaseClass {
 	}
 
 	public void setEquivalentClasses(Collection<BaseClass> equivalentClasses) {
-		List<BaseClass> bufList = new ArrayList<>();
+		List<BaseClass> bufList = new ArrayList<BaseClass>();
 
 		for (BaseClass node : equivalentClasses) {
 			bufList.add(node);

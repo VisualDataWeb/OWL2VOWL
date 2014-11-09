@@ -19,13 +19,13 @@ import java.util.*;
 public class AxiomParser extends GeneralParser {
 	public void parseAxioms(OWLEntity entity) {
 		Map<String, Map<String, List<OWLAxiom>>> mapping = mapData.getEntityToAxiom();
-		Map<String, List<OWLAxiom>> axioms = new HashMap<>();
+		Map<String, List<OWLAxiom>> axioms = new HashMap<String, List<OWLAxiom>>();
 
 		for (OWLAxiom currentAxiom : entity.getReferencingAxioms(ontology)) {
 			List<OWLAxiom> items = axioms.get(currentAxiom.getAxiomType().toString());
 
 			if (items == null) {
-				items = new ArrayList<>();
+				items = new ArrayList<OWLAxiom>();
 			}
 
 			items.add(currentAxiom);
@@ -39,9 +39,9 @@ public class AxiomParser extends GeneralParser {
 		Map<String, Map<String, List<OWLAxiom>>> mapping = mapData.getEntityToAxiom();
 		Map<String, List<OWLAxiom>> i = mapping.get(entity.getIRI().toString());
 
-		List<OWLAxiom> j = i.get("DisjointClasses");
+		List<OWLAxiom> j = i.get(Constants.AXIOM_DISJOINT);
 
-		Set<OWLClassExpression> disjoints = new HashSet<>();
+		Set<OWLClassExpression> disjoints = new HashSet<OWLClassExpression>();
 
 		if (j != null) {
 			for (OWLAxiom currentAxiom : j) {
@@ -56,14 +56,14 @@ public class AxiomParser extends GeneralParser {
 		Map<String, Map<String, List<OWLAxiom>>> mapping = mapData.getEntityToAxiom();
 		Map<String, List<OWLAxiom>> i = mapping.get(entity.getIRI().toString());
 
-		List<OWLAxiom> j = i.get("DisjointUnion");
-		Set<DisjointUnion> elements = new HashSet<>();
+		List<OWLAxiom> j = i.get(Constants.AXIOM_DISJOINTUNION);
+		Set<DisjointUnion> elements = new HashSet<DisjointUnion>();
 
 		if (j != null) {
 			for (OWLAxiom currentAxiom : j) {
 				OWLDisjointUnionAxiom theAxiom = (OWLDisjointUnionAxiom) currentAxiom;
 				BaseNode base = mapData.getMergedMap().get(theAxiom.getOWLClass().getIRI().toString());
-				Set<BaseNode> disjoints = new HashSet<>();
+				Set<BaseNode> disjoints = new HashSet<BaseNode>();
 
 				for (OWLClass test : theAxiom.getOWLDisjointClassesAxiom().getClassesInSignature()) {
 					disjoints.add(mapData.getMergedMap().get(test.getIRI().toString()));
@@ -101,7 +101,7 @@ public class AxiomParser extends GeneralParser {
 	}
 
 	public List<Set<OWLClass>> searchInEquivalents(OWLEntity entity, String axiom) {
-		List<Set<OWLClass>> listOfNested = new ArrayList<>();
+		List<Set<OWLClass>> listOfNested = new ArrayList<Set<OWLClass>>();
 
 		for (OWLAxiom currentAxiom : entity.getReferencingAxioms(ontology)) {
 			// TODO if directly axiom is a logical axiom.
@@ -117,7 +117,7 @@ public class AxiomParser extends GeneralParser {
 	}
 
 	public Set<OWLClass> search(OWLEntity property, String axiom, boolean direction) {
-		List<String> searchString = new ArrayList<>();
+		List<String> searchString = new ArrayList<String>();
 
 		if (direction) {
 			searchString.add(Constants.AXIOM_OBJ_PROP_DOMAIN);

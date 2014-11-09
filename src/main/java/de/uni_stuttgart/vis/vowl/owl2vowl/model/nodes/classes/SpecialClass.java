@@ -20,9 +20,9 @@ public class SpecialClass extends BaseClass {
 
 	public SpecialClass() {
 		super();
-		unions = new ArrayList<>();
-		intersections = new ArrayList<>();
-		complements = new ArrayList<>();
+		unions = new ArrayList<BaseNode>();
+		intersections = new ArrayList<BaseNode>();
+		complements = new ArrayList<BaseNode>();
 	}
 
 	public List<BaseNode> getComplements() {

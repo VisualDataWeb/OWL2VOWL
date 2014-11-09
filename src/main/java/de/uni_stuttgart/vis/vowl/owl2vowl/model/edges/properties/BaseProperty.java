@@ -15,10 +15,10 @@ import java.util.List;
  */
 public class BaseProperty extends BaseEdge {
 	protected static int indexCounter = 1;
-	protected List<String> subProperties = new ArrayList<>();
-	protected List<String> superProperties = new ArrayList<>();
-	protected List<String> disjoints = new ArrayList<>();
-	protected List<String> equivalents = new ArrayList<>();
+	protected List<String> subProperties = new ArrayList<String>();
+	protected List<String> superProperties = new ArrayList<String>();
+	protected List<String> disjoints = new ArrayList<String>();
+	protected List<String> equivalents = new ArrayList<String>();
 	protected String inverseIRI;
 	protected String inverseID;
 

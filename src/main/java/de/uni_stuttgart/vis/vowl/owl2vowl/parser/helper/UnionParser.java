@@ -63,7 +63,7 @@ public class UnionParser extends AxiomParser {
 	private OwlUnionOf getExistingUnionClass(Set<OWLClass> classes) {
 		for(Map.Entry<String, OwlUnionOf> entry : unionNodes.entrySet()) {
 			OwlUnionOf currentClass = entry.getValue();
-			List<String> test = new ArrayList<>();
+			List<String> test = new ArrayList<String>();
 
 			for(OWLClass curIri : classes){
 				test.add(curIri.getIRI().toString());
