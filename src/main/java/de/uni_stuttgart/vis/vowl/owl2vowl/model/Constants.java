@@ -27,6 +27,7 @@ public class Constants {
 
 	/* PROPERTY TYPES */
 	public static final String PROP_TYPE_SUBCLASS = "rdfs:SubClassOf";
+	public static final String PROP_TYPE_DISJOINT = "owl:disjointWith";
 
 	/* SAMPLE ONTOLOGIES */
 	public static final String PATH_VARIABLE =
@@ -40,9 +41,10 @@ public class Constants {
 	public static final String FOAF = PATH_VARIABLE + "foaf.rdf";
 	public static final String PERSONAS = PATH_VARIABLE + "personasonto.owl";
 	public static final String GEONAMES = PATH_VARIABLE + "geonames.rdf";
+	public static final String EXT_GEONAMES = "http://www.geonames.org/ontology/ontology_v3.1.rdf";
 	public static final String BENCHMARK1 = PATH_VARIABLE + "ontovibe/BenchmarkOntology.ttl";
 	public static final String BENCHMARK2 = PATH_VARIABLE + "ontovibe/BenchmarkOntologyModule.ttl";
-	public static final String PROV = PATH_VARIABLE + "TODO";
+	public static final String EXT_PROV = "http://www.w3.org/ns/prov-o";
 	public static final String EXT_PIZZA = "http://130.88.198.11/co-ode-files/ontologies/pizza.owl";
 	public static final String EXT_ONTOVIBE = "http://ontovibe.visualdataweb.org/1.0";
 
@@ -93,4 +95,8 @@ public class Constants {
 	public static final String AXIOM_OBJ_UNION = "ObjectUnionOf";
 	public static final String AXIOM_OBJ_INTERSECTION = "ObjectIntersectionOf";
 	public static final String AXIOM_OBJ_COMPLEMENT = "ObjectComplementOf";
+	public static final String AXIOM_DISJOINT = "DisjointClasses";
+	public static final String AXIOM_SUBCLASS = "SubClassOf";
+	public static final String AXIOM_CARD_MIN = "ObjectMinCardinality";
+	public static final String AXIOM_CARD_EXACT = "ObjectExactCardinality";
 }
