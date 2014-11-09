@@ -48,6 +48,20 @@ public class ProcessUnit {
 
 	}
 
+	private void processAxiomDisjointClasses(BaseClass currentClass, OWLEntity entity) {
+		List<BaseNode> disjoints = currentClass.getDisjoints();
+
+		for (OWLClassExpression o : axiomParser.getDisjoints(entity)) {
+			disjoints.add(mapData.getClassMap().get(o.getClassesInSignature().iterator().next().getIRI().toString()));
+		}
+
+		for (BaseNode i : disjoints) {
+			if (i != currentClass) {
+				DisjointProperty prop = new DisjointProperty(i, currentClass);
+				mapData.addDisjointProperty(prop);
+			}
+		}
+	}
 	private void processSpecialBehaviour(BaseClass currentClass) {
 		if(!(currentClass instanceof SpecialClass)) {
 			return;
