@@ -6,10 +6,8 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlDatatypeProperty;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProperty;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.SubClassProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.containerElements.DisjointUnion;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlEquivalentClass;
@@ -26,7 +24,6 @@ import java.util.*;
  * @author Vincent Link, Eduard Marbach
  */
 public class ProcessUnit {
-
 	private OWLDataFactory factory;
 	private MapData mapData;
 	private OWLOntology ontology;
@@ -64,17 +61,34 @@ public class ProcessUnit {
 		List<Set<OWLClass>> complements = axiomParser.searchInEquivalents(theClass, Constants.AXIOM_OBJ_COMPLEMENT);
 
 		for(OWLClass currentUnion : retrieveMainUnit(unions, theClass)) {
-			working.getUnions().add(mapData.getClassMap().get(currentUnion.getIRI().toString()));
+			BaseClass aClass = mapData.getClassMap().get(currentUnion.getIRI().toString());
+
+			if (aClass == null) {
+				Main.logger.error("Could not find correct intersection element in map: " + currentUnion);
+				System.out.println("Problems during intersection searching: " + currentUnion);
+				continue;
+			}
+
+			working.getUnions().add(aClass);
 			working.setType(Constants.TYPE_UNION);
 		}
 
-		for(OWLClass currentUnion : retrieveMainUnit(intersections, theClass)) {
-			working.getIntersections().add(mapData.getClassMap().get(currentUnion.getIRI().toString()));
+		for (OWLClass curInteresection : retrieveMainUnit(intersections, theClass)) {
+			BaseClass aClass = mapData.getClassMap().get(curInteresection.getIRI().toString());
+
+			if (aClass == null) {
+				Main.logger.error("Could not find correct intersection element in map: " + curInteresection);
+				System.out.println("Problems during intersection searching: " + curInteresection);
+				continue;
+			}
+
+			working.getIntersections().add(aClass);
 			working.setType(Constants.TYPE_INTERSECTION);
 		}
 
-		for(OWLClass currentUnion : retrieveMainUnit(complements, theClass)) {
-			working.getComplements().add(mapData.getClassMap().get(currentUnion.getIRI().toString()));
+		for (OWLClass curComplement : retrieveMainUnit(complements, theClass)) {
+			BaseClass aClass = mapData.getClassMap().get(curComplement.getIRI().toString());
+			working.getComplements().add(aClass);
 			working.setType(Constants.TYPE_COMPLEMENT);
 		}
 	}
