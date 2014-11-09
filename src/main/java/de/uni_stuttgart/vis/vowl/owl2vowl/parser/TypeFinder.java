@@ -80,31 +80,9 @@ public class TypeFinder {
 				.isOWLThing();
 	}
 
+	// TODO braucht man das überhaupt noch, da external nur noch ein Attribut ist?
 	private boolean isExternal(OWLClass theClass) {
-		IRI ontoIRI = ontology.getOntologyID().getOntologyIRI();
-		String definedBy = null;
-
-		for (OWLAnnotation i : theClass.getAnnotations(ontology, factory.getRDFSIsDefinedBy())) {
-			definedBy = i.getValue().toString();
-		}
-
-		if (ontoIRI == null && definedBy != null) {
-			ontoIRI = IRI.create(definedBy);
-		}
-
-		return this.hasDifferentNamespace(theClass.getIRI().toString(), ontoIRI);
-	}
-
-	/**
-	 * TODO
-	 * NOT SURE HOW TO CHECK THIS DIRECTLY.
-	 * NOT USABLE YET!
-	 *
-	 * @param theClass
-	 * @return
-	 */
-	private boolean isDeprected(OWLClass theClass) {
-		return false;
+		return ComparisonHelper.hasDifferentNameSpace(theClass, ontology);
 	}
 
 	private boolean isEquivalentClass(OWLClass theClass) {
