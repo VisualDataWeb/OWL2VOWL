@@ -36,6 +36,7 @@ public class TypeFinder {
 		}
 	}
 
+	// TODO if special type is in the first level and not in a nested like equivalent class?
 	private boolean isSpecialClass(OWLClass theClass) {
 		for (OWLAxiom baseAxiom : theClass.getReferencingAxioms(ontology)) {
 			if (baseAxiom.getAxiomType().isAxiomType("EquivalentClasses")) {
@@ -43,6 +44,12 @@ public class TypeFinder {
 					if (specialAxioms.contains(nestedClasses.getClassExpressionType().toString())) {
 						return true;
 					}
+				}
+			}
+
+			if(baseAxiom.getAxiomType().toString().equals("DisjointUnion")) {
+				if(((OWLDisjointUnionAxiom)baseAxiom).getOWLClass() == theClass) {
+					return true;
 				}
 			}
 		}
