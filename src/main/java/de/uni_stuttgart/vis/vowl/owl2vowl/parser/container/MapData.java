@@ -7,18 +7,17 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.container;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.containerElements.DisjointUnion;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.DisjointProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLDataProperty;
-import org.semanticweb.owlapi.model.OWLDatatype;
-import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.*;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -28,17 +27,21 @@ public class MapData {
 		 * Data with own created objects.
 		 */
 	private Map<String, BaseNode> mergedMap = new HashMap<>();
-	private Map<String, BaseClass> classMap = new MergeMap<>(mergedMap);
-	private Map<String, BaseDatatype> datatypeMap = new MergeMap<>(mergedMap);
+	private Map<String, BaseClass> classMap = new MergeNodeMap<>(mergedMap);
+	private Map<String, BaseDatatype> datatypeMap = new MergeNodeMap<>(mergedMap);
 	/**
 	 * The key value of this map is an ID not a IRI!
 	 */
-	private Map<String, OwlThing> thingMap = new MergeMap<>(mergedMap);
-	private Map<String, OwlUnionOf> unionMap = new MergeMap<>(mergedMap);
-	private Map<String, OwlIntersectionOf> intersectionMap = new MergeMap<>(mergedMap);
-	private Map<String, OwlComplementOf> complementMap = new MergeMap<>(mergedMap);
-	private Map<String, OwlObjectProperty> objectPropertyMap = new HashMap<>();
-	private Map<String, OwlDatatypeProperty> datatypePropertyMap = new HashMap<>();
+	private Map<String, OwlThing> thingMap = new MergeNodeMap<>(mergedMap);
+	private Map<String, OwlUnionOf> unionMap = new MergeNodeMap<>(mergedMap);
+	private Map<String, OwlIntersectionOf> intersectionMap = new MergeNodeMap<>(mergedMap);
+	private Map<String, OwlComplementOf> complementMap = new MergeNodeMap<>(mergedMap);
+	private Map<String, BaseProperty> mergedProperties = new HashMap<>();
+	private Map<String, OwlObjectProperty> objectPropertyMap = new MergePropertyMap<String, OwlObjectProperty>(mergedProperties);
+	private Map<String, OwlDatatypeProperty> datatypePropertyMap = new MergePropertyMap<String, OwlDatatypeProperty>(mergedProperties);
+	private Map<String, DisjointProperty> disjointPropertyMap = new MergePropertyMap<String, DisjointProperty>(mergedProperties);
+	/* Helper collections */
+	private Set<DisjointUnion> disjointUnions = new HashSet<>();
 	/*
 	 * IRI as key and the owl objects as value.
 	 */
@@ -48,8 +51,52 @@ public class MapData {
 	private Map<String, OWLDataProperty> owlDatatypeProperties = new HashMap<>();
 	private OntologyInfo ontologyInfo = new OntologyInfo();
 	private OntologyMetric ontologyMetric = new OntologyMetric();
+	private Map<String, Map<String, List<OWLAxiom>>> entityToAxiom = new HashMap<>();
 
 	public MapData() {
+	}
+
+	public Set<DisjointUnion> getDisjointUnions() {
+		return disjointUnions;
+	}
+
+	public void setDisjointUnions(Set<DisjointUnion> disjointUnions) {
+		this.disjointUnions = disjointUnions;
+	}
+
+	public Map<String, BaseProperty> getMergedProperties() {
+		return mergedProperties;
+	}
+
+	public Map<String, BaseNode> getMergedMap() {
+		return mergedMap;
+	}
+
+	public Map<String, DisjointProperty> getDisjointPropertyMap() {
+		return disjointPropertyMap;
+	}
+
+	public void setDisjointPropertyMap(Map<String, DisjointProperty> disjointPropertyMap) {
+		this.disjointPropertyMap = disjointPropertyMap;
+	}
+
+	public boolean addDisjointProperty(DisjointProperty property) {
+		for (Map.Entry<String, DisjointProperty> currentEntry : disjointPropertyMap.entrySet()) {
+			if (currentEntry.getValue().equivalentDisjoints(property)) {
+				return false;
+			}
+		}
+
+		disjointPropertyMap.put(property.getId(), property);
+		return true;
+	}
+
+	public Map<String, Map<String, List<OWLAxiom>>> getEntityToAxiom() {
+		return entityToAxiom;
+	}
+
+	public void setEntityToAxiom(Map<String, Map<String, List<OWLAxiom>>> entityToAxiom) {
+		this.entityToAxiom = entityToAxiom;
 	}
 
 	public Map<String, OwlUnionOf> getUnionMap() {
@@ -161,10 +208,25 @@ public class MapData {
 	}
 }
 
-class MergeMap<K, V extends BaseNode> extends HashMap<K, V> {
+class MergeNodeMap<K, V extends BaseNode> extends HashMap<K, V> {
 	private HashMap<K, V> mergeMap;
 
-	public <Val extends BaseNode> MergeMap(Map<K, Val> mergeMap) {
+	public <Val extends BaseNode> MergeNodeMap(Map<K, Val> mergeMap) {
+		this.mergeMap = (HashMap<K, V>) mergeMap;
+	}
+
+	@Override
+	public V put(K key, V value) {
+		super.put(key, value);
+		mergeMap.put(key, value);
+		return value;
+	}
+}
+
+class MergePropertyMap<K, V extends BaseProperty> extends HashMap<K, V> {
+	private HashMap<K, V> mergeMap;
+
+	public <Val extends BaseProperty> MergePropertyMap(Map<K, Val> mergeMap) {
 		this.mergeMap = (HashMap<K, V>) mergeMap;
 	}
 
