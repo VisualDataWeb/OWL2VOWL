@@ -6,20 +6,34 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.containerElements.DisjointUnion;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.GeneralParser;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
  */
 public class AxiomParser extends GeneralParser {
+	public void parseAxioms(OWLEntity entity) {
+		Map<String, Map<String, List<OWLAxiom>>> mapping = mapData.getEntityToAxiom();
+		Map<String, List<OWLAxiom>> axioms = new HashMap<>();
+
+		for (OWLAxiom currentAxiom : entity.getReferencingAxioms(ontology)) {
+			List<OWLAxiom> items = axioms.get(currentAxiom.getAxiomType().toString());
+
+			if (items == null) {
+				items = new ArrayList<>();
+			}
+
+			items.add(currentAxiom);
+			axioms.put(currentAxiom.getAxiomType().toString(), items);
+		}
+
+		mapping.put(entity.getIRI().toString(), axioms);
+	}
 	/**
 	 * Searches for an union class of the property. If already exists take it an return else create
 	 * a new node. If no union found return null.
