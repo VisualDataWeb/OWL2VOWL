@@ -39,6 +39,11 @@ public class Main {
 	private static OWLOntology ontology;
 
 	public static void main(String[] args) {
+		if (DEBUG_EXPORT) {
+			debugLoading();
+			return;
+		}
+
 		if (args.length == 0) {
 			System.out.println("Please call this program with a URI as parameter!");
 			return;
