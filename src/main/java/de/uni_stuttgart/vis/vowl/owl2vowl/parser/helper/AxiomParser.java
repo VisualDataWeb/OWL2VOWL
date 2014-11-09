@@ -34,6 +34,53 @@ public class AxiomParser extends GeneralParser {
 
 		mapping.put(entity.getIRI().toString(), axioms);
 	}
+
+	public Set<OWLClassExpression> getDisjoints(OWLEntity entity) {
+		Map<String, Map<String, List<OWLAxiom>>> mapping = mapData.getEntityToAxiom();
+		Map<String, List<OWLAxiom>> i = mapping.get(entity.getIRI().toString());
+
+		List<OWLAxiom> j = i.get("DisjointClasses");
+
+		Set<OWLClassExpression> disjoints = new HashSet<>();
+
+		if (j != null) {
+			for (OWLAxiom currentAxiom : j) {
+				disjoints.addAll(currentAxiom.getNestedClassExpressions());
+			}
+		}
+
+		return disjoints;
+	}
+
+	public Set<DisjointUnion> getDisjointUnions(OWLEntity entity) {
+		Map<String, Map<String, List<OWLAxiom>>> mapping = mapData.getEntityToAxiom();
+		Map<String, List<OWLAxiom>> i = mapping.get(entity.getIRI().toString());
+
+		List<OWLAxiom> j = i.get("DisjointUnion");
+		Set<DisjointUnion> elements = new HashSet<>();
+
+		if (j != null) {
+			for (OWLAxiom currentAxiom : j) {
+				OWLDisjointUnionAxiom theAxiom = (OWLDisjointUnionAxiom) currentAxiom;
+				BaseNode base = mapData.getMergedMap().get(theAxiom.getOWLClass().getIRI().toString());
+				Set<BaseNode> disjoints = new HashSet<>();
+
+				for (OWLClass test : theAxiom.getOWLDisjointClassesAxiom().getClassesInSignature()) {
+					disjoints.add(mapData.getMergedMap().get(test.getIRI().toString()));
+				}
+
+				DisjointUnion disjointUnion = new DisjointUnion(base, disjoints);
+
+				if (!mapData.getDisjointUnions().contains(disjointUnion)) {
+					mapData.getDisjointUnions().add(disjointUnion);
+					elements.add(disjointUnion);
+				}
+			}
+		}
+
+		return elements;
+	}
+
 	/**
 	 * Searches for an union class of the property. If already exists take it an return else create
 	 * a new node. If no union found return null.
