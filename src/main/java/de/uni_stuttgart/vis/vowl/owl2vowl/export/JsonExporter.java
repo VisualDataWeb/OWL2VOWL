@@ -330,8 +330,7 @@ public class JsonExporter {
 		processMetrics(mapData.getOntologyMetric());
 		processClasses(mapData.getClassMap());
 		processDatatypes(mapData.getDatatypeMap());
-		processProperties(mapData.getObjectPropertyMap());
-		processProperties(mapData.getDatatypePropertyMap());
+		processProperties(mapData.getMergedProperties());
 		processThings(mapData.getThingMap());
 		processUnions(mapData.getUnionMap());
 		close();
