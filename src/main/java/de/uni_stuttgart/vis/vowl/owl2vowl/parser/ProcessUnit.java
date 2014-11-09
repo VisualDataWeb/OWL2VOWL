@@ -43,9 +43,18 @@ public class ProcessUnit {
 			processEquivalents(currentClass);
 			processSubClasses(currentClass);
 			processSuperClasses(currentClass);
+			processAxioms(currentClass);
 			processSpecialBehaviour(currentClass);
 		}
 
+	}
+
+	private void processAxioms(BaseClass currentClass) {
+		OWLEntity entity = mapData.getOwlClasses().get(currentClass.getIri());
+		axiomParser.parseAxioms(entity);
+
+		processAxiomDisjointClasses(currentClass, entity);
+		processAxiomDisjointUnion(entity);
 	}
 
 	private void processAxiomDisjointClasses(BaseClass currentClass, OWLEntity entity) {
