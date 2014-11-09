@@ -10,6 +10,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProper
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.apache.logging.log4j.core.Logger;
 import org.semanticweb.owlapi.model.*;
@@ -135,7 +136,7 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 				ontoIRI = IRI.create(rdfsIsDefinedBy);
 			}
 
-			if (hasDifferentNamespace(iri, ontoIRI)) {
+			if (ComparisonHelper.hasDifferentNameSpace(currentProperty, ontology)) {
 				theProperty.getAttributes().add(Constants.PROP_ATTR_IMPORT);
 			}
 			if (isFuntionalObjectProperty(GeneralParser.ontology, currentProperty)) {

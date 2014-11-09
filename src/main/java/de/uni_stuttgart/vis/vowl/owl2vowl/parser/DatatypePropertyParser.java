@@ -12,6 +12,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
@@ -35,7 +36,6 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 	protected void execute() {
 		Map<String, OwlDatatypeProperty> propertyMap = mapData.getDatatypePropertyMap();
 		Map<String, OWLDataProperty> owlDatatypeProperties = mapData.getOwlDatatypeProperties();
-		int indexCounter = 1;
 
 		for (OWLDataProperty currentProperty : data) {
 			rdfsLabel = "";
@@ -113,7 +113,7 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 			OwlDatatypeProperty property = new OwlDatatypeProperty();
 
-			if (isImported(iri)) {
+			if (ComparisonHelper.hasDifferentNameSpace(currentProperty, ontology)) {
 				property.getAttributes().add(Constants.PROP_ATTR_IMPORT);
 			}
 
@@ -140,8 +140,6 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 			if (isDeprecated) {
 				property.getAttributes().add(Constants.PROP_ATTR_DEPR);
 			}
-
-			indexCounter++;
 
 			owlDatatypeProperties.put(currentProperty.getIRI().toString(), currentProperty);
 			propertyMap.put(property.getIri(), property);
