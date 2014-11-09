@@ -33,10 +33,10 @@ public class Main {
 	private static final boolean DEBUG_EXPORT = true;
 	public static org.apache.logging.log4j.Logger logger = LogManager.getRootLogger();
 	public static OWLOntologyManager manager;
+	public static OWLDataFactory factory;
 	private static MapData mapData;
 	private static GeneralParser parser;
 	private static OWLOntology ontology;
-	private static OWLDataFactory factory;
 
 	public static void main(String[] args) {
 		if (args.length == 0) {
@@ -82,7 +82,7 @@ public class Main {
 
 			try {
 				//mainO.loadOntologies(curr);
-				//mainO.loadOntologies(new File(Constants.SIOC));
+				//mainO.loadOntologies(new File(Constants.PROV));
 				//mainO.loadOntologies(quickExport, Arrays.asList(nec));
 				mainO.loadOntologies(Constants.EXT_ONTOVIBE);
 				mainO.startConvertion();
@@ -90,8 +90,10 @@ public class Main {
 				break;
 			} catch (OWLOntologyCreationException e) {
 				//e.printStackTrace();
+				System.out.println(e.getMessage());
 				System.out.println("FAILED TO LOAD " + curr.getName());
 				logger.error("FAILED TO LOAD " + curr.getName());
+				break;
 			}
 		}
 
@@ -316,6 +318,17 @@ public class Main {
 		System.out.println("Ontology data parsed!");
 
 		if (DEBUG_EXPORT) {
+			String filePath = System.getProperty("user.dir") + "\\WebVOWL\\src\\js\\data\\";
+			;
+			File exportFile = new File(filePath, FilenameUtils.removeExtension(ontology.getOntologyID().getOntologyIRI().getFragment()) + ".json");
+			JsonExporter exporter = new JsonExporter(exportFile);
+
+			try {
+				exporter.execute(mapData);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} else {
 			File location = getJarDir(this.getClass());
 			File exportFile = new File(location, FilenameUtils.removeExtension(ontology.getOntologyID().getOntologyIRI().getFragment()) + ".json");
 			JsonExporter exporter = new JsonExporter(exportFile);
