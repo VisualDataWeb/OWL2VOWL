@@ -62,6 +62,41 @@ public class ProcessUnit {
 			}
 		}
 	}
+
+	private void processAxiomDisjointUnion(OWLEntity entity) {
+		Set<DisjointUnion> disjointUnions = axiomParser.getDisjointUnions(entity);
+
+		if (!disjointUnions.isEmpty()) {
+			for (DisjointUnion currentDisUn : disjointUnions) {
+				if (currentDisUn.getBaseNode().getClass() != SpecialClass.class) {
+					break;
+				}
+
+				SpecialClass currentNode = (SpecialClass) currentDisUn.getBaseNode();
+
+				currentNode.setType(Constants.TYPE_UNION);
+
+				currentNode.setUnions(new ArrayList<BaseNode>(currentDisUn.getDisjointness()));
+
+				int i = 0;
+				List<BaseNode> baseNodeList = new ArrayList<>(currentDisUn.getDisjointness());
+
+				while (i < baseNodeList.size()) {
+					DisjointProperty prop;
+
+					if (i + 1 == baseNodeList.size()) {
+						prop = new DisjointProperty(baseNodeList.get(i), baseNodeList.get(0));
+					} else {
+						prop = new DisjointProperty(baseNodeList.get(i), baseNodeList.get(i + 1));
+					}
+
+					mapData.addDisjointProperty(prop);
+					i++;
+				}
+			}
+		}
+	}
+
 	private void processSpecialBehaviour(BaseClass currentClass) {
 		if(!(currentClass instanceof SpecialClass)) {
 			return;
