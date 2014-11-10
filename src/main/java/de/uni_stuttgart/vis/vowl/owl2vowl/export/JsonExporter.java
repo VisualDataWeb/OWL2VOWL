@@ -247,6 +247,13 @@ public class JsonExporter {
 	}
 
 	public void close() throws IOException {
+		int i = 0;
+
+		while(outputFile.exists()) {
+			outputFile.renameTo(new File(outputFile.getAbsolutePath() + "_" + i));
+			i++;
+		}
+
 		FileWriter writer = new FileWriter(outputFile);
 		writer.write(root.toString());
 		writer.close();
