@@ -351,8 +351,35 @@ public class ProcessUnit {
 	}
 
 	public void processProperties() {
+		processEquivalentProperties();
 		processObjectProperty();
 		processDatatypeProperty();
+	}
+
+	private void processEquivalentProperties() {
+		Map<String, BaseProperty> mergedProperties = mapData.getMergedProperties();
+
+		// TODO change arrays to Objects and not only Strings
+		for (BaseProperty baseProperty : mergedProperties.values()) {
+			for (String s : baseProperty.getEquivalents()) {
+				BaseProperty equiv = mapData.getMergedProperties().get(s);
+
+				if (equiv == null) {
+					continue;
+				}
+
+				Set<String> equivs = new HashSet<String>(equiv.getEquivalents());
+
+				// Add all equivalents and the calling property. But remove the property of the current element.
+				equivs.addAll(baseProperty.getEquivalents());
+				equivs.add(baseProperty.getIri());
+				equivs.remove(s);
+
+				equiv.setEquivalents(new ArrayList<String>(equivs));
+			}
+		}
+
+
 	}
 
 	private void processObjectProperty() {
