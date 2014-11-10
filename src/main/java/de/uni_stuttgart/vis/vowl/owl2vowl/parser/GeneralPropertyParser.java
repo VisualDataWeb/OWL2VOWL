@@ -7,10 +7,10 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.IntersectionParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.UnionParser;
 import org.semanticweb.owlapi.model.*;
@@ -184,7 +184,6 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 			return iriList;
 		}
 
-
 		for (Object curSub : subProperties) {
 			OWLNamedObject definedSub = (OWLNamedObject) curSub;
 			iriList.add(definedSub.getIRI().toString());
@@ -197,10 +196,10 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		Set subProperties = property.getEquivalentProperties(ontology);
 		List<String> iriList = new ArrayList<String>();
 
-		if (subProperties.isEmpty()) {
+		// TODO Do not use external properties as base. But if there are equivalent external properties only?
+		if (ComparisonHelper.hasDifferentNameSpace((OWLEntity) property, ontology)) {
 			return iriList;
 		}
-
 
 		for (Object curSub : subProperties) {
 			OWLNamedObject definedSub = (OWLNamedObject) curSub;
