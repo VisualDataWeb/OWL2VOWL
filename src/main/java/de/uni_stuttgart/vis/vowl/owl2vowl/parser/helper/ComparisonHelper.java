@@ -19,6 +19,8 @@ import java.util.Set;
 public class ComparisonHelper {
 	public static boolean hasDifferentNamespace(String elementNamespace, IRI ontologyNamespace) {
 		int element = elementNamespace.indexOf("#");
+		int elementSlash = elementNamespace.lastIndexOf("/");
+
 		int ontologyIn = ontologyNamespace.toString().indexOf("#");
 
 		String newElement = elementNamespace;
@@ -26,17 +28,20 @@ public class ComparisonHelper {
 
 		if (element != -1) {
 			newElement = newElement.substring(0, element);
+		} else if (elementSlash != -1) {
+			newElement = newElement.substring(0, elementSlash + 1);
 		}
 
 		if (ontologyIn != -1) {
 			newOntology = newOntology.substring(0, ontologyIn);
 		}
 
-		/*
-		System.out.println("ELEMENT: " + elementNamespace);
-		System.out.println("ONTOLOGY: " + ontologyNamespace);
+		      /*
+		System.out.println("ELEMENT: " + newElement);
+		System.out.println("ONTOLOGY: " + newOntology);
 		System.out.println();
 		*/
+
 
 		return !(newElement.equals(newOntology));
 	}
