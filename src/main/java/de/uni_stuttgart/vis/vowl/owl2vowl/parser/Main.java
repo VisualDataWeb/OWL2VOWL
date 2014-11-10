@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +32,7 @@ import java.util.Set;
  */
 public class Main {
 	private static final boolean DEBUG_EXPORT = true;
+	private static final boolean CONVERSION = true;
 	public static org.apache.logging.log4j.Logger logger = LogManager.getRootLogger();
 	public static OWLOntologyManager manager;
 	public static OWLDataFactory factory;
@@ -39,6 +41,11 @@ public class Main {
 	private static OWLOntology ontology;
 
 	public static void main(String[] args) {
+		if (CONVERSION) {
+			convertAllOntologies();
+			return;
+		}
+
 		if (DEBUG_EXPORT) {
 			debugLoading();
 			return;
@@ -68,13 +75,29 @@ public class Main {
 	public static void debugLoading() {
 		Main mainO = new Main();
 		mainO.initializeAPI();
+		try {
+			mainO.loadOntologies(new File(Constants.FOAF));
+			mainO.startConvertion();
+			mainO.reset();
+		} catch (OWLOntologyCreationException e) {
+			//e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+	}
 
-		File quickExport = new File(Constants.BENCHMARK1);
-		File nec = new File(Constants.BENCHMARK2);
-		File prov = new File(Constants.PERSONAS);
+	public static void convertAllOntologies() {
+		Main mainO = new Main();
+		mainO.initializeAPI();
 
-		File test = new File(Constants.PATH_VARIABLE);
-		File[] children = test.listFiles();
+		File filePath = new File(Constants.PATH_VARIABLE);
+		File[] children = filePath.listFiles();
+
+		List<String> externalOntologies = new ArrayList<String>();
+		externalOntologies.add(Constants.EXT_GEONAMES);
+		externalOntologies.add(Constants.EXT_ONTOVIBE);
+		externalOntologies.add(Constants.EXT_PIZZA);
+		externalOntologies.add(Constants.EXT_PROV);
+
 
 		if (children == null) {
 			throw new IllegalStateException("Directory doesn't contain files.");
@@ -86,22 +109,33 @@ public class Main {
 			}
 
 			try {
-				//mainO.loadOntologies(curr);
-				//mainO.loadOntologies(new File(Constants.PROV));
-				//mainO.loadOntologies(quickExport, Arrays.asList(nec));
-				mainO.loadOntologies(Constants.EXT_ONTOVIBE);
+				mainO.loadOntologies(curr);
+				System.out.println("Ontology: " + curr + " loaded!");
 				mainO.startConvertion();
 				mainO.reset();
-				break;
+				System.out.println();
 			} catch (OWLOntologyCreationException e) {
 				//e.printStackTrace();
 				System.out.println(e.getMessage());
 				System.out.println("FAILED TO LOAD " + curr.getName());
 				logger.error("FAILED TO LOAD " + curr.getName());
-				break;
 			}
 		}
 
+		for (String externalOntology : externalOntologies) {
+			try {
+				mainO.loadOntologies(externalOntology);
+				System.out.println("Ontology: " + externalOntology + " loaded!");
+				mainO.startConvertion();
+				mainO.reset();
+				System.out.println();
+			} catch (OWLOntologyCreationException e) {
+				//e.printStackTrace();
+				System.out.println(e.getMessage());
+				System.out.println("FAILED TO LOAD " + externalOntology);
+				logger.error("FAILED TO LOAD " + externalOntology);
+			}
+		}
 	}
 
 	private static void parseOntoInfo() {
