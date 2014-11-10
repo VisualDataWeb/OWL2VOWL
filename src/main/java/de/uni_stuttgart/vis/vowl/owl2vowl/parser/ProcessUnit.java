@@ -47,6 +47,25 @@ public class ProcessUnit {
 			processSpecialBehaviour(currentClass);
 		}
 
+		for (BaseNode baseNode : this.mapData.getMergedMap().values()) {
+			removeExternalEquivalents(baseNode);
+		}
+	}
+
+	private void removeExternalEquivalents(BaseNode baseNode) {
+		if (baseNode.getClass() != OwlEquivalentClass.class || !baseNode.getAttributes().contains(Constants.PROP_ATTR_IMPORT)) {
+			return;
+		}
+
+		OwlEquivalentClass equivNode = (OwlEquivalentClass) baseNode;
+
+		for (BaseClass baseClass : equivNode.getEquivalentClasses()) {
+			if (!baseClass.getAttributes().contains(Constants.PROP_ATTR_IMPORT)) {
+				System.out.println(equivNode.getIri() + " , " + equivNode.getEquivalentClasses());
+				equivNode.getEquivalentClasses().clear();
+				return;
+			}
+		}
 	}
 
 	private void processAxioms(BaseClass currentClass) {
@@ -179,11 +198,13 @@ public class ProcessUnit {
 		OwlEquivalentClass newBase = (OwlEquivalentClass) base;
 		List<BaseClass> equivalents = newBase.getEquivalentClasses();
 
+		/*
 		// Ignore class if not basis TODO is probably not correct yet. Because there could be equivalent
 		// classes without a base in the equal namespace.
 		if (hasDifferentNamespace(newBase.getIri(), ontology.getOntologyID().getOntologyIRI())) {
 			return;
 		}
+		*/
 
 		for (OWLClassExpression equiClassExpression : theClass.getEquivalentClasses(ontology)) {
 			if (!equiClassExpression.isAnonymous()) {
@@ -298,6 +319,7 @@ public class ProcessUnit {
 			boolean b = ComparisonHelper.hasDifferentNameSpace(theClass, ontology);
 			return b;
 		}
+
 		IRI ontoIRI = ontology.getOntologyID().getOntologyIRI();
 		String definedBy = null;
 
