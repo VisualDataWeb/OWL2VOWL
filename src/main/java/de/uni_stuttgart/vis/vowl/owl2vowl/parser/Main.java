@@ -31,8 +31,8 @@ import java.util.Set;
  * @author Eduard Marbach
  */
 public class Main {
-	private static final boolean DEBUG_EXPORT = true;
-	private static final boolean CONVERSION = true;
+	private static final boolean DEBUG_EXPORT = false;
+	private static final boolean CONVERSION = false;
 	public static org.apache.logging.log4j.Logger logger = LogManager.getRootLogger();
 	public static OWLOntologyManager manager;
 	public static OWLDataFactory factory;
