@@ -40,10 +40,9 @@ public class Constants {
 	public static final String MUTO = PATH_VARIABLE + "muto.rdf";
 	public static final String FOAF = PATH_VARIABLE + "foaf.rdf";
 	public static final String PERSONAS = PATH_VARIABLE + "personasonto.owl";
-	public static final String GEONAMES = PATH_VARIABLE + "geonames.rdf";
-	public static final String EXT_GEONAMES = "http://www.geonames.org/ontology/ontology_v3.1.rdf";
 	public static final String BENCHMARK1 = PATH_VARIABLE + "ontovibe/BenchmarkOntology.ttl";
 	public static final String BENCHMARK2 = PATH_VARIABLE + "ontovibe/BenchmarkOntologyModule.ttl";
+	public static final String EXT_GEONAMES = "http://www.geonames.org/ontology/ontology_v3.1.rdf";
 	public static final String EXT_PROV = "http://www.w3.org/ns/prov-o";
 	public static final String EXT_PIZZA = "http://130.88.198.11/co-ode-files/ontologies/pizza.owl";
 	public static final String EXT_ONTOVIBE = "http://ontovibe.visualdataweb.org/1.0";
