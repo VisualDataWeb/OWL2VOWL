@@ -112,7 +112,7 @@ public class JsonExporter {
 			classAttrJson.put("uri", currentClass.getIri());
 			classAttrJson.put("comment", currentClass.getComment());
 			// TODO not implemented yet
-			classAttrJson.put("instances", 0);
+			classAttrJson.put("instances", currentClass.getNumberOfIndividuals());
 
 			classAttrJson.put("equivalent", equivalent);
 			classAttrJson.put("attributes", attributes);
@@ -187,8 +187,6 @@ public class JsonExporter {
 			datatypeAttrJson.put("label", currentDatatype.getName());
 			datatypeAttrJson.put("uri", currentDatatype.getIri());
 			datatypeAttrJson.put("comment", currentDatatype.getComment());
-			// TODO not implemented yet
-			datatypeAttrJson.put("instances", 0);
 
 			datatypeAttrJson.put("attributes", attributes);
 			datatypeAttrJson.put("subClasses", subClasses);
@@ -290,9 +288,6 @@ public class JsonExporter {
 			dataAttrJson.put("domain", currentProperty.getDomain().getId());
 			dataAttrJson.put("range", currentProperty.getRange().getId());
 			dataAttrJson.put("inverse", currentProperty.getInverseID());
-			// TODO not implemented yet
-			dataAttrJson.put("instances", 0);
-
 			dataAttrJson.put("equivalent", equivalent);
 			dataAttrJson.put("attributes", attributes);
 			dataAttrJson.put("subproperty", subProperty);

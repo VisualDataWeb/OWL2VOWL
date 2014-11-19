@@ -69,6 +69,7 @@ public class ClassParser extends GeneralNodeParser {
 			theClass.setIri(iri);
 			theClass.setDefinedBy(FormatText.cutQuote(rdfsIsDefinedBy));
 			theClass.setOwlVersion(FormatText.cutQuote(owlVersionInfo));
+			theClass.setNumberOfIndividuals(currentClass.getIndividuals(ontology).size());
 
 			if (isDeprecated) {
 				theClass.getAttributes().add(Constants.PROP_ATTR_DEPR);

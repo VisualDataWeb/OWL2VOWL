@@ -14,12 +14,21 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 public class BaseClass extends BaseNode {
 
 	protected static int indexCounter = 1;
+	protected int numberOfIndividuals = 0;
 
 	public BaseClass() {
 		super();
 		setType(Constants.TYPE_CLASS);
 		setId("class" + indexCounter);
 		indexCounter++;
+	}
+
+	public int getNumberOfIndividuals() {
+		return numberOfIndividuals;
+	}
+
+	public void setNumberOfIndividuals(int numberOfIndividuals) {
+		this.numberOfIndividuals = numberOfIndividuals;
 	}
 
 	public void printClass() {
