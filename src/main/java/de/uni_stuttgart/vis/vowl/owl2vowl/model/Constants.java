@@ -39,6 +39,7 @@ public class Constants {
 	public static final String GR = PATH_VARIABLE + "v1.owl";
 	public static final String MUTO = PATH_VARIABLE + "muto.rdf";
 	public static final String FOAF = PATH_VARIABLE + "foaf.rdf";
+	public static final String WINE = PATH_VARIABLE + "wine.rdf";
 	public static final String PERSONAS = PATH_VARIABLE + "personasonto.owl";
 	public static final String BENCHMARK1 = PATH_VARIABLE + "ontovibe/BenchmarkOntology.ttl";
 	public static final String BENCHMARK2 = PATH_VARIABLE + "ontovibe/BenchmarkOntologyModule.ttl";

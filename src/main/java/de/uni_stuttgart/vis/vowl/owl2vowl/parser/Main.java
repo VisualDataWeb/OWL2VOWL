@@ -31,7 +31,7 @@ import java.util.Set;
  * @author Eduard Marbach
  */
 public class Main {
-	private static final boolean DEBUG_EXPORT = false;
+	private static final boolean DEBUG_EXPORT = true;
 	private static final boolean CONVERSION = false;
 	public static org.apache.logging.log4j.Logger logger = LogManager.getRootLogger();
 	public static OWLOntologyManager manager;
@@ -76,7 +76,7 @@ public class Main {
 		Main mainO = new Main();
 		mainO.initializeAPI();
 		try {
-			mainO.loadOntologies(new File(Constants.FOAF));
+			mainO.loadOntologies(new File(Constants.WINE));
 			mainO.startConvertion();
 			mainO.reset();
 		} catch (OWLOntologyCreationException e) {
