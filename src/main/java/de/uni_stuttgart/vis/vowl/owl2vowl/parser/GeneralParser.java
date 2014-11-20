@@ -10,8 +10,11 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
+import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -28,15 +31,25 @@ public class GeneralParser {
 	protected String rdfsIsDefinedBy = "";
 	protected String owlVersionInfo = "";
 	protected Boolean isDeprecated = false;
+
+	protected Map<String, String> comments;
+	protected Map<String, String> languageToLabel;
 	protected String iri;
 
 	public GeneralParser() {
 	}
-
 	public GeneralParser(OWLOntology ontology, OWLDataFactory factory, MapData mapData) {
 		GeneralParser.ontology = ontology;
 		GeneralParser.factory = factory;
 		GeneralParser.mapData = mapData;
+	}
+
+	public Map<String, String> getLanguageToLabel() {
+		return languageToLabel;
+	}
+
+	public void setLanguageToLabel(Map<String, String> languageToLabel) {
+		this.languageToLabel = languageToLabel;
 	}
 
 	public String getIri() {
@@ -93,7 +106,14 @@ public class GeneralParser {
 		isDeprecated = false;
 		rdfsIsDefinedBy = "";
 		owlVersionInfo = "";
+		languageToLabel = new HashMap<String, String>();
 
+		OWLAnnotationProperty labelProp = factory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
+		OWLAnnotationProperty commentProp = factory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_COMMENT.getIRI());
+
+		languageToLabel = parseLanguage(entity, labelProp);
+		languageToLabel.put("default", FormatText.cutQuote(extractNameFromIRI(entity.getIRI().toString())));
+		comments = parseLanguage(entity, commentProp);
 
 		for(OWLOntology currentOntology : Main.manager.getOntologies()) {
 			for (OWLAnnotation owlPropAno : entity.getAnnotations(currentOntology)) {
@@ -116,31 +136,30 @@ public class GeneralParser {
 			}
 		}
 	}
-	public void parseAnnotations(Set<OWLAnnotation> owlPropAnoSet) {
-		rdfsLabel = "";
-		rdfsComment = "";
-		isDeprecated = false;
-		rdfsIsDefinedBy = "";
-		owlVersionInfo = "";
 
-		for (OWLAnnotation owlPropAno : owlPropAnoSet) {
-			OWLAnnotationProperty annotationProperty = owlPropAno.getProperty();
-			OWLAnnotationValue annotationValue = owlPropAno.getValue();
+	/**
+	 * Processes all available languages in the given rdf property of the owl entity.
+	 * @param entity The entity to search in,
+	 * @param property The desired property like rdf:comment or rdfs:label
+	 * @return A mapping of language to the value.
+	 */
+	protected Map<String, String> parseLanguage(OWLEntity entity, OWLAnnotationProperty property) {
+		Map<String, String> workingMap = new HashMap<String, String>();
 
-			if (annotationProperty.isComment()) {
-				rdfsComment = annotationValue.toString();
-			} else if (annotationProperty.isDeprecated()) {
-				isDeprecated = true;
-			} else if (annotationProperty.isLabel()) {
-				rdfsLabel = annotationValue.toString();
-			} else if (annotationProperty.toString().equals(Constants.RDFS_DEFINED_BY)) {
-				rdfsIsDefinedBy = annotationValue.toString();
-			} else if (annotationProperty.toString().equals(Constants.OWL_VERSIONINFO)) {
-				owlVersionInfo = annotationValue.toString();
-			} else if(LOG_ANNOTATIONS){
-				System.out.println("Not used annotation: " + owlPropAno);
+		for (OWLOntology owlOntology : Main.manager.getOntologies()) {
+			for (OWLAnnotation owlAnnotation : entity.getAnnotations(owlOntology, property)) {
+				if (owlAnnotation.getValue() instanceof OWLLiteral) {
+					OWLLiteral val = (OWLLiteral) owlAnnotation.getValue();
+
+					if (val.isRDFPlainLiteral()) {
+						workingMap.put(val.getLang(), val.getLiteral());
+						mapData.getAvailableLanguages().add(val.getLang());
+					}
+				}
 			}
 		}
+
+		return workingMap;
 	}
 
 	protected String extractNameFromIRI(String iri) {
@@ -162,14 +181,6 @@ public class GeneralParser {
 		return name;
 	}
 
-	protected boolean isImported(String elementNamespace) {
-		return ComparisonHelper.hasDifferentNamespace(elementNamespace, ontology.getOntologyID().getOntologyIRI());
-	}
-
-	protected boolean hasDifferentNamespace(String elementNamespace, IRI ontologyNamespace) {
-		return ComparisonHelper.hasDifferentNamespace(elementNamespace, ontologyNamespace);
-	}
-
 	protected BaseNode findNode(String nodeIRI) {
 		return mapData.findNode(nodeIRI);
 	}
@@ -189,6 +200,11 @@ public class GeneralParser {
 		}
 
 		return null;
+	}
+
+	public void handleOntologyInfo() {
+		OntoInfoParser parser = new OntoInfoParser();
+		parser.execute();
 	}
 
 	public void handleClass(Set<OWLClass> data) {

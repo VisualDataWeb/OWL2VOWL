@@ -8,22 +8,26 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Vincent Link, Eduard Marbach
  */
 public class BaseEntity {
 	protected String id;
-	private String name;
-	private String comment;
-	private String type;
-	private String iri;
-	private String definedBy;
-	private String owlVersion;
-	private List<String> attributes;
-	private List<BaseNode> subClasses;
-	private List<BaseNode> superClasses;
+	protected String name;
+	protected String comment;
+	protected String type;
+	protected String iri;
+	protected String definedBy;
+	protected String owlVersion;
+	protected List<String> attributes;
+	protected List<BaseNode> subClasses;
+	protected List<BaseNode> superClasses;
+	protected Map<String, String> comments;
+	protected Map<String, String> labels;
 
 	/**
 	 * Creates a new class object in owl form.
@@ -33,6 +37,24 @@ public class BaseEntity {
 		attributes = new ArrayList<String>();
 		subClasses = new ArrayList<BaseNode>();
 		superClasses = new ArrayList<BaseNode>();
+		comments = new HashMap<String, String>();
+		labels = new HashMap<String, String>();
+	}
+
+	public Map<String, String> getComments() {
+		return comments;
+	}
+
+	public void setComments(Map<String, String> comments) {
+		this.comments = comments;
+	}
+
+	public Map<String, String> getLabels() {
+		return labels;
+	}
+
+	public void setLabels(Map<String, String> labels) {
+		this.labels = labels;
 	}
 
 	public String getName() {

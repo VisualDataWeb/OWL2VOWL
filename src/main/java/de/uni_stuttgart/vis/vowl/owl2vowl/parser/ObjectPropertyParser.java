@@ -73,10 +73,6 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 		int indexCounter = objectPropertyMap.size() + 1;
 
 		for (OWLObjectProperty currentProperty : objectProperties) {
-			Set<OWLAnnotation> owlPropAnoSet = currentProperty.getAnnotations(GeneralParser.ontology);
-
-			rdfsLabel = "";
-			rdfsComment = "";
 			isDeprecated = false;
 			rdfsIsDefinedBy = "";
 			owlVersionInfo = "";
@@ -87,11 +83,7 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 
 			OwlObjectProperty theProperty = new OwlObjectProperty();
 
-			parseAnnotations(owlPropAnoSet);
-
-			if (rdfsLabel.isEmpty()) {
-				rdfsLabel = extractNameFromIRI(iri);
-			}
+			parseAnnotations(currentProperty);
 
 			Main.logger.info("ObjectProperty: " + currentProperty);
 			for(OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)){
@@ -127,13 +119,6 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 						}
 					}
 				}
-			}
-
-
-			IRI ontoIRI = GeneralParser.ontology.getOntologyID().getOntologyIRI();
-
-			if (ontoIRI == null && rdfsIsDefinedBy != null) {
-				ontoIRI = IRI.create(rdfsIsDefinedBy);
 			}
 
 			if (ComparisonHelper.hasDifferentNameSpace(currentProperty, ontology)) {
@@ -210,8 +195,9 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			theProperty.setSubProperties(retrieveSubProperties(currentProperty));
 			theProperty.setSuperProperties(retrieveSuperProperties(currentProperty));
 
-			theProperty.setName(FormatText.cutQuote(rdfsLabel));
-			theProperty.setComment(FormatText.cutQuote(rdfsComment));
+			theProperty.setLabels(languageToLabel);
+			theProperty.setComments(comments);
+			theProperty.setName(languageToLabel.get("default"));
 			theProperty.setIri(iri);
 			theProperty.setDefinedBy(rdfsIsDefinedBy);
 			theProperty.setOwlVersion(owlVersionInfo);

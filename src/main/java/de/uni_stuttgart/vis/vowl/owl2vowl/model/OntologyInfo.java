@@ -5,6 +5,9 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * This class saves all information of the processed ontology.
  */
@@ -18,9 +21,36 @@ public class OntologyInfo {
 	private String issued;
 	private String license;
 	private String rdfsLabel;
+	private Map<String, String> languageToTitle = new HashMap<String, String>();
+	private Map<String, String> languageToDescription = new HashMap<String, String>();
+	private Map<String, String> languageToLabel = new HashMap<String, String>();
 
 	public OntologyInfo() {
 		super();
+	}
+
+	public Map<String, String> getLanguageToLabel() {
+		return languageToLabel;
+	}
+
+	public void setLanguageToLabel(Map<String, String> languageToLabel) {
+		this.languageToLabel = languageToLabel;
+	}
+
+	public Map<String, String> getLanguageToDescription() {
+		return languageToDescription;
+	}
+
+	public void setLanguageToDescription(Map<String, String> languageToDescription) {
+		this.languageToDescription = languageToDescription;
+	}
+
+	public Map<String, String> getLanguageToTitle() {
+		return languageToTitle;
+	}
+
+	public void setLanguageToTitle(Map<String, String> languageToTitle) {
+		this.languageToTitle = languageToTitle;
 	}
 
 	public String getSeeAlso() {

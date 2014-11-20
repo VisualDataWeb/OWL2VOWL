@@ -7,10 +7,8 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
-import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -76,7 +74,8 @@ public class Main {
 		Main mainO = new Main();
 		mainO.initializeAPI();
 		try {
-			mainO.loadOntologies(new File(Constants.WINE));
+			mainO.loadOntologies(Constants.EXT_NICETAG);
+			//mainO.loadOntologies(new File(Constants.WINE));
 			mainO.startConvertion();
 			mainO.reset();
 		} catch (OWLOntologyCreationException e) {
@@ -136,67 +135,6 @@ public class Main {
 				logger.error("FAILED TO LOAD " + externalOntology);
 			}
 		}
-	}
-
-	private static void parseOntoInfo() {
-		OntologyInfo info = mapData.getOntologyInfo();
-
-		IRI ontoIri = ontology.getOntologyID().getOntologyIRI();
-		IRI versionIri = ontology.getOntologyID().getVersionIRI();
-
-		if (ontoIri != null) {
-			info.setIri(ontoIri.toString());
-		}
-
-		if (versionIri != null) {
-			info.setVersion(versionIri.toString());
-		}
-
-		/* Save available annotations */
-		for (OWLAnnotation i : ontology.getAnnotations()) {
-			if (i.getProperty().toString().equals(Constants.INFO_CREATOR)) {
-				info.setAuthor(FormatText.cutQuote(i.getValue().toString()));
-			}
-			if (i.getProperty().toString().equals(Constants.INFO_DESCRIPTION)) {
-				info.setDescription(FormatText.cutQuote(i.getValue().toString()));
-			}
-			if (i.getProperty().toString().equals(Constants.INFO_ISSUED)) {
-				info.setIssued(FormatText.cutQuote(i.getValue().toString()));
-			}
-			if (i.getProperty().toString().equals(Constants.INFO_LICENSE)) {
-				info.setLicense(FormatText.cutQuote(i.getValue().toString()));
-			}
-			if (i.getProperty().toString().equals(Constants.INFO_RDFS_LABEL)) {
-				info.setRdfsLabel(FormatText.cutQuote(i.getValue().toString()));
-			}
-			if (i.getProperty().toString().equals(Constants.INFO_SEE_ALSO)) {
-				info.setSeeAlso(FormatText.cutQuote(i.getValue().toString()));
-			}
-			if (i.getProperty().toString().equals(Constants.INFO_TITLE)) {
-				info.setTitle(FormatText.cutQuote(i.getValue().toString()));
-			}
-			if (i.getProperty().toString().equals(Constants.INFO_VERSION_INFO)) {
-				info.setVersion(FormatText.cutQuote(i.getValue().toString()));
-			}
-		}
-
-
-	}
-
-	private static void parseDatatypeProperties(Set<OWLDataProperty> dataProperties) {
-		parser.handleDatatypeProperty(dataProperties);
-	}
-
-	private static void parseObjectProperty(Set<OWLObjectProperty> objectProperties) {
-		parser.handleObjectProperty(objectProperties);
-	}
-
-	private static void parseDatatypes(Set<OWLDatatype> datatypes) {
-		parser.handleDatatype(datatypes);
-	}
-
-	private static void parseClasses(Set<OWLClass> classes) {
-		parser.handleClass(classes);
 	}
 
 	/**
@@ -340,11 +278,11 @@ public class Main {
 		Parsing of the raw data gained from the OWL API. Will be transformed to useable data
 		for WebVOWL.
 		*/
-		parseOntoInfo();
-		parseClasses(classes);
+		parser.handleOntologyInfo();
+		parser.handleClass(classes);
 		//parseDatatypes(datatypes);
-		parseObjectProperty(objectProperties);
-		parseDatatypeProperties(dataProperties);
+		parser.handleObjectProperty(objectProperties);
+		parser.handleDatatypeProperty(dataProperties);
 		parseMetrics();
 
 		/*
@@ -357,6 +295,8 @@ public class Main {
 		System.out.println("Ontology data parsed!");
 
 		if (DEBUG_EXPORT) {
+			if(false)
+				return;
 			String filePath = System.getProperty("user.dir") + "\\WebVOWL\\src\\js\\data\\";
 			;
 			File exportFile = new File(filePath, FilenameUtils.removeExtension(ontology.getOntologyID().getOntologyIRI().getFragment()) + ".json");

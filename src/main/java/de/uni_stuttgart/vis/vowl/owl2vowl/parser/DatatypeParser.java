@@ -29,19 +29,13 @@ public class DatatypeParser extends GeneralNodeParser {
 		Map<String, BaseDatatype> datatypeMap = mapData.getDatatypeMap();
 		Map<String, OWLDatatype> owlDatatypes = mapData.getOwlDatatypes();
 
-		int indexCounter = datatypeMap.size() + 1;
-
 		for (OWLDatatype currentDatatype : datatypes) {
-			rdfsLabel = "";
-			rdfsComment = "";
 			isDeprecated = false;
 			rdfsIsDefinedBy = "";
 			owlVersionInfo = "";
 			iri = currentDatatype.getIRI().toString();
-			Set<OWLAnnotation> currentClassAnnotations = currentDatatype.getAnnotations(GeneralParser.ontology);
 			TypeFinder finder = new TypeFinder(GeneralParser.ontology, GeneralParser.factory);
 			BaseDatatype theDatatype = finder.findVowlDatatype(currentDatatype);
-
 
 			Main.logger.info("Datatype: " + currentDatatype);
 			for(OWLAxiom currentAxiom : currentDatatype.getReferencingAxioms(ontology)){
@@ -52,14 +46,11 @@ public class DatatypeParser extends GeneralNodeParser {
 				}
 			}
 
-			parseAnnotations(currentClassAnnotations);
+			parseAnnotations(currentDatatype);
 
-			if (rdfsLabel.isEmpty()) {
-				rdfsLabel = extractNameFromIRI(iri);
-			}
-
-			theDatatype.setName(rdfsLabel);
-			theDatatype.setComment(rdfsComment);
+			theDatatype.setLabels(languageToLabel);
+			theDatatype.setComments(comments);
+			theDatatype.setName(languageToLabel.get("default"));
 			theDatatype.setIri(iri);
 			theDatatype.setDefinedBy(rdfsIsDefinedBy);
 			theDatatype.setOwlVersion(owlVersionInfo);
@@ -67,8 +58,6 @@ public class DatatypeParser extends GeneralNodeParser {
 			if (isDeprecated) {
 				theDatatype.getAttributes().add(Constants.PROP_ATTR_DEPR);
 			}
-
-			indexCounter++;
 
 			owlDatatypes.put(currentDatatype.getIRI().toString(), currentDatatype);
 			datatypeMap.put(theDatatype.getIri(), theDatatype);

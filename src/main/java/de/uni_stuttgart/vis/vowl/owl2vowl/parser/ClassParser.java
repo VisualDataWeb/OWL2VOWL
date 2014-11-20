@@ -31,8 +31,6 @@ public class ClassParser extends GeneralNodeParser {
 		Map<String, OWLClass> owlClasses = mapData.getOwlClasses();
 
 		for (OWLClass currentClass : classes) {
-			rdfsLabel = "";
-			rdfsComment = "";
 			isDeprecated = false;
 			rdfsIsDefinedBy = "";
 			owlVersionInfo = "";
@@ -52,20 +50,15 @@ public class ClassParser extends GeneralNodeParser {
 				}
 			}
 
-			Set<OWLAnnotation> currentClassAnnotations = currentClass.getAnnotations(GeneralParser.ontology);
-
 			TypeFinder finder = new TypeFinder(GeneralParser.ontology, GeneralParser.factory);
 			BaseClass theClass = finder.findVowlClass(currentClass);
 
 			parseAnnotations(currentClass);
 
-			if (rdfsLabel.isEmpty()) {
-				rdfsLabel = extractNameFromIRI(iri);
-			}
-
 			// Setting data in VOWLClass
-			theClass.setName(FormatText.cutQuote(rdfsLabel));
-			theClass.setComment(FormatText.cutQuote(rdfsComment));
+			theClass.setLabels(languageToLabel);
+			theClass.setComments(comments);
+			theClass.setName(languageToLabel.get("default"));
 			theClass.setIri(iri);
 			theClass.setDefinedBy(FormatText.cutQuote(rdfsIsDefinedBy));
 			theClass.setOwlVersion(FormatText.cutQuote(owlVersionInfo));

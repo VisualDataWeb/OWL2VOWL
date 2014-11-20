@@ -52,8 +52,17 @@ public class MapData {
 	private OntologyInfo ontologyInfo = new OntologyInfo();
 	private OntologyMetric ontologyMetric = new OntologyMetric();
 	private Map<String, Map<String, List<OWLAxiom>>> entityToAxiom = new HashMap<String, Map<String, List<OWLAxiom>>>();
+	private Set<String> availableLanguages = new HashSet<String>();
 
 	public MapData() {
+	}
+
+	public Set<String> getAvailableLanguages() {
+		return availableLanguages;
+	}
+
+	public void setAvailableLanguages(Set<String> availableLanguages) {
+		this.availableLanguages = availableLanguages;
 	}
 
 	public Set<DisjointUnion> getDisjointUnions() {

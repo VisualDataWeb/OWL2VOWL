@@ -35,10 +35,8 @@ public class JsonExporter {
 	private JSONArray datatypeAttribute;
 	private JSONArray objectProperty;
 	private JSONArray objectPropertyAttribute;
-	private JSONArray datatypeProperty;
-	private JSONArray datatypePropertyAttribute;
 	private File outputFile;
-
+	private MapData mapData;
 
 	public JsonExporter(File outputFile) {
 		this.outputFile = outputFile;
@@ -69,6 +67,34 @@ public class JsonExporter {
 				.put("propertyAttribute", objectPropertyAttribute);
 	}
 
+	public void execute(MapData mapData) throws IOException {
+		this.mapData = mapData;
+		System.out.println("Start Export...");
+		processNamespace();
+		processHeader(mapData.getOntologyInfo());
+		processMetrics(mapData.getOntologyMetric());
+		processClasses(mapData.getClassMap());
+		processDatatypes(mapData.getDatatypeMap());
+		processProperties(mapData.getMergedProperties());
+		processThings(mapData.getThingMap());
+		processUnions(mapData.getUnionMap());
+		close();
+		System.out.println("Export finished!");
+	}
+
+	public void close() throws IOException {
+		int i = 0;
+
+		while(outputFile.exists()) {
+			outputFile.renameTo(new File(outputFile.getAbsolutePath() + "_" + i));
+			i++;
+		}
+
+		FileWriter writer = new FileWriter(outputFile);
+		writer.write(root.toString(2));
+		writer.close();
+	}
+
 	// TODO
 	public void processNamespace() {
 		// Namespace only sample because there wasn't one
@@ -80,10 +106,13 @@ public class JsonExporter {
 	public void processHeader(OntologyInfo info) {
 		// Apply header
 		header.put("title", info.getTitle())
+				.put("titles", info.getLanguageToTitle())
 				.put("uri", info.getIri())
 				.put("version", info.getVersion())
 				.put("author", info.getAuthor())
-				.put("description", info.getDescription());
+				.put("description", info.getDescription())
+				.put("descriptions", info.getLanguageToDescription())
+				.put("languages", mapData.getAvailableLanguages());
 	}
 
 	public void processClasses(Map<String, BaseClass> classes) {
@@ -109,11 +138,11 @@ public class JsonExporter {
 
 			classAttrJson.put("id", currentClass.getId());
 			classAttrJson.put("label", currentClass.getName());
+			classAttrJson.put("labels", currentClass.getLabels());
 			classAttrJson.put("uri", currentClass.getIri());
 			classAttrJson.put("comment", currentClass.getComment());
-			// TODO not implemented yet
+			classAttrJson.put("comments", currentClass.getComments());
 			classAttrJson.put("instances", currentClass.getNumberOfIndividuals());
-
 			classAttrJson.put("equivalent", equivalent);
 			classAttrJson.put("attributes", attributes);
 			classAttrJson.put("union", union);
@@ -187,11 +216,11 @@ public class JsonExporter {
 			datatypeAttrJson.put("label", currentDatatype.getName());
 			datatypeAttrJson.put("uri", currentDatatype.getIri());
 			datatypeAttrJson.put("comment", currentDatatype.getComment());
-
+			datatypeAttrJson.put("labels", currentDatatype.getLabels());
+			datatypeAttrJson.put("comments", currentDatatype.getComments());
 			datatypeAttrJson.put("attributes", attributes);
 			datatypeAttrJson.put("subClasses", subClasses);
 			datatypeAttrJson.put("superClasses", superClasses);
-
 
 			// Apply attributes
 			for (String attribute : currentDatatype.getAttributes()) {
@@ -244,101 +273,6 @@ public class JsonExporter {
 				.put("axiomCount", metric.getAxiomCount());
 	}
 
-	public void close() throws IOException {
-		int i = 0;
-
-		while(outputFile.exists()) {
-			outputFile.renameTo(new File(outputFile.getAbsolutePath() + "_" + i));
-			i++;
-		}
-
-		FileWriter writer = new FileWriter(outputFile);
-		writer.write(root.toString());
-		writer.close();
-	}
-
-	public <V extends BaseProperty> void processProperties(Map<String, V> propertyMap) {
-		for (Map.Entry<String, V> baseProperty : propertyMap.entrySet()) {
-			BaseProperty currentProperty = baseProperty.getValue();
-
-			if (currentProperty.getDomain() == null || currentProperty.getRange() == null) {
-				System.out.println("Skip " + currentProperty.getName() + " property.");
-				continue;
-			}
-
-			JSONObject propertyJson = new JSONObject();
-
-			JSONArray equivalent = new JSONArray();
-			JSONArray attributes = new JSONArray();
-			JSONArray subProperty = new JSONArray();
-			JSONArray superProperty = new JSONArray();
-			JSONArray disjoints = new JSONArray();
-
-			propertyJson.put("id", currentProperty.getId());
-			propertyJson.put("type", currentProperty.getType());
-
-			objectProperty.put(propertyJson);
-
-			JSONObject dataAttrJson = new JSONObject();
-
-			dataAttrJson.put("id", currentProperty.getId());
-			dataAttrJson.put("label", currentProperty.getName());
-			dataAttrJson.put("uri", currentProperty.getIri());
-			dataAttrJson.put("comment", currentProperty.getComment());
-			dataAttrJson.put("domain", currentProperty.getDomain().getId());
-			dataAttrJson.put("range", currentProperty.getRange().getId());
-			dataAttrJson.put("inverse", currentProperty.getInverseID());
-			dataAttrJson.put("equivalent", equivalent);
-			dataAttrJson.put("attributes", attributes);
-			dataAttrJson.put("subproperty", subProperty);
-			dataAttrJson.put("superproperty", superProperty);
-			dataAttrJson.put("disjoint", disjoints);
-
-			// TODO equivalents durchgehen
-
-			// Apply attributes
-			for (String attribute : currentProperty.getAttributes()) {
-				attributes.put(attribute);
-			}
-
-			// Apply sub classes
-			for (String entity : currentProperty.getSubProperties()) {
-				subProperty.put(entity);
-			}
-
-			for (String entity : currentProperty.getSuperProperties()) {
-				superProperty.put(entity);
-			}
-
-
-			// Apply equivalents
-			for (String entity : currentProperty.getEquivalents()) {
-				equivalent.put(entity);
-			}
-
-			// Apply disjoints
-			for (String entity : currentProperty.getDisjoints()) {
-				disjoints.put(entity);
-			}
-
-			objectPropertyAttribute.put(dataAttrJson);
-		}
-	}
-
-	public void execute(MapData mapData) throws IOException {
-		System.out.println("Start Export...");
-		processNamespace();
-		processHeader(mapData.getOntologyInfo());
-		processMetrics(mapData.getOntologyMetric());
-		processClasses(mapData.getClassMap());
-		processDatatypes(mapData.getDatatypeMap());
-		processProperties(mapData.getMergedProperties());
-		processThings(mapData.getThingMap());
-		processUnions(mapData.getUnionMap());
-		close();
-		System.out.println("Export finished!");
-	}
-
 	private void processUnions(Map<String, OwlUnionOf> unionMap) {
 		for (Map.Entry<String, OwlUnionOf> baseClass : unionMap.entrySet()) {
 			OwlUnionOf currentClass = baseClass.getValue();
@@ -373,6 +307,74 @@ public class JsonExporter {
 			}
 
 			classAttribute.put(classAttrJson);
+		}
+	}
+
+	public <V extends BaseProperty> void processProperties(Map<String, V> propertyMap) {
+		for (Map.Entry<String, V> baseProperty : propertyMap.entrySet()) {
+			BaseProperty currentProperty = baseProperty.getValue();
+
+			if (currentProperty.getDomain() == null || currentProperty.getRange() == null) {
+				System.out.println("Skip " + currentProperty.getName() + " property.");
+				continue;
+			}
+
+			JSONObject propertyJson = new JSONObject();
+
+			JSONArray equivalent = new JSONArray();
+			JSONArray attributes = new JSONArray();
+			JSONArray subProperty = new JSONArray();
+			JSONArray superProperty = new JSONArray();
+			JSONArray disjoints = new JSONArray();
+
+			propertyJson.put("id", currentProperty.getId());
+			propertyJson.put("type", currentProperty.getType());
+
+			objectProperty.put(propertyJson);
+
+			JSONObject dataAttrJson = new JSONObject();
+
+			dataAttrJson.put("id", currentProperty.getId());
+			dataAttrJson.put("label", currentProperty.getName());
+			dataAttrJson.put("uri", currentProperty.getIri());
+			dataAttrJson.put("comment", currentProperty.getComment());
+			dataAttrJson.put("labels", currentProperty.getLabels());
+			dataAttrJson.put("comments", currentProperty.getComments());
+			dataAttrJson.put("domain", currentProperty.getDomain().getId());
+			dataAttrJson.put("range", currentProperty.getRange().getId());
+			dataAttrJson.put("inverse", currentProperty.getInverseID());
+			dataAttrJson.put("equivalent", equivalent);
+			dataAttrJson.put("attributes", attributes);
+			dataAttrJson.put("subproperty", subProperty);
+			dataAttrJson.put("superproperty", superProperty);
+			dataAttrJson.put("disjoint", disjoints);
+
+			// Apply attributes
+			for (String attribute : currentProperty.getAttributes()) {
+				attributes.put(attribute);
+			}
+
+			// Apply sub classes
+			for (String entity : currentProperty.getSubProperties()) {
+				subProperty.put(entity);
+			}
+
+			for (String entity : currentProperty.getSuperProperties()) {
+				superProperty.put(entity);
+			}
+
+
+			// Apply equivalents
+			for (String entity : currentProperty.getEquivalents()) {
+				equivalent.put(entity);
+			}
+
+			// Apply disjoints
+			for (String entity : currentProperty.getDisjoints()) {
+				disjoints.put(entity);
+			}
+
+			objectPropertyAttribute.put(dataAttrJson);
 		}
 	}
 }

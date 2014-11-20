@@ -47,6 +47,7 @@ public class Constants {
 	public static final String EXT_PROV = "http://www.w3.org/ns/prov-o";
 	public static final String EXT_PIZZA = "http://130.88.198.11/co-ode-files/ontologies/pizza.owl";
 	public static final String EXT_ONTOVIBE = "http://ontovibe.visualdataweb.org/1.0";
+	public static final String EXT_NICETAG = "http://ns.inria.fr/nicetag/2010/09/09/voc";
 
 
 	/* ANNOTATIONS */

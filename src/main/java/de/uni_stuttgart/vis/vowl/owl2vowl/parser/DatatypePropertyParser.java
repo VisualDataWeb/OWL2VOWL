@@ -38,8 +38,6 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 		Map<String, OWLDataProperty> owlDatatypeProperties = mapData.getOwlDatatypeProperties();
 
 		for (OWLDataProperty currentProperty : data) {
-			rdfsLabel = "";
-			rdfsComment = "";
 			isDeprecated = false;
 			rdfsIsDefinedBy = "";
 			owlVersionInfo = "";
@@ -47,9 +45,7 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 			rdfsDomain = "";
 			iri = currentProperty.getIRI().toString();
 
-			Set<OWLAnnotation> annotations = currentProperty.getAnnotations(ontology);
-			parseAnnotations(annotations);
-
+			parseAnnotations(currentProperty);
 
 			Main.logger.info("DatatypeProperty: " + currentProperty);
 			for(OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)){
@@ -58,10 +54,6 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 				for(OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
 					Main.logger.info("\t\tNested: " + nestExpr);
 				}
-			}
-
-			if (rdfsLabel.isEmpty()) {
-				rdfsLabel = extractNameFromIRI(iri);
 			}
 
 			rdfsDomain = retrieveDomain(currentProperty);
@@ -126,8 +118,9 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 			property.setSubProperties(retrieveSubProperties(currentProperty));
 			property.setSuperProperties(retrieveSuperProperties(currentProperty));
 
-			property.setName(FormatText.cutQuote(rdfsLabel));
-			property.setComment(FormatText.cutQuote(rdfsComment));
+			property.setLabels(languageToLabel);
+			property.setComments(comments);
+			property.setName(languageToLabel.get("default"));
 			property.setIri(iri);
 			property.setDefinedBy(rdfsIsDefinedBy);
 			property.setOwlVersion(owlVersionInfo);
