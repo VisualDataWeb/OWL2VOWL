@@ -3,12 +3,15 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
-import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotation;
+import org.semanticweb.owlapi.model.OWLLiteral;
 
-import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Parser for the ontology information.
+ */
 public class OntoInfoParser extends GeneralParser {
 	public void execute() {
 		OntologyInfo info = mapData.getOntologyInfo();
@@ -23,11 +26,6 @@ public class OntoInfoParser extends GeneralParser {
 		if (versionIri != null) {
 			info.setVersion(versionIri.toString());
 		}
-
-
-		OWLAnnotationProperty descriptionProp = factory.getOWLAnnotationProperty(OWLRDFVocabulary.RDF_DESCRIPTION.getIRI());
-		OWLAnnotationProperty labelProp = factory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
-
 
 		/* Save available annotations */
 		for (OWLAnnotation annotation : ontology.getAnnotations()) {
@@ -59,10 +57,14 @@ public class OntoInfoParser extends GeneralParser {
 				info.setVersion(FormatText.cutQuote(annotation.getValue().toString()));
 			}
 		}
-
-
 	}
 
+	/**
+	 * Adds a language found in the owl annotation into the given map.
+	 *
+	 * @param mapToAdd      Map where the language should be added.
+	 * @param owlAnnotation The desired annotation which should contain a language.
+	 */
 	private void addLanguage(Map<String, String> mapToAdd, OWLAnnotation owlAnnotation) {
 		if (owlAnnotation.getValue() instanceof OWLLiteral) {
 			OWLLiteral val = (OWLLiteral) owlAnnotation.getValue();
@@ -72,29 +74,5 @@ public class OntoInfoParser extends GeneralParser {
 				mapData.getAvailableLanguages().add(val.getLang());
 			}
 		}
-	}
-
-	/**
-	 * Processes all available languages in the given rdf property of the owl entity.
-	 * @param property The desired property like rdf:comment or rdfs:label
-	 * @return A mapping of language to the value.
-	 */
-	protected Map<String, String> parseLanguage(OWLOntology paramOntology, OWLAnnotationProperty property) {
-		Map<String, String> workingMap = new HashMap<String, String>();
-
-		for (OWLOntology owlOntology : Main.manager.getOntologies()) {
-			for (OWLAnnotation owlAnnotation : paramOntology.getAnnotations()) {
-				if (owlAnnotation.getValue() instanceof OWLLiteral) {
-					OWLLiteral val = (OWLLiteral) owlAnnotation.getValue();
-
-					if (val.isRDFPlainLiteral()) {
-						workingMap.put(val.getLang(), val.getLiteral());
-						mapData.getAvailableLanguages().add(val.getLang());
-					}
-				}
-			}
-		}
-
-		return workingMap;
 	}
 }
