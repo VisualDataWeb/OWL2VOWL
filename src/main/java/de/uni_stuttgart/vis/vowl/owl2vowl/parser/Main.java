@@ -139,6 +139,7 @@ public class Main {
 
 	/**
 	 * Save the metrics of the current loaded ontology.
+	 * TODO Should be optimized probalby...
 	 */
 	public static void parseMetrics() {
 		OntologyMetric ontologyMetric = mapData.getOntologyMetric();
