@@ -8,10 +8,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
-import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -62,7 +59,8 @@ public class ClassParser extends GeneralNodeParser {
 			theClass.setIri(iri);
 			theClass.setDefinedBy(FormatText.cutQuote(rdfsIsDefinedBy));
 			theClass.setOwlVersion(FormatText.cutQuote(owlVersionInfo));
-			theClass.setNumberOfIndividuals(currentClass.getIndividuals(ontology).size());
+
+			setIndividuals(theClass, currentClass);
 
 			if (isDeprecated) {
 				theClass.getAttributes().add(Constants.PROP_ATTR_DEPR);
@@ -71,5 +69,16 @@ public class ClassParser extends GeneralNodeParser {
 			owlClasses.put(currentClass.getIRI().toString(), currentClass);
 			classMap.put(theClass.getIri(), theClass);
 		}
+	}
+
+	private void setIndividuals(BaseClass theClass, OWLClass clazz) {
+		int size = 0;
+
+		for (OWLOntology owlOntology : Main.manager.getOntologies()) {
+			Set<OWLIndividual> individuals = clazz.getIndividuals(owlOntology);
+			size += individuals.size();
+		}
+
+		theClass.setNumberOfIndividuals(size);
 	}
 }
