@@ -271,7 +271,8 @@ public class JsonExporter {
 				.put("datatypePropertyCount", metric.getDataPropertyCount())
 				.put("propertyCount", metric.getPropertyCount())
 				.put("nodeCount", metric.getNodeCount())
-				.put("axiomCount", metric.getAxiomCount());
+				.put("axiomCount", metric.getAxiomCount())
+				.put("individualCount", metric.getIndividualCount());
 	}
 
 	private void processUnions(Map<String, OwlUnionOf> unionMap) {
