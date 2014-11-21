@@ -12,6 +12,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -86,7 +87,7 @@ public class JsonExporter {
 		int i = 0;
 
 		while(outputFile.exists()) {
-			outputFile.renameTo(new File(outputFile.getAbsolutePath() + "_" + i));
+			outputFile.renameTo(new File(FilenameUtils.getFullPath(outputFile.getPath()) + FilenameUtils.getBaseName(outputFile.getPath()) + i + "." + FilenameUtils.getExtension(outputFile.getName())));
 			i++;
 		}
 
