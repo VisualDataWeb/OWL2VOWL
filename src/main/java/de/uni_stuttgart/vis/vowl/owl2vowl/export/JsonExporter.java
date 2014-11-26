@@ -106,13 +106,11 @@ public class JsonExporter {
 
 	public void processHeader(OntologyInfo info) {
 		// Apply header
-		header.put("title", info.getTitle())
-				.put("titles", info.getLanguageToTitle())
+		header.put("title", info.getLanguageToTitle())
 				.put("uri", info.getIri())
 				.put("version", info.getVersion())
 				.put("author", info.getAuthor())
-				.put("description", info.getDescription())
-				.put("descriptions", info.getLanguageToDescription())
+				.put("description", info.getLanguageToDescription())
 				.put("languages", mapData.getAvailableLanguages());
 	}
 
@@ -138,11 +136,9 @@ public class JsonExporter {
 			JSONObject classAttrJson = new JSONObject();
 
 			classAttrJson.put("id", currentClass.getId());
-			classAttrJson.put("label", currentClass.getName());
-			classAttrJson.put("labels", currentClass.getLabels());
+			classAttrJson.put("label", currentClass.getLabels());
 			classAttrJson.put("uri", currentClass.getIri());
-			classAttrJson.put("comment", currentClass.getComment());
-			classAttrJson.put("comments", currentClass.getComments());
+			classAttrJson.put("comment", currentClass.getComments());
 			classAttrJson.put("instances", currentClass.getNumberOfIndividuals());
 			classAttrJson.put("equivalent", equivalent);
 			classAttrJson.put("attributes", attributes);
@@ -213,12 +209,10 @@ public class JsonExporter {
 
 			JSONObject datatypeAttrJson = new JSONObject();
 
-			datatypeAttrJson.put("id", currentDatatype.getId());
-			datatypeAttrJson.put("label", currentDatatype.getName());
+			datatypeAttrJson.put("id", currentDatatype.getId());;
 			datatypeAttrJson.put("uri", currentDatatype.getIri());
-			datatypeAttrJson.put("comment", currentDatatype.getComment());
-			datatypeAttrJson.put("labels", currentDatatype.getLabels());
-			datatypeAttrJson.put("comments", currentDatatype.getComments());
+			datatypeAttrJson.put("label", currentDatatype.getLabels());
+			datatypeAttrJson.put("comment", currentDatatype.getComments());
 			datatypeAttrJson.put("attributes", attributes);
 			datatypeAttrJson.put("subClasses", subClasses);
 			datatypeAttrJson.put("superClasses", superClasses);
@@ -337,11 +331,9 @@ public class JsonExporter {
 			JSONObject dataAttrJson = new JSONObject();
 
 			dataAttrJson.put("id", currentProperty.getId());
-			dataAttrJson.put("label", currentProperty.getName());
 			dataAttrJson.put("uri", currentProperty.getIri());
-			dataAttrJson.put("comment", currentProperty.getComment());
-			dataAttrJson.put("labels", currentProperty.getLabels());
-			dataAttrJson.put("comments", currentProperty.getComments());
+			dataAttrJson.put("label", currentProperty.getLabels());
+			dataAttrJson.put("comment", currentProperty.getComments());
 			dataAttrJson.put("domain", currentProperty.getDomain().getId());
 			dataAttrJson.put("range", currentProperty.getRange().getId());
 			dataAttrJson.put("inverse", currentProperty.getInverseID());
