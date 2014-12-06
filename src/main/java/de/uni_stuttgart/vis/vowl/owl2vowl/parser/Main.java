@@ -328,7 +328,7 @@ public class Main {
 
 //		System.out.println("Ontology data parsed!");
 
-		if(DEBUG_EXPORT) {
+		if (DEBUG_EXPORT) {
 			if (false)
 				return;
 			String filePath = System.getProperty("user.dir") + "\\WebVOWL\\src\\js\\data\\";

@@ -26,6 +26,7 @@ import java.util.Map;
  * @version 1.0
  */
 public class JsonExporter {
+	public static final int INDENT_FACTOR = 2;
 	private JSONObject root;
 	private JSONArray namespace;
 	private JSONObject header;
@@ -89,7 +90,7 @@ public class JsonExporter {
 
 	public void close() throws IOException {
 		if (outputFile == null) {
-			System.out.println(root.toString(2));
+			System.out.println(root.toString(INDENT_FACTOR));
 		} else {
 			int i = 0;
 
@@ -99,7 +100,7 @@ public class JsonExporter {
 			}
 
 			FileWriter writer = new FileWriter(outputFile);
-			writer.write(root.toString(2));
+			writer.write(root.toString(INDENT_FACTOR));
 			writer.close();
 		}
 	}
@@ -217,7 +218,7 @@ public class JsonExporter {
 
 			JSONObject datatypeAttrJson = new JSONObject();
 
-			datatypeAttrJson.put("id", currentDatatype.getId());;
+			datatypeAttrJson.put("id", currentDatatype.getId());
 			datatypeAttrJson.put("uri", currentDatatype.getIri());
 			datatypeAttrJson.put("label", currentDatatype.getLabels());
 			datatypeAttrJson.put("comment", currentDatatype.getComments());
