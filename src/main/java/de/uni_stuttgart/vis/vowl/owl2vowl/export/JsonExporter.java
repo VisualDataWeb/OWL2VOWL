@@ -39,6 +39,10 @@ public class JsonExporter {
 	private File outputFile;
 	private MapData mapData;
 
+	public JsonExporter() {
+		this(null);
+	}
+
 	public JsonExporter(File outputFile) {
 		this.outputFile = outputFile;
 		this.initialize();
@@ -84,16 +88,20 @@ public class JsonExporter {
 	}
 
 	public void close() throws IOException {
-		int i = 0;
+		if (outputFile == null) {
+			System.out.println(root.toString(2));
+		} else {
+			int i = 0;
 
-		while(outputFile.exists()) {
-			outputFile.renameTo(new File(FilenameUtils.getFullPath(outputFile.getPath()) + FilenameUtils.getBaseName(outputFile.getPath()) + i + "." + FilenameUtils.getExtension(outputFile.getName())));
-			i++;
+			while (outputFile.exists()) {
+				outputFile.renameTo(new File(FilenameUtils.getFullPath(outputFile.getPath()) + FilenameUtils.getBaseName(outputFile.getPath()) + i + "." + FilenameUtils.getExtension(outputFile.getName())));
+				i++;
+			}
+
+			FileWriter writer = new FileWriter(outputFile);
+			writer.write(root.toString(2));
+			writer.close();
 		}
-
-		FileWriter writer = new FileWriter(outputFile);
-		writer.write(root.toString(2));
-		writer.close();
 	}
 
 	// TODO

@@ -77,7 +77,7 @@ public class Main {
 		try {
 			mainO.loadOntologies(ontologyIri);
 //			System.out.println("Ontologie >" + ontologyIri + "< loaded! Starting convertion ...");
-			mainO.startConvertion();
+			mainO.startConvertion(true);
 			mainO.reset();
 		} catch (OWLOntologyCreationException e) {
 			//e.printStackTrace();
@@ -109,7 +109,7 @@ public class Main {
 		try {
 			mainO.loadOntologies(Constants.EXT_NICETAG);
 			//mainO.loadOntologies(new File(Constants.WINE));
-			mainO.startConvertion();
+			mainO.startConvertion(false);
 			mainO.reset();
 		} catch (OWLOntologyCreationException e) {
 			//e.printStackTrace();
@@ -143,7 +143,7 @@ public class Main {
 			try {
 				mainO.loadOntologies(curr);
 				System.out.println("Ontology: " + curr + " loaded!");
-				mainO.startConvertion();
+				mainO.startConvertion(false);
 				mainO.reset();
 				System.out.println();
 			} catch (OWLOntologyCreationException e) {
@@ -158,7 +158,7 @@ public class Main {
 			try {
 				mainO.loadOntologies(externalOntology);
 				System.out.println("Ontology: " + externalOntology + " loaded!");
-				mainO.startConvertion();
+				mainO.startConvertion(false);
 				mainO.reset();
 				System.out.println();
 			} catch (OWLOntologyCreationException e) {
@@ -297,7 +297,7 @@ public class Main {
 		logger.info("Ontologies loaded! Main Ontolgy: " + ontology.getOntologyID().getOntologyIRI().getFragment());
 	}
 
-	public void startConvertion() {
+	public void startConvertion(boolean exportToConsole) {
 		mapData = new MapData();
 
 		Set<OWLClass> classes = ontology.getClassesInSignature();
@@ -342,9 +342,15 @@ public class Main {
 				e.printStackTrace();
 			}
 		} else {
-			File location = getJarDir(this.getClass());
-			File exportFile = new File(location, FilenameUtils.removeExtension(ontology.getOntologyID().getOntologyIRI().getFragment()) + ".json");
-			JsonExporter exporter = new JsonExporter(exportFile);
+			JsonExporter exporter;
+
+			if (exportToConsole) {
+				exporter = new JsonExporter();
+			} else {
+				File location = getJarDir(this.getClass());
+				File exportFile = new File(location, FilenameUtils.removeExtension(ontology.getOntologyID().getOntologyIRI().getFragment()) + ".json");
+				exporter = new JsonExporter(exportFile);
+			}
 
 			try {
 				exporter.execute(mapData);
