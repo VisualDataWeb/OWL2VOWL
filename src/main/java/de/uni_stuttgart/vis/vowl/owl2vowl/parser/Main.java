@@ -30,7 +30,7 @@ import java.util.Set;
  * @author Eduard Marbach
  */
 public class Main {
-	private static final boolean DEBUG_EXPORT = true;
+	private static final boolean DEBUG_EXPORT = false;
 	private static final boolean CONVERSION = false;
 	private static final String IRI_OPTION_NAME = "iri";
 	private static final String HELP_OPTION_NAME = "h";
