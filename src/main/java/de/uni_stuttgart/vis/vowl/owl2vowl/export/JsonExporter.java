@@ -70,7 +70,7 @@ public class JsonExporter {
 
 	public void execute(MapData mapData) throws IOException {
 		this.mapData = mapData;
-		System.out.println("Start Export...");
+//		System.out.println("Start Export...");
 		processNamespace();
 		processHeader(mapData.getOntologyInfo());
 		processMetrics(mapData.getOntologyMetric());
@@ -80,7 +80,7 @@ public class JsonExporter {
 		processThings(mapData.getThingMap());
 		processUnions(mapData.getUnionMap());
 		close();
-		System.out.println("Export finished!");
+//		System.out.println("Export finished!");
 	}
 
 	public void close() throws IOException {
@@ -311,7 +311,7 @@ public class JsonExporter {
 			BaseProperty currentProperty = baseProperty.getValue();
 
 			if (currentProperty.getDomain() == null || currentProperty.getRange() == null) {
-				System.out.println("Skip " + currentProperty.getName() + " property.");
+//				System.out.println("Skip " + currentProperty.getName() + " property.");
 				continue;
 			}
 

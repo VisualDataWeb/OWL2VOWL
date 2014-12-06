@@ -72,11 +72,11 @@ public class Main {
 
 		Main mainO = new Main();
 		mainO.initializeAPI();
-		System.out.println("API loaded ...");
+//		System.out.println("API loaded ...");
 
 		try {
 			mainO.loadOntologies(ontologyIri);
-			System.out.println("Ontologie >" + ontologyIri + "< loaded! Starting convertion ...");
+//			System.out.println("Ontologie >" + ontologyIri + "< loaded! Starting convertion ...");
 			mainO.startConvertion();
 			mainO.reset();
 		} catch (OWLOntologyCreationException e) {
@@ -326,10 +326,10 @@ public class Main {
 		//processor.processDatatypes();
 		processor.processProperties();
 
-		System.out.println("Ontology data parsed!");
+//		System.out.println("Ontology data parsed!");
 
-		if (DEBUG_EXPORT) {
-			if(false)
+		if(DEBUG_EXPORT) {
+			if (false)
 				return;
 			String filePath = System.getProperty("user.dir") + "\\WebVOWL\\src\\js\\data\\";
 			;
