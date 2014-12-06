@@ -9,6 +9,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import org.apache.commons.cli.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -31,6 +32,8 @@ import java.util.Set;
 public class Main {
 	private static final boolean DEBUG_EXPORT = true;
 	private static final boolean CONVERSION = false;
+	private static final String IRI_OPTION_NAME = "iri";
+	private static final String HELP_OPTION_NAME = "h";
 	public static org.apache.logging.log4j.Logger logger = LogManager.getRootLogger();
 	public static OWLOntologyManager manager;
 	public static OWLDataFactory factory;
@@ -39,6 +42,24 @@ public class Main {
 	private static OWLOntology ontology;
 
 	public static void main(String[] args) {
+		CommandLine line = null;
+		Options options = createOptions();
+
+		String ontologyIri = null;
+
+		try {
+			line = new BasicParser().parse(options, args);
+		} catch (ParseException exp) {
+			System.err.println("Parsing failed.  Reason: " + exp.getMessage());
+			System.exit(1);
+		}
+		if (line.hasOption(HELP_OPTION_NAME) || line.getOptions().length == 0) {
+			HelpFormatter helpFormatter = new HelpFormatter();
+			helpFormatter.printHelp("OWL2VOWL", options);
+			System.exit(0);
+		}
+		ontologyIri = line.getOptionValue(IRI_OPTION_NAME);
+
 		if (CONVERSION) {
 			convertAllOntologies();
 			return;
@@ -49,18 +70,13 @@ public class Main {
 			return;
 		}
 
-		if (args.length == 0) {
-			System.out.println("Please call this program with a URI as parameter!");
-			return;
-		}
-
 		Main mainO = new Main();
 		mainO.initializeAPI();
 		System.out.println("API loaded ...");
 
 		try {
-			mainO.loadOntologies(args[0]);
-			System.out.println("Ontologie >" + args[0] + "< loaded! Starting convertion ...");
+			mainO.loadOntologies(ontologyIri);
+			System.out.println("Ontologie >" + ontologyIri + "< loaded! Starting convertion ...");
 			mainO.startConvertion();
 			mainO.reset();
 		} catch (OWLOntologyCreationException e) {
@@ -68,6 +84,23 @@ public class Main {
 			System.out.println("FAILED TO LOAD " + Arrays.toString(args));
 			logger.error("FAILED TO LOAD " + Arrays.toString(args));
 		}
+	}
+
+	private static Options createOptions() {
+		Options options = new Options();
+
+		Option helpOption = new Option(HELP_OPTION_NAME, "views this help text");
+
+		Option iriOption = OptionBuilder.withArgName("IRI")
+				.isRequired()
+				.hasArg()
+				.withDescription("the iri of an ontology")
+				.create(IRI_OPTION_NAME);
+
+		options.addOption(helpOption);
+		options.addOption(iriOption);
+
+		return options;
 	}
 
 	public static void debugLoading() {
