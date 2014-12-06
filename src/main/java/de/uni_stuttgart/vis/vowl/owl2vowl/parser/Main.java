@@ -5,7 +5,9 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonExporter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.ConsoleExporter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.FileExporter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGenerator;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
@@ -17,7 +19,6 @@ import org.semanticweb.owlapi.metrics.*;
 import org.semanticweb.owlapi.model.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -328,35 +329,26 @@ public class Main {
 
 //		System.out.println("Ontology data parsed!");
 
-		if (DEBUG_EXPORT) {
-			if (false)
-				return;
-			String filePath = System.getProperty("user.dir") + "\\WebVOWL\\src\\js\\data\\";
-			;
-			File exportFile = new File(filePath, FilenameUtils.removeExtension(ontology.getOntologyID().getOntologyIRI().getFragment()) + ".json");
-			JsonExporter exporter = new JsonExporter(exportFile);
+		JsonGenerator exporter;
 
-			try {
-				exporter.execute(mapData);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if (exportToConsole) {
+			exporter = new JsonGenerator(new ConsoleExporter());
 		} else {
-			JsonExporter exporter;
-
-			if (exportToConsole) {
-				exporter = new JsonExporter();
+			File exportFile;
+			if (DEBUG_EXPORT) {
+				String filePath = System.getProperty("user.dir") + "\\WebVOWL\\src\\js\\data\\";
+				exportFile = new File(filePath, FilenameUtils.removeExtension(ontology.getOntologyID().getOntologyIRI().getFragment()) + ".json");
 			} else {
 				File location = getJarDir(this.getClass());
-				File exportFile = new File(location, FilenameUtils.removeExtension(ontology.getOntologyID().getOntologyIRI().getFragment()) + ".json");
-				exporter = new JsonExporter(exportFile);
+				exportFile = new File(location, FilenameUtils.removeExtension(ontology.getOntologyID().getOntologyIRI().getFragment()) + ".json");
 			}
+			exporter = new JsonGenerator(new FileExporter(exportFile));
+		}
 
-			try {
-				exporter.execute(mapData);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		try {
+			exporter.execute(mapData);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }

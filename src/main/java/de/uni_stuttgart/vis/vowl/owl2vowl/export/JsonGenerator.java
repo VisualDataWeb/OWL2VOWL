@@ -12,20 +12,16 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
-import org.apache.commons.io.FilenameUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.Map;
 
 /**
  * @author Eduard Marbach
  * @version 1.0
  */
-public class JsonExporter {
+public class JsonGenerator {
 	public static final int INDENT_FACTOR = 2;
 	private JSONObject root;
 	private JSONArray namespace;
@@ -37,16 +33,12 @@ public class JsonExporter {
 	private JSONArray datatypeAttribute;
 	private JSONArray objectProperty;
 	private JSONArray objectPropertyAttribute;
-	private File outputFile;
+	private Exporter exporter;
 	private MapData mapData;
 
-	public JsonExporter() {
-		this(null);
-	}
-
-	public JsonExporter(File outputFile) {
-		this.outputFile = outputFile;
-		this.initialize();
+	public JsonGenerator(Exporter exporter) {
+		this.exporter = exporter;
+		initialize();
 	}
 
 	private void initialize() {
@@ -73,7 +65,7 @@ public class JsonExporter {
 				.put("propertyAttribute", objectPropertyAttribute);
 	}
 
-	public void execute(MapData mapData) throws IOException {
+	public void execute(MapData mapData) throws Exception {
 		this.mapData = mapData;
 //		System.out.println("Start Export...");
 		processNamespace();
@@ -84,25 +76,12 @@ public class JsonExporter {
 		processProperties(mapData.getMergedProperties());
 		processThings(mapData.getThingMap());
 		processUnions(mapData.getUnionMap());
-		close();
+		export();
 //		System.out.println("Export finished!");
 	}
 
-	public void close() throws IOException {
-		if (outputFile == null) {
-			System.out.println(root.toString(INDENT_FACTOR));
-		} else {
-			int i = 0;
-
-			while (outputFile.exists()) {
-				outputFile.renameTo(new File(FilenameUtils.getFullPath(outputFile.getPath()) + FilenameUtils.getBaseName(outputFile.getPath()) + i + "." + FilenameUtils.getExtension(outputFile.getName())));
-				i++;
-			}
-
-			FileWriter writer = new FileWriter(outputFile);
-			writer.write(root.toString(INDENT_FACTOR));
-			writer.close();
-		}
+	public void export() throws Exception {
+		exporter.write(root.toString(INDENT_FACTOR));
 	}
 
 	// TODO
