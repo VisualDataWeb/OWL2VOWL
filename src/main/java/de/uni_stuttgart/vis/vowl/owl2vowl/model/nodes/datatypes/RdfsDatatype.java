@@ -16,7 +16,7 @@ public class RdfsDatatype extends BaseDatatype {
 
 	@Override
 	public void setName(String name) {
-		getLabels().put("default", name);
+		getLabels().put(Constants.LANG_DEFAULT, name);
 		super.setName(name);
 	}
 }

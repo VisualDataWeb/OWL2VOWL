@@ -112,7 +112,7 @@ public class GeneralParser {
 		OWLAnnotationProperty commentProp = factory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_COMMENT.getIRI());
 
 		languageToLabel = parseLanguage(entity, labelProp);
-		languageToLabel.put("default", FormatText.cutQuote(extractNameFromIRI(entity.getIRI().toString())));
+		languageToLabel.put(Constants.LANG_DEFAULT, FormatText.cutQuote(extractNameFromIRI(entity.getIRI().toString())));
 		comments = parseLanguage(entity, commentProp);
 
 		for(OWLOntology currentOntology : Main.manager.getOntologies()) {
@@ -152,8 +152,13 @@ public class GeneralParser {
 					OWLLiteral val = (OWLLiteral) owlAnnotation.getValue();
 
 					if (val.isRDFPlainLiteral()) {
-						workingMap.put(val.getLang(), val.getLiteral());
-						mapData.getAvailableLanguages().add(val.getLang());
+						if(val.getLang().isEmpty()) {
+							workingMap.put(Constants.LANG_UNSET, val.getLiteral());
+							mapData.getAvailableLanguages().add(Constants.LANG_UNSET);
+						} else {
+							workingMap.put(val.getLang(), val.getLiteral());
+							mapData.getAvailableLanguages().add(val.getLang());
+						}
 					}
 				}
 			}

@@ -7,7 +7,7 @@ public class RdfsLiteral extends BaseDatatype {
 	public RdfsLiteral() {
 		setType(Constants.TYPE_LITERAL);
 		setID();
-		getLabels().put("default", "Literal");
+		getLabels().put(Constants.LANG_DEFAULT, "Literal");
 	}
 
 	@Override

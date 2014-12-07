@@ -120,7 +120,7 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 			property.setLabels(languageToLabel);
 			property.setComments(comments);
-			property.setName(languageToLabel.get("default"));
+			property.setName(languageToLabel.get(Constants.LANG_DEFAULT));
 			property.setIri(iri);
 			property.setDefinedBy(rdfsIsDefinedBy);
 			property.setOwlVersion(owlVersionInfo);

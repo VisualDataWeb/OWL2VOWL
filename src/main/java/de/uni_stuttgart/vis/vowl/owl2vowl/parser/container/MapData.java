@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.container;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.containerElements.DisjointUnion;
@@ -55,6 +56,8 @@ public class MapData {
 	private Set<String> availableLanguages = new HashSet<String>();
 
 	public MapData() {
+		// Default langauge always exists.
+		availableLanguages.add(Constants.LANG_DEFAULT);
 	}
 
 	public Set<String> getAvailableLanguages() {
