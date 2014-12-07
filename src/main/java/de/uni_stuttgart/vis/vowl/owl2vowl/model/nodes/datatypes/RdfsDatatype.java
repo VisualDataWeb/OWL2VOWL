@@ -13,4 +13,10 @@ public class RdfsDatatype extends BaseDatatype {
 		id = "datatype" + counterObjects;
 		counterObjects++;
 	}
+
+	@Override
+	public void setName(String name) {
+		getLabels().put("default", name);
+		super.setName(name);
+	}
 }

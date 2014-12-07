@@ -70,8 +70,12 @@ public class OntoInfoParser extends GeneralParser {
 			OWLLiteral val = (OWLLiteral) owlAnnotation.getValue();
 
 			if (val.isRDFPlainLiteral()) {
-				mapToAdd.put(val.getLang(), val.getLiteral());
-				mapData.getAvailableLanguages().add(val.getLang());
+				if (val.getLang().isEmpty()) {
+					mapToAdd.put("default", val.getLiteral());
+				} else {
+					mapToAdd.put(val.getLang(), val.getLiteral());
+					mapData.getAvailableLanguages().add(val.getLang());
+				}
 			}
 		}
 	}
