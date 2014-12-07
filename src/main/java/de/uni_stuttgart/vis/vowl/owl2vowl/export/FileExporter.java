@@ -33,8 +33,7 @@ public class FileExporter implements Exporter {
 			i++;
 		}
 
-		FileWriter writer = null;
-		writer = new FileWriter(destinationFile);
+		FileWriter writer = new FileWriter(destinationFile);
 		writer.write(text);
 		writer.close();
 	}
