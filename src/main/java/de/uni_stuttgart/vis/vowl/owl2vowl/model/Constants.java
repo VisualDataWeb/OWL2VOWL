@@ -101,4 +101,8 @@ public class Constants {
 	public static final String AXIOM_SUBCLASS = "SubClassOf";
 	public static final String AXIOM_CARD_MIN = "ObjectMinCardinality";
 	public static final String AXIOM_CARD_EXACT = "ObjectExactCardinality";
+
+	/* Languages */
+	public static final String LANG_UNSET = "unset";
+	public static final String LANG_DEFAULT = "iriBased";
 }
