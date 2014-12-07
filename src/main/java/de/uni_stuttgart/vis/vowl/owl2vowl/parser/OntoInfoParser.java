@@ -71,7 +71,8 @@ public class OntoInfoParser extends GeneralParser {
 
 			if (val.isRDFPlainLiteral()) {
 				if (val.getLang().isEmpty()) {
-					mapToAdd.put("default", val.getLiteral());
+					mapToAdd.put(Constants.LANG_UNSET, val.getLiteral());
+					mapData.getAvailableLanguages().add(Constants.LANG_UNSET);
 				} else {
 					mapToAdd.put(val.getLang(), val.getLiteral());
 					mapData.getAvailableLanguages().add(val.getLang());
