@@ -61,7 +61,7 @@ public class ProcessUnit {
 
 		for (BaseClass baseClass : equivNode.getEquivalentClasses()) {
 			if (!baseClass.getAttributes().contains(Constants.PROP_ATTR_IMPORT)) {
-				System.out.println(equivNode.getIri() + " , " + equivNode.getEquivalentClasses());
+//				System.out.println(equivNode.getIri() + " , " + equivNode.getEquivalentClasses());
 				equivNode.getEquivalentClasses().clear();
 				return;
 			}
@@ -142,7 +142,6 @@ public class ProcessUnit {
 
 			if (aClass == null) {
 				Main.logger.error("Could not find correct intersection element in map: " + currentUnion);
-				System.out.println("Problems during intersection searching: " + currentUnion);
 				continue;
 			}
 
@@ -155,7 +154,6 @@ public class ProcessUnit {
 
 			if (aClass == null) {
 				Main.logger.error("Could not find correct intersection element in map: " + curInteresection);
-				System.out.println("Problems during intersection searching: " + curInteresection);
 				continue;
 			}
 
@@ -453,7 +451,7 @@ public class ProcessUnit {
 		} else if (datatypePropertyMap.containsKey(iri)) {
 			property.setInverseID(datatypePropertyMap.get(iri).getId());
 		} else {
-			System.out.println("Missing inverse IRI: " + iri);
+//			System.out.println("Missing inverse IRI: " + iri);
 		}
 	}
 

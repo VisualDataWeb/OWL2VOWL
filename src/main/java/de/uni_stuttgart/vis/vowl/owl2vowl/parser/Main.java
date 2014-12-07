@@ -82,8 +82,8 @@ public class Main {
 			mainO.reset();
 		} catch (OWLOntologyCreationException e) {
 			//e.printStackTrace();
-			System.out.println("FAILED TO LOAD " + Arrays.toString(args));
 			logger.error("FAILED TO LOAD " + Arrays.toString(args));
+			System.exit(1);
 		}
 	}
 
