@@ -43,6 +43,16 @@ public class Main {
 	private static OWLOntology ontology;
 
 	public static void main(String[] args) {
+		if (CONVERSION) {
+			convertAllOntologies();
+			return;
+		}
+
+		if (DEBUG_EXPORT) {
+			debugLoading();
+			return;
+		}
+
 		CommandLine line = null;
 		Options options = createOptions();
 
@@ -61,15 +71,6 @@ public class Main {
 		}
 		ontologyIri = line.getOptionValue(IRI_OPTION_NAME);
 
-		if (CONVERSION) {
-			convertAllOntologies();
-			return;
-		}
-
-		if (DEBUG_EXPORT) {
-			debugLoading();
-			return;
-		}
 
 		Main mainO = new Main();
 		mainO.initializeAPI();
