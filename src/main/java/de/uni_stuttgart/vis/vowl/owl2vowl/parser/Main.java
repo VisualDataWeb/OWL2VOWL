@@ -11,6 +11,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGenerator;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ExportNames;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
@@ -131,7 +132,6 @@ public class Main {
 		externalOntologies.add(Constants.EXT_ONTOVIBE);
 		externalOntologies.add(Constants.EXT_PIZZA);
 		externalOntologies.add(Constants.EXT_PROV);
-
 
 		if (children == null) {
 			throw new IllegalStateException("Directory doesn't contain files.");
@@ -336,9 +336,17 @@ public class Main {
 			exporter = new JsonGenerator(new ConsoleExporter());
 		} else {
 			File exportFile;
+
 			if (DEBUG_EXPORT) {
-				String filePath = System.getProperty("user.dir") + "\\WebVOWL\\src\\js\\data\\";
-				exportFile = new File(filePath, FilenameUtils.removeExtension(ontology.getOntologyID().getOntologyIRI().getFragment()) + ".json");
+				String exportName = getDebugExportName(ontology);
+
+				if(exportName != null) {
+					String filePath = System.getProperty("user.dir") + "\\WebVOWL\\src\\js\\data\\";
+					exportFile = new File(filePath, exportName + ".json");
+				} else {
+					logger.error("No suitable export name found to export: " + ontology.getOntologyID().getOntologyIRI().toString());
+					return;
+				}
 			} else {
 				File location = getJarDir(this.getClass());
 				exportFile = new File(location, FilenameUtils.removeExtension(ontology.getOntologyID().getOntologyIRI().getFragment()) + ".json");
@@ -351,5 +359,33 @@ public class Main {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	private String getDebugExportName(OWLOntology ontology) {
+		String iri = ontology.getOntologyID().getOntologyIRI().toString();
+
+		if (iri.equals(ExportNames.EXPORT_FOAF)) {
+			return ExportNames.FILENAME_FOAF;
+		} else if (iri.equals(ExportNames.EXPORT_GEONAMES)) {
+			return ExportNames.FILENAME_GEONAMES;
+		} else if (iri.equals(ExportNames.EXPORT_MARINE)) {
+			return ExportNames.FILENAME_MARINE;
+		} else if (iri.equals(ExportNames.EXPORT_MARINE2)) {
+			return ExportNames.FILENAME_MARINE2;
+		} else if (iri.equals(ExportNames.EXPORT_MUTO)) {
+			return ExportNames.FILENAME_MUTO;
+		} else if (iri.equals(ExportNames.EXPORT_ONTOVIVBE)) {
+			return ExportNames.FILENAME_ONTOVIVBE;
+		} else if (iri.equals(ExportNames.EXPORT_PERSONAS)) {
+			return ExportNames.FILENAME_PERSONAS;
+		} else if (iri.equals(ExportNames.EXPORT_PROV)) {
+			return ExportNames.FILENAME_PROV;
+		} else if (iri.equals(ExportNames.EXPORT_SIOC)) {
+			return ExportNames.FILENAME_SIOC;
+		} else if (iri.equals(ExportNames.EXPORT_RELATIONS)) {
+			return ExportNames.FILENAME_RELATIONS;
+		}
+
+		return null;
 	}
 }
