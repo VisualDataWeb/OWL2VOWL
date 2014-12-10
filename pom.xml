@@ -53,6 +53,11 @@
 							<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.parser.Main</mainClass>
 						</manifest>
 					</archive>
+					<finalName>owl2vowl</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
+
+					<!-- Create .zip -->
+					<descriptor>src/assembly/release_version.xml</descriptor>
 				</configuration>
 			</plugin>
 		</plugins>
