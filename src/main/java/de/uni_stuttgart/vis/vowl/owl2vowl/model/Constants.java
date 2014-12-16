@@ -110,6 +110,6 @@ public class Constants {
 	public static final String AXIOM_CARD_EXACT = "ObjectExactCardinality";
 
 	/* Languages */
-	public static final String LANG_UNSET = "unset";
-	public static final String LANG_DEFAULT = "iriBased";
+	public static final String LANG_UNSET = "undefined";
+	public static final String LANG_DEFAULT = "IRI-based";
 }
