@@ -316,7 +316,7 @@ public class Main {
 				String exportName = getDebugExportName(ontology);
 
 				if(exportName != null) {
-					String filePath = System.getProperty("user.dir") + "\\WebVOWL\\src\\js\\data\\";
+					String filePath = System.getProperty("user.dir") + "/WebVOWL/src/js/data/";
 					exportFile = new File(filePath, exportName + ".json");
 				} else {
 					logger.error("No suitable export name found to export: " + ontology.getOntologyID().getOntologyIRI().toString());
