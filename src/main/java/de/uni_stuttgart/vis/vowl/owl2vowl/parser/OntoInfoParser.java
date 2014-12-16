@@ -7,6 +7,7 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -29,32 +30,36 @@ public class OntoInfoParser extends GeneralParser {
 
 		/* Save available annotations */
 		for (OWLAnnotation annotation : ontology.getAnnotations()) {
-			if (annotation.getProperty().toString().equals(Constants.INFO_CREATOR)) {
-				info.setAuthor(FormatText.cutQuote(annotation.getValue().toString()));
-			}
-			if (annotation.getProperty().toString().equals(Constants.INFO_DESCRIPTION)) {
-				addLanguage(info.getLanguageToDescription(), annotation);
-				info.setDescription(FormatText.cutQuote(annotation.getValue().toString()));
-			}
-			if (annotation.getProperty().toString().equals(Constants.INFO_ISSUED)) {
-				info.setIssued(FormatText.cutQuote(annotation.getValue().toString()));
-			}
-			if (annotation.getProperty().toString().equals(Constants.INFO_LICENSE)) {
-				info.setLicense(FormatText.cutQuote(annotation.getValue().toString()));
-			}
-			if (annotation.getProperty().toString().equals(Constants.INFO_RDFS_LABEL)) {
-				addLanguage(info.getLanguageToLabel(), annotation);
-				info.setRdfsLabel(FormatText.cutQuote(annotation.getValue().toString()));
-			}
-			if (annotation.getProperty().toString().equals(Constants.INFO_SEE_ALSO)) {
-				info.setSeeAlso(FormatText.cutQuote(annotation.getValue().toString()));
-			}
-			if (annotation.getProperty().toString().equals(Constants.INFO_TITLE)) {
-				addLanguage(info.getLanguageToTitle(), annotation);
-				info.setTitle(FormatText.cutQuote(annotation.getValue().toString()));
-			}
-			if (annotation.getProperty().toString().equals(Constants.INFO_VERSION_INFO)) {
-				info.setVersion(FormatText.cutQuote(annotation.getValue().toString()));
+			switch (PROPMAP.getValue(annotation.getProperty().toString())) {
+				case CREATOR:
+					info.setAuthor(FormatText.cutQuote(annotation.getValue().toString()));
+					break;
+				case DESCRIPTION:
+					addLanguage(info.getLanguageToDescription(), annotation);
+					info.setDescription(FormatText.cutQuote(annotation.getValue().toString()));
+					break;
+				case ISSUED:
+					info.setIssued(FormatText.cutQuote(annotation.getValue().toString()));
+					break;
+				case LICENSE:
+					info.setLicense(FormatText.cutQuote(annotation.getValue().toString()));
+					break;
+				case LABEL:
+					addLanguage(info.getLanguageToLabel(), annotation);
+					info.setRdfsLabel(FormatText.cutQuote(annotation.getValue().toString()));
+					break;
+				case SEE_ALSO:
+					info.setSeeAlso(FormatText.cutQuote(annotation.getValue().toString()));
+					break;
+				case TITLE:
+					addLanguage(info.getLanguageToTitle(), annotation);
+					info.setTitle(FormatText.cutQuote(annotation.getValue().toString()));
+					break;
+				case VERSION:
+					info.setVersion(FormatText.cutQuote(annotation.getValue().toString()));
+					break;
+				default:
+					// Nothing
 			}
 		}
 	}
@@ -79,5 +84,60 @@ public class OntoInfoParser extends GeneralParser {
 				}
 			}
 		}
+	}
+}
+
+enum PROPMAP {
+	CREATOR(new String[]{Constants.INFO_CREATOR_DC, Constants.INFO_CREATOR_DCTERMS}),
+	DESCRIPTION(new String[]{Constants.INFO_DESCRIPTION_DC, Constants.INFO_DESCRIPTION_DCTERMS}),
+	ISSUED(new String[]{Constants.INFO_ISSUED_DCTERMS}),
+	LICENSE(new String[]{Constants.INFO_LICENSE_DCTERMS}),
+	LABEL(new String[]{Constants.INFO_RDFS_LABEL}),
+	SEE_ALSO(new String[]{Constants.INFO_SEE_ALSO}),
+	TITLE(new String[]{Constants.INFO_TITLE_DC, Constants.INFO_TITLE_DCTERMS}),
+	VERSION(new String[]{Constants.INFO_VERSION_INFO}),
+	EMPTY(new String[0]);
+
+	private final String[] values;
+	/**
+	 * @param values All matching strings.
+	 */
+	private PROPMAP(final String[] values) {
+		this.values = values;
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(values);
+	}
+
+	/**
+	 * Checks if the string array contains the search string.
+	 * @param search String to search for.
+	 * @return True if found else false.
+	 */
+	public boolean contains(String search) {
+		for (String value : values) {
+			if (value.equals(search)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * Returns the enum value if found.
+	 * @param searchProp The search string.
+	 * @return The matching enum or EMPTY if not found.
+	 */
+	public static PROPMAP getValue(String searchProp) {
+		for (PROPMAP propmap : PROPMAP.values()) {
+			if (propmap.contains(searchProp)) {
+				return propmap;
+			}
+		}
+
+		return EMPTY;
 	}
 }
