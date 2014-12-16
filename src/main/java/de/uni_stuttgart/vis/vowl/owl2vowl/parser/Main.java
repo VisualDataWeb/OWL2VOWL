@@ -124,37 +124,12 @@ public class Main {
 		Main mainO = new Main();
 		mainO.initializeAPI();
 
-		File filePath = new File(Constants.PATH_VARIABLE);
-		File[] children = filePath.listFiles();
-
 		List<String> externalOntologies = new ArrayList<String>();
-		externalOntologies.add(Constants.EXT_GEONAMES);
-		externalOntologies.add(Constants.EXT_ONTOVIBE);
-		externalOntologies.add(Constants.EXT_PIZZA);
-		externalOntologies.add(Constants.EXT_PROV);
-
-		if (children == null) {
-			throw new IllegalStateException("Directory doesn't contain files.");
-		}
-
-		for (File curr : children) {
-			if (curr.isDirectory()) {
-				continue;
-			}
-
-			try {
-				mainO.loadOntologies(curr);
-				System.out.println("Ontology: " + curr + " loaded!");
-				mainO.startConvertion(false);
-				mainO.reset();
-				System.out.println();
-			} catch (OWLOntologyCreationException e) {
-				//e.printStackTrace();
-				System.out.println(e.getMessage());
-				System.out.println("FAILED TO LOAD " + curr.getName());
-				logger.error("FAILED TO LOAD " + curr.getName());
-			}
-		}
+		externalOntologies.add(ExportNames.EXPORT_FOAF);
+		externalOntologies.add(ExportNames.EXPORT_MUTO);
+		externalOntologies.add(ExportNames.EXPORT_PERSONAS);
+		externalOntologies.add(ExportNames.EXPORT_SIOC);
+		externalOntologies.add(ExportNames.EXPORT_ONTOVIVBE);
 
 		for (String externalOntology : externalOntologies) {
 			try {
