@@ -29,9 +29,6 @@
 					</execution>
 				</executions>
 				<configuration>
-					<descriptorRefs>
-						<descriptorRef>jar-with-dependencies</descriptorRef>
-					</descriptorRefs>
 					<archive>
 						<manifest>
 							<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.parser.Main</mainClass>
@@ -39,9 +36,11 @@
 					</archive>
 					<finalName>owl2vowl</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
-
-					<!-- Create .zip -->
-					<descriptor>src/assembly/release_version.xml</descriptor>
+					<descriptors>
+						<!-- Create .zip -->
+						<descriptor>src/assembly/jar-with-dependencies.xml</descriptor>
+						<descriptor>src/assembly/release_version.xml</descriptor>
+					</descriptors>
 				</configuration>
 			</plugin>
 		</plugins>
