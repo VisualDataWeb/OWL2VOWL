@@ -17,23 +17,9 @@
 
 	<build>
 		<plugins>
-			<!--<plugin>
-				<!- Build an executable JAR ->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>2.4</version>
-				<configuration>
-					<archive>
-						<manifest>
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
-							<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.parser.Main</mainClass>
-						</manifest>
-					</archive>
-				</configuration>
-			</plugin>-->
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.5</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -48,8 +34,6 @@
 					</descriptorRefs>
 					<archive>
 						<manifest>
-							<addClasspath>true</addClasspath>
-							<classpathPrefix>lib/</classpathPrefix>
 							<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.parser.Main</mainClass>
 						</manifest>
 					</archive>
