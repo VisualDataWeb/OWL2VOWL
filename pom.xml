@@ -33,6 +33,10 @@
 						<manifest>
 							<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.parser.Main</mainClass>
 						</manifest>
+						<manifestEntries>
+							<Version>${project.version}</Version>
+							<Authors>Vincent Link, Steffen Lohmann, Eduard Marbach</Authors>
+						</manifestEntries>
 					</archive>
 					<finalName>owl2vowl</finalName>
 					<appendAssemblyId>false</appendAssemblyId>
