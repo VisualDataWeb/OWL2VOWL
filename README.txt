@@ -1,23 +1,20 @@
--- How to use initial version of OWL2VOWL-Converter --
+How to use the current version of OWL2VOWL converter
+====================================================
 
-Requirements:
-- Java 6 (1.6_u18)
+Requirements
+------------
+- at least Java 6
 
-How-To:
-You have to run this .jar out of command line tool.
-Then you type: java -jar owl2vowl.jar "[Here you type in your desired ontology URI]"
-The output file will be created next to the .jar directory. If possible the name of the jar
-will be extracted out of the ontology IRI. If not the name will be >null.json<
+Instructions
+------------
+Run owl2vowl.jar from the command line:
+	java -jar owl2vowl.jar -iri "[Ontology IRI]"
+The converted ontology will be printed on the console.
 
-Example:
-java -jar owl2vowl.jar "http://ontovibe.visualdataweb.org/1.0/"
-The output file is next to the jar with the name null.json
+Example
+-------
+java -jar owl2vowl.jar -iri "http://ontovibe.visualdataweb.org/1.0/"
 
-Notes:
-- There will be created a log file for the ontology structure. This is just for debug purpose
-and only in the initial release of OWL2VOWL.
-
-
-Log:
-- Updated to run with Java 6_u18
-- Improvements in conversion of further constructs.
+Notes
+-----
+A log file is created for debugging purposes.
