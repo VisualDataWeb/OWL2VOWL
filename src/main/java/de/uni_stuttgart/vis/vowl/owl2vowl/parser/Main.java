@@ -63,12 +63,10 @@ public class Main {
 			line = new BasicParser().parse(options, args);
 		} catch (ParseException exp) {
 			System.err.println("Parsing failed.  Reason: " + exp.getMessage());
-			System.exit(1);
+			printHelpMenuAndExit(options);
 		}
-		if (line.hasOption(HELP_OPTION_NAME) || line.getOptions().length == 0) {
-			HelpFormatter helpFormatter = new HelpFormatter();
-			helpFormatter.printHelp("OWL2VOWL", options);
-			System.exit(0);
+		if (line.hasOption(HELP_OPTION_NAME)) {
+			printHelpMenuAndExit(options);
 		}
 		ontologyIri = line.getOptionValue(IRI_OPTION_NAME);
 
@@ -87,6 +85,12 @@ public class Main {
 			logger.error("FAILED TO LOAD " + Arrays.toString(args));
 			System.exit(1);
 		}
+	}
+
+	private static void printHelpMenuAndExit(Options options) {
+		HelpFormatter helpFormatter = new HelpFormatter();
+		helpFormatter.printHelp("OWL2VOWL", options);
+		System.exit(0);
 	}
 
 	private static Options createOptions() {
