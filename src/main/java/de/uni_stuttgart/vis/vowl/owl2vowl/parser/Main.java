@@ -268,7 +268,7 @@ public class Main {
 
 		ontology = manager.loadOntologyFromOntologyDocument(mainOnto);
 
-		logger.info("Ontologies loaded! Main Ontolgy: " + ontology.getOntologyID().getOntologyIRI());
+		logger.info("Ontologies loaded! Main Ontology: " + ontology.getOntologyID().getOntologyIRI());
 	}
 
 	public void loadOntologies(File mainOnto) throws OWLOntologyCreationException {
@@ -276,13 +276,13 @@ public class Main {
 
 		ontology = manager.loadOntologyFromOntologyDocument(mainOnto);
 
-		logger.info("Ontology loaded! Main Ontolgy: " + ontology.getOntologyID().getOntologyIRI());
+		logger.info("Ontology loaded! Main Ontology: " + ontology.getOntologyID().getOntologyIRI());
 	}
 
 	public void loadOntologies(String linkToOntology) throws OWLOntologyCreationException {
 		logger.info("Loading ontologies ... " + linkToOntology);
 		ontology = manager.loadOntology(IRI.create(linkToOntology));
-		logger.info("Ontologies loaded! Main Ontolgy: " + ontology.getOntologyID().getOntologyIRI().getFragment());
+		logger.info("Ontologies loaded! Main Ontology: " + ontology.getOntologyID().getOntologyIRI().getFragment());
 	}
 
 	public void startConvertion(boolean exportToConsole) {

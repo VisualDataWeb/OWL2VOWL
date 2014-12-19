@@ -4,7 +4,7 @@
 		<Property name="log-path">logs</Property>
 	</Properties>
 	<Appenders>
-		<RollingFile name="console-log" fileName="${log-path}/ontology_structre.log"
+		<RollingFile name="console-log" fileName="${log-path}/ontology_structure.log"
 		             filePattern="${log-path}/mycuteblog-trace-%d{yyyy-MM-dd}.log" append="false">
 			<PatternLayout>
 				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
