@@ -48,6 +48,13 @@ public class Constants {
 	public static final String EXT_PIZZA = "http://130.88.198.11/co-ode-files/ontologies/pizza.owl";
 	public static final String EXT_ONTOVIBE = "http://ontovibe.visualdataweb.org/1.0";
 	public static final String EXT_NICETAG = "http://ns.inria.fr/nicetag/2010/09/09/voc";
+	public static final String EXT_SIOC = "http://rdfs.org/sioc/ns#";
+	public static final String EXT_FOAF = "http://xmlns.com/foaf/0.1/";
+	public static final String EXT_MUTO = "http://purl.org/muto/core";
+	public static final String EXT_GOODRELATIONS = "http://purl.org/goodrelations/v1";
+	public static final String EXT_MUSIC = "http://purl.org/ontology/mo/";
+	public static final String EXT_MARINE = "http://www.ics.forth.gr/isl/MarineTLO/v3/marinetlo.owl";
+	public static final String EXT_MARINE_TLO = "http://www.ics.forth.gr/isl/MarineTLO/v3/marinetloimarine.owl";
 
 
 	/* ANNOTATIONS */
