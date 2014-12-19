@@ -5,7 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Axiom_Annotations;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlIntersectionOf;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -30,7 +30,7 @@ public class IntersectionParser extends AxiomParser {
 	 * @param direction True for domain else range.
 	 */
 	public OwlIntersectionOf searchIntersection(OWLProperty property, boolean direction) {
-		Set<OWLClass> classes = search(property, Constants.AXIOM_OBJ_INTERSECTION, direction);
+		Set<OWLClass> classes = search(property, Axiom_Annotations.AXIOM_OBJ_INTERSECTION, direction);
 
 		if (classes == null) {
 			return null;

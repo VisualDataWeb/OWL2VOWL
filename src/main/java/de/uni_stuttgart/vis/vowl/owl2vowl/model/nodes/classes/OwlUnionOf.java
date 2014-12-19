@@ -1,16 +1,15 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes;
 
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OwlUnionOf extends SpecialClass {
 	public OwlUnionOf() {
 		super();
-		setType(Constants.TYPE_UNION);
+		setType(Node_Types.TYPE_UNION);
 	}
 
 	public void addUnion(BaseNode node) {

@@ -5,9 +5,8 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
-import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDatatype;
@@ -56,7 +55,7 @@ public class DatatypeParser extends GeneralNodeParser {
 			theDatatype.setOwlVersion(owlVersionInfo);
 
 			if (isDeprecated) {
-				theDatatype.getAttributes().add(Constants.PROP_ATTR_DEPR);
+				theDatatype.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_DEPR);
 			}
 
 			owlDatatypes.put(currentDatatype.getIRI().toString(), currentDatatype);

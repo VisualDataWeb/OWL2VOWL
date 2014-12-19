@@ -1,17 +1,16 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes;
 
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class OwlIntersectionOf extends SpecialClass {
 
 	public OwlIntersectionOf() {
 		super();
-		setType(Constants.TYPE_INTERSECTION);
+		setType(Node_Types.TYPE_INTERSECTION);
 	}
 
 	public void addIntersection(BaseNode node) {

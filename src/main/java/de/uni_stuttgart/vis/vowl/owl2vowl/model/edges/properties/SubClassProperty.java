@@ -5,7 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Property_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
 /**
@@ -14,7 +14,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 public class SubClassProperty extends OwlObjectProperty {
 	public SubClassProperty() {
 		super();
-		setType(Constants.PROP_TYPE_SUBCLASS);
+		setType(Property_Types.PROP_TYPE_SUBCLASS);
 		setName("Subclass Of");
 	}
 
@@ -22,7 +22,7 @@ public class SubClassProperty extends OwlObjectProperty {
 		super();
 		setRange(range);
 		setDomain(domain);
-		setType(Constants.PROP_TYPE_SUBCLASS);
+		setType(Property_Types.PROP_TYPE_SUBCLASS);
 		setName("Subclass Of");
 	}
 }

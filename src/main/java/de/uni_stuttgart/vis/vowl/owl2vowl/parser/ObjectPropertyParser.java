@@ -5,14 +5,12 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
-import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
-import org.apache.logging.log4j.core.Logger;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.Map;
@@ -122,29 +120,29 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			}
 
 			if (ComparisonHelper.hasDifferentNameSpace(currentProperty, ontology)) {
-				theProperty.getAttributes().add(Constants.PROP_ATTR_IMPORT);
+				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_IMPORT);
 			}
 			if (isFuntionalObjectProperty(GeneralParser.ontology, currentProperty)) {
-				theProperty.getAttributes().add(Constants.PROP_ATTR_FUNCT);
+				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_FUNCT);
 			}
 			if (isSymmetricObjectProperty(GeneralParser.ontology, currentProperty)) {
-				theProperty.getAttributes().add(Constants.PROP_ATTR_SYM);
+				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_SYM);
 			}
 			if (isTransitiveObjectProperty(GeneralParser.ontology, currentProperty)) {
-				theProperty.getAttributes().add(Constants.PROP_ATTR_TRANS);
+				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_TRANS);
 			}
 			if (isInverseFunctionalObjectProperty(GeneralParser.ontology, currentProperty)) {
-				theProperty.getAttributes().add(Constants.PROP_ATTR_INV_FUNCT);
+				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_INV_FUNCT);
 			}
 
 			// TODO
 			BaseNode sourceNodeID = findNode(rdfsDomain);
 			BaseNode targetNodeID = findNode(rdfsRange);
 
-			if (Constants.OWL_THING_CLASS_URI.equals(rdfsDomain)) {
+			if (Standard_Iris.OWL_THING_CLASS_URI.equals(rdfsDomain)) {
 				sourceNodeID = null;
 			}
-			if (Constants.OWL_THING_CLASS_URI.equals(rdfsRange)) {
+			if (Standard_Iris.OWL_THING_CLASS_URI.equals(rdfsRange)) {
 				targetNodeID = null;
 			}
 
@@ -213,7 +211,7 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			theProperty.setRange(range);
 
 			if (isDeprecated) {
-				theProperty.getAttributes().add(Constants.PROP_ATTR_DEPR);
+				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_DEPR);
 			}
 
 			indexCounter++;

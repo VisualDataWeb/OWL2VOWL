@@ -5,7 +5,8 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.semanticweb.owlapi.model.*;
@@ -34,7 +35,7 @@ public class ClassParser extends GeneralNodeParser {
 			iri = currentClass.getIRI().toString();
 
 			// If thing is found skip it! It only gets created where necessary.
-			if (iri.equals(Constants.OWL_THING_CLASS_URI)) {
+			if (iri.equals(Standard_Iris.OWL_THING_CLASS_URI)) {
 				continue;
 			}
 
@@ -63,7 +64,7 @@ public class ClassParser extends GeneralNodeParser {
 			setIndividuals(theClass, currentClass);
 
 			if (isDeprecated) {
-				theClass.getAttributes().add(Constants.PROP_ATTR_DEPR);
+				theClass.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_DEPR);
 			}
 
 			owlClasses.put(currentClass.getIRI().toString(), currentClass);

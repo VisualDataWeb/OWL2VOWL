@@ -5,7 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Property_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
 /**
@@ -19,7 +19,7 @@ public class DisjointProperty extends OwlObjectProperty {
 
 	public DisjointProperty() {
 		super();
-		setType(Constants.PROP_TYPE_DISJOINT);
+		setType(Property_Types.PROP_TYPE_DISJOINT);
 		setName("Subclass Of");
 	}
 
@@ -29,7 +29,7 @@ public class DisjointProperty extends OwlObjectProperty {
 		setDomain(domain);
 		contacts[0] = domain.getId();
 		contacts[1] = range.getId();
-		setType(Constants.PROP_TYPE_DISJOINT);
+		setType(Property_Types.PROP_TYPE_DISJOINT);
 		setName("Disjoint With");
 	}
 

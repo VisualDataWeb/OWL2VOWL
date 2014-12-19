@@ -5,12 +5,11 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Axiom_Annotations;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLProperty;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +29,7 @@ public class UnionParser extends AxiomParser {
 	 * @param direction True for domain else range.
 	 */
 	public OwlUnionOf searchUnion(OWLEntity property, boolean direction) {
-		Set<OWLClass> classes = search(property, Constants.AXIOM_OBJ_UNION, direction);
+		Set<OWLClass> classes = search(property, Axiom_Annotations.AXIOM_OBJ_UNION, direction);
 
 		if (classes == null) {
 			return null;

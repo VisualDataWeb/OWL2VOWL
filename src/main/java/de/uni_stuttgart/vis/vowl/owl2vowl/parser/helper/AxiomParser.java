@@ -5,7 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Axiom_Annotations;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.containerElements.DisjointUnion;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.GeneralParser;
@@ -39,7 +39,7 @@ public class AxiomParser extends GeneralParser {
 		Map<String, Map<String, List<OWLAxiom>>> mapping = mapData.getEntityToAxiom();
 		Map<String, List<OWLAxiom>> i = mapping.get(entity.getIRI().toString());
 
-		List<OWLAxiom> j = i.get(Constants.AXIOM_DISJOINT);
+		List<OWLAxiom> j = i.get(Axiom_Annotations.AXIOM_DISJOINT);
 
 		Set<OWLClassExpression> disjoints = new HashSet<OWLClassExpression>();
 
@@ -56,7 +56,7 @@ public class AxiomParser extends GeneralParser {
 		Map<String, Map<String, List<OWLAxiom>>> mapping = mapData.getEntityToAxiom();
 		Map<String, List<OWLAxiom>> i = mapping.get(entity.getIRI().toString());
 
-		List<OWLAxiom> j = i.get(Constants.AXIOM_DISJOINTUNION);
+		List<OWLAxiom> j = i.get(Axiom_Annotations.AXIOM_DISJOINTUNION);
 		Set<DisjointUnion> elements = new HashSet<DisjointUnion>();
 
 		if (j != null) {
@@ -120,11 +120,11 @@ public class AxiomParser extends GeneralParser {
 		List<String> searchString = new ArrayList<String>();
 
 		if (direction) {
-			searchString.add(Constants.AXIOM_OBJ_PROP_DOMAIN);
-			searchString.add(Constants.AXIOM_DATA_PROP_DOMAIN);
+			searchString.add(Axiom_Annotations.AXIOM_OBJ_PROP_DOMAIN);
+			searchString.add(Axiom_Annotations.AXIOM_DATA_PROP_DOMAIN);
 		} else {
-			searchString.add(Constants.AXIOM_OBJ_PROP_RANGE);
-			searchString.add(Constants.AXIOM_DATA_PROP_RANGE);
+			searchString.add(Axiom_Annotations.AXIOM_OBJ_PROP_RANGE);
+			searchString.add(Axiom_Annotations.AXIOM_DATA_PROP_RANGE);
 		}
 
 		for (OWLAxiom currentAxiom : property.getReferencingAxioms(ontology)) {

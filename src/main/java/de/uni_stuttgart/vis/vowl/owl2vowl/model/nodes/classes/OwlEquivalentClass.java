@@ -1,6 +1,6 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,7 +13,7 @@ public class OwlEquivalentClass extends BaseClass {
 	public OwlEquivalentClass() {
 		super();
 		equivalentClasses = new ArrayList<BaseClass>();
-		setType(Constants.TYPE_EQUIVALENT);
+		setType(Node_Types.TYPE_EQUIVALENT);
 	}
 
 	public List<BaseClass> getEquivalentClasses() {

@@ -1,6 +1,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Ontology_Info;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.semanticweb.owlapi.model.IRI;
@@ -76,8 +77,8 @@ public class OntoInfoParser extends GeneralParser {
 
 			if (val.isRDFPlainLiteral()) {
 				if (val.getLang().isEmpty()) {
-					mapToAdd.put(Constants.LANG_UNSET, val.getLiteral());
-					mapData.getAvailableLanguages().add(Constants.LANG_UNSET);
+					mapToAdd.put(Vowl_Lang.LANG_UNSET, val.getLiteral());
+					mapData.getAvailableLanguages().add(Vowl_Lang.LANG_UNSET);
 				} else {
 					mapToAdd.put(val.getLang(), val.getLiteral());
 					mapData.getAvailableLanguages().add(val.getLang());
@@ -88,14 +89,14 @@ public class OntoInfoParser extends GeneralParser {
 }
 
 enum PROPMAP {
-	CREATOR(new String[]{Constants.INFO_CREATOR_DC, Constants.INFO_CREATOR_DCTERMS}),
-	DESCRIPTION(new String[]{Constants.INFO_DESCRIPTION_DC, Constants.INFO_DESCRIPTION_DCTERMS}),
-	ISSUED(new String[]{Constants.INFO_ISSUED_DCTERMS}),
-	LICENSE(new String[]{Constants.INFO_LICENSE_DCTERMS}),
-	LABEL(new String[]{Constants.INFO_RDFS_LABEL}),
-	SEE_ALSO(new String[]{Constants.INFO_SEE_ALSO}),
-	TITLE(new String[]{Constants.INFO_TITLE_DC, Constants.INFO_TITLE_DCTERMS}),
-	VERSION(new String[]{Constants.INFO_VERSION_INFO}),
+	CREATOR(new String[]{Ontology_Info.INFO_CREATOR_DC, Ontology_Info.INFO_CREATOR_DCTERMS}),
+	DESCRIPTION(new String[]{Ontology_Info.INFO_DESCRIPTION_DC, Ontology_Info.INFO_DESCRIPTION_DCTERMS}),
+	ISSUED(new String[]{Ontology_Info.INFO_ISSUED_DCTERMS}),
+	LICENSE(new String[]{Ontology_Info.INFO_LICENSE_DCTERMS}),
+	LABEL(new String[]{Ontology_Info.INFO_RDFS_LABEL}),
+	SEE_ALSO(new String[]{Ontology_Info.INFO_SEE_ALSO}),
+	TITLE(new String[]{Ontology_Info.INFO_TITLE_DC, Ontology_Info.INFO_TITLE_DCTERMS}),
+	VERSION(new String[]{Ontology_Info.INFO_VERSION_INFO}),
 	EMPTY(new String[0]);
 
 	private final String[] values;

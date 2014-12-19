@@ -1,7 +1,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.BaseEntity;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
 
 import java.util.ArrayList;
@@ -41,7 +41,7 @@ public abstract class BaseNode extends BaseEntity {
 		for (BaseProperty out : getOutGoingEdges()) {
 			String type = out.getRange().getType();
 
-			if (type.equals(Constants.TYPE_THING)) {
+			if (type.equals(Node_Types.TYPE_THING)) {
 				return out.getRange();
 			}
 		}
@@ -49,7 +49,7 @@ public abstract class BaseNode extends BaseEntity {
 		for (BaseProperty in : getInGoingEdges()) {
 			String type = in.getDomain().getType();
 
-			if (type.equals(Constants.TYPE_THING)) {
+			if (type.equals(Node_Types.TYPE_THING)) {
 				return in.getDomain();
 			}
 		}

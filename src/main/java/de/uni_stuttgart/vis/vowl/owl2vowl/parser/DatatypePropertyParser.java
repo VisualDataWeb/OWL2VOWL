@@ -5,7 +5,9 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
@@ -13,8 +15,6 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
-import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
-import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClassExpression;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -80,7 +80,7 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 				isGeneric = true;
 			}
 
-			if (rdfsRange.equals(Constants.GENERIC_LITERAL_URI)) {
+			if (rdfsRange.equals(Standard_Iris.GENERIC_LITERAL_URI)) {
 				isGeneric = true;
 			}
 
@@ -106,11 +106,11 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 			OwlDatatypeProperty property = new OwlDatatypeProperty();
 
 			if (ComparisonHelper.hasDifferentNameSpace(currentProperty, ontology)) {
-				property.getAttributes().add(Constants.PROP_ATTR_IMPORT);
+				property.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_IMPORT);
 			}
 
 			if (isFuntionalDataProperty(currentProperty)) {
-				property.getAttributes().add(Constants.PROP_ATTR_FUNCT);
+				property.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_FUNCT);
 			}
 
 			property.setDisjoints(retrieveDisjoints(currentProperty));
@@ -120,7 +120,7 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 			property.setLabels(languageToLabel);
 			property.setComments(comments);
-			property.setName(languageToLabel.get(Constants.LANG_DEFAULT));
+			property.setName(languageToLabel.get(Vowl_Lang.LANG_DEFAULT));
 			property.setIri(iri);
 			property.setDefinedBy(rdfsIsDefinedBy);
 			property.setOwlVersion(owlVersionInfo);
@@ -131,7 +131,7 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 			property.setRange(rangeNode);
 
 			if (isDeprecated) {
-				property.getAttributes().add(Constants.PROP_ATTR_DEPR);
+				property.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_DEPR);
 			}
 
 			owlDatatypeProperties.put(currentProperty.getIRI().toString(), currentProperty);

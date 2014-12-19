@@ -1,6 +1,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Axiom_Annotations;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsDatatype;
@@ -19,7 +20,7 @@ public class TypeFinder {
 	public TypeFinder(OWLOntology ontology, OWLDataFactory factory) {
 		this.ontology = ontology;
 		this.factory = factory;
-		specialAxioms = Arrays.asList(Constants.AXIOM_OBJ_INTERSECTION, Constants.AXIOM_OBJ_UNION, Constants.AXIOM_OBJ_COMPLEMENT);
+		specialAxioms = Arrays.asList(Axiom_Annotations.AXIOM_OBJ_INTERSECTION, Axiom_Annotations.AXIOM_OBJ_UNION, Axiom_Annotations.AXIOM_OBJ_COMPLEMENT);
 	}
 
 	public BaseClass findVowlClass(OWLClass theClass) {
@@ -76,7 +77,7 @@ public class TypeFinder {
 	}
 
 	private boolean isThing(OWLClass theClass) {
-		return Constants.OWL_THING_CLASS_URI.equals(theClass.getIRI().toString()) || theClass
+		return Standard_Iris.OWL_THING_CLASS_URI.equals(theClass.getIRI().toString()) || theClass
 				.isOWLThing();
 	}
 

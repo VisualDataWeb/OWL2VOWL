@@ -1,10 +1,11 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 
 public class RdfsDatatype extends BaseDatatype {
 	public RdfsDatatype() {
-		setType(Constants.TYPE_DATATYPE);
+		setType(Node_Types.TYPE_DATATYPE);
 		setID();
 	}
 
@@ -16,7 +17,7 @@ public class RdfsDatatype extends BaseDatatype {
 
 	@Override
 	public void setName(String name) {
-		getLabels().put(Constants.LANG_DEFAULT, name);
+		getLabels().put(Vowl_Lang.LANG_DEFAULT, name);
 		super.setName(name);
 	}
 }

@@ -1,12 +1,12 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes;
 
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 
 public class RdfsClass extends BaseClass {
 
 	public RdfsClass() {
 		super();
-		setType(Constants.TYPE_RDFSCLASS);
+		setType(Node_Types.TYPE_RDFSCLASS);
 	}
 }

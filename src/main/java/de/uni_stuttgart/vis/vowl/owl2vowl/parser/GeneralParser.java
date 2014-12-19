@@ -5,11 +5,11 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Annotations;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
@@ -112,7 +112,7 @@ public class GeneralParser {
 		OWLAnnotationProperty commentProp = factory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_COMMENT.getIRI());
 
 		languageToLabel = parseLanguage(entity, labelProp);
-		languageToLabel.put(Constants.LANG_DEFAULT, FormatText.cutQuote(extractNameFromIRI(entity.getIRI().toString())));
+		languageToLabel.put(Vowl_Lang.LANG_DEFAULT, FormatText.cutQuote(extractNameFromIRI(entity.getIRI().toString())));
 		comments = parseLanguage(entity, commentProp);
 
 		for(OWLOntology currentOntology : Main.manager.getOntologies()) {
@@ -126,9 +126,9 @@ public class GeneralParser {
 					isDeprecated = true;
 				} else if (annotationProperty.isLabel()) {
 					rdfsLabel = annotationValue.toString();
-				} else if (annotationProperty.toString().equals(Constants.RDFS_DEFINED_BY)) {
+				} else if (annotationProperty.toString().equals(Annotations.RDFS_DEFINED_BY)) {
 					rdfsIsDefinedBy = annotationValue.toString();
-				} else if (annotationProperty.toString().equals(Constants.OWL_VERSIONINFO)) {
+				} else if (annotationProperty.toString().equals(Annotations.OWL_VERSIONINFO)) {
 					owlVersionInfo = annotationValue.toString();
 				} else if(LOG_ANNOTATIONS){
 					System.out.println("Not used annotation: " + owlPropAno);
@@ -153,8 +153,8 @@ public class GeneralParser {
 
 					if (val.isRDFPlainLiteral()) {
 						if(val.getLang().isEmpty()) {
-							workingMap.put(Constants.LANG_UNSET, val.getLiteral());
-							mapData.getAvailableLanguages().add(Constants.LANG_UNSET);
+							workingMap.put(Vowl_Lang.LANG_UNSET, val.getLiteral());
+							mapData.getAvailableLanguages().add(Vowl_Lang.LANG_UNSET);
 						} else {
 							workingMap.put(val.getLang(), val.getLiteral());
 							mapData.getAvailableLanguages().add(val.getLang());

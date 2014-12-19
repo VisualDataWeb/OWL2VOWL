@@ -5,7 +5,10 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Axiom_Annotations;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.containerElements.DisjointUnion;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
@@ -53,14 +56,14 @@ public class ProcessUnit {
 	}
 
 	private void removeExternalEquivalents(BaseNode baseNode) {
-		if (baseNode.getClass() != OwlEquivalentClass.class || !baseNode.getAttributes().contains(Constants.PROP_ATTR_IMPORT)) {
+		if (baseNode.getClass() != OwlEquivalentClass.class || !baseNode.getAttributes().contains(Vowl_Prop_Attr.PROP_ATTR_IMPORT)) {
 			return;
 		}
 
 		OwlEquivalentClass equivNode = (OwlEquivalentClass) baseNode;
 
 		for (BaseClass baseClass : equivNode.getEquivalentClasses()) {
-			if (!baseClass.getAttributes().contains(Constants.PROP_ATTR_IMPORT)) {
+			if (!baseClass.getAttributes().contains(Vowl_Prop_Attr.PROP_ATTR_IMPORT)) {
 //				System.out.println(equivNode.getIri() + " , " + equivNode.getEquivalentClasses());
 				equivNode.getEquivalentClasses().clear();
 				return;
@@ -102,7 +105,7 @@ public class ProcessUnit {
 
 				SpecialClass currentNode = (SpecialClass) currentDisUn.getBaseNode();
 
-				currentNode.setType(Constants.TYPE_UNION);
+				currentNode.setType(Node_Types.TYPE_UNION);
 
 				currentNode.setUnions(new ArrayList<BaseNode>(currentDisUn.getDisjointness()));
 
@@ -133,9 +136,9 @@ public class ProcessUnit {
 		OWLClass theClass = mapData.getOwlClasses().get(currentClass.getIri());
 		SpecialClass working = (SpecialClass) currentClass;
 
-		List<Set<OWLClass>> unions = axiomParser.searchInEquivalents(theClass, Constants.AXIOM_OBJ_UNION);
-		List<Set<OWLClass>> intersections = axiomParser.searchInEquivalents(theClass, Constants.AXIOM_OBJ_INTERSECTION);
-		List<Set<OWLClass>> complements = axiomParser.searchInEquivalents(theClass, Constants.AXIOM_OBJ_COMPLEMENT);
+		List<Set<OWLClass>> unions = axiomParser.searchInEquivalents(theClass, Axiom_Annotations.AXIOM_OBJ_UNION);
+		List<Set<OWLClass>> intersections = axiomParser.searchInEquivalents(theClass, Axiom_Annotations.AXIOM_OBJ_INTERSECTION);
+		List<Set<OWLClass>> complements = axiomParser.searchInEquivalents(theClass, Axiom_Annotations.AXIOM_OBJ_COMPLEMENT);
 
 		for(OWLClass currentUnion : retrieveMainUnit(unions, theClass)) {
 			BaseClass aClass = mapData.getClassMap().get(currentUnion.getIRI().toString());
@@ -146,7 +149,7 @@ public class ProcessUnit {
 			}
 
 			working.getUnions().add(aClass);
-			working.setType(Constants.TYPE_UNION);
+			working.setType(Node_Types.TYPE_UNION);
 		}
 
 		for (OWLClass curInteresection : retrieveMainUnit(intersections, theClass)) {
@@ -158,13 +161,13 @@ public class ProcessUnit {
 			}
 
 			working.getIntersections().add(aClass);
-			working.setType(Constants.TYPE_INTERSECTION);
+			working.setType(Node_Types.TYPE_INTERSECTION);
 		}
 
 		for (OWLClass curComplement : retrieveMainUnit(complements, theClass)) {
 			BaseClass aClass = mapData.getClassMap().get(curComplement.getIRI().toString());
 			working.getComplements().add(aClass);
-			working.setType(Constants.TYPE_COMPLEMENT);
+			working.setType(Node_Types.TYPE_COMPLEMENT);
 		}
 	}
 
@@ -277,7 +280,7 @@ public class ProcessUnit {
 			if (!subClassExpression.isAnonymous()) {
 				String subClassURI = subClassExpression.asOWLClass().getIRI().toString();
 				// ignore subclass with the namespace of OWLClass Thing
-				if (!Constants.OWL_THING_CLASS_URI.equals(subClassURI)) {
+				if (!Standard_Iris.OWL_THING_CLASS_URI.equals(subClassURI)) {
 					BaseClass sub = mapData.getClassMap().get(subClassURI);
 
 					if (sub != null) {
@@ -299,7 +302,7 @@ public class ProcessUnit {
 			if (!superClassExpression.isAnonymous()) {
 				String superClassURI = superClassExpression.asOWLClass().getIRI().toString();
 				// ignore subclass with the namespace of OWLClass Thing
-				if (!Constants.OWL_THING_CLASS_URI.equals(superClassURI)) {
+				if (!Standard_Iris.OWL_THING_CLASS_URI.equals(superClassURI)) {
 					BaseClass sub = mapData.getClassMap().get(superClassURI);
 
 					if (sub != null) {
