@@ -4,19 +4,19 @@
 		<Property name="log-path">logs</Property>
 	</Properties>
 	<Appenders>
-		<RollingFile name="info-log" fileName="${log-path}/ontology-structure.log"
-		             filePattern="${log-path}/ontology-structure-%d{yyyy-MM-dd}.log" append="false">
-			<PatternLayout>
-				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
-			</PatternLayout>
-			<Policies>
-				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-			</Policies>
-		</RollingFile>
+		<!--<RollingFile name="info-log" fileName="${log-path}/ontology-structure.log"-->
+		             <!--filePattern="${log-path}/ontology-structure-%d{yyyy-MM-dd}.log" append="false">-->
+			<!--<PatternLayout>-->
+				<!--<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>-->
+			<!--</PatternLayout>-->
+			<!--<Policies>-->
+				<!--<TimeBasedTriggeringPolicy interval="1" modulate="true"/>-->
+			<!--</Policies>-->
+		<!--</RollingFile>-->
 	</Appenders>
 	<Loggers>
 		<Root level="info" additivity="false">
-			<appender-ref ref="info-log" level="debug"/>
+			<!--<appender-ref ref="info-log" level="debug"/>-->
 		</Root>
 	</Loggers>
 </Configuration>
