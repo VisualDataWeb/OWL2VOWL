@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Ontology_Path;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.ConsoleExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.FileExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGenerator;
@@ -33,6 +34,7 @@ import java.util.Set;
  */
 public class Main {
 	private static final boolean DEBUG_EXPORT = false;
+	private static final boolean CONVERT_ONE = false;
 	private static final boolean CONVERSION = false;
 	private static final String IRI_OPTION_NAME = "iri";
 	private static final String FILE_OPTION_NAME = "file";
@@ -46,6 +48,11 @@ public class Main {
 	private static OWLOntology ontology;
 
 	public static void main(String[] args) {
+		if (CONVERT_ONE) {
+			convertOneOntology();
+			return;
+		}
+
 		if (CONVERSION) {
 			convertAllOntologies();
 			return;
@@ -138,6 +145,22 @@ public class Main {
 			}
 		}
 	}
+
+	public static void convertOneOntology() {
+		Main mainO = new Main();
+		mainO.initializeAPI();
+
+		try {
+			mainO.loadOntologies(Ontology_Path.EXT_NICETAG);
+			//mainO.loadOntologies(new File(Constants.WINE));
+			mainO.startConvertion(false);
+			mainO.reset();
+		} catch (OWLOntologyCreationException e) {
+			//e.printStackTrace();
+			System.out.println(e.getMessage());
+		}
+	}
+
 
 	/**
 	 * Save the metrics of the current loaded ontology.
