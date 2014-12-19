@@ -4,8 +4,8 @@
 		<Property name="log-path">logs</Property>
 	</Properties>
 	<Appenders>
-		<RollingFile name="console-log" fileName="${log-path}/ontology_structure.log"
-		             filePattern="${log-path}/mycuteblog-trace-%d{yyyy-MM-dd}.log" append="false">
+		<RollingFile name="info-log" fileName="${log-path}/ontology-structure.log"
+		             filePattern="${log-path}/ontology-structure-%d{yyyy-MM-dd}.log" append="false">
 			<PatternLayout>
 				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
 			</PatternLayout>
@@ -13,35 +13,10 @@
 				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
 			</Policies>
 		</RollingFile>
-		<!--<RollingFile name="trace-log" fileName="${log-path}/mycuteblog-trace.log"
-		             filePattern="${log-path}/mycuteblog-trace-%d{yyyy-MM-dd}.log" append="false">
-			<PatternLayout>
-				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
-			</PatternLayout>
-			<Policies>
-				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-			</Policies>
-		</RollingFile>
-		<RollingFile name="error-log" fileName="${log-path}/mycuteblog-error.log"
-		             filePattern="${log-path}/mycuteblog-error-%d{yyyy-MM-dd}.log" append="false">
-			<PatternLayout>
-				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
-			</PatternLayout>
-			<Policies>
-				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
-			</Policies>
-		</RollingFile>-->
 	</Appenders>
 	<Loggers>
-		<Logger name="com.mycuteblog.log4j2" level="debug" additivity="false">
-			<!-- <appender-ref ref="trace-log" level="debug"/> -->
-			<!--<appender-ref ref="error-log" level="error"/>-->
-			<appender-ref ref="console-log" level="debug"/>
-		</Logger>
 		<Root level="info" additivity="false">
-			<!--<appender-ref ref="trace-log" level="debug"/>-->
-			<!--<appender-ref ref="error-log" level="error"/>-->
-			<appender-ref ref="console-log" level="debug"/>
+			<appender-ref ref="info-log" level="debug"/>
 		</Root>
 	</Loggers>
 </Configuration>
