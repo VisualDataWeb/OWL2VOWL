@@ -90,7 +90,7 @@ public class Main {
 
 	private static void printHelpMenuAndExit(Options options) {
 		HelpFormatter helpFormatter = new HelpFormatter();
-		helpFormatter.printHelp("OWL2VOWL", options);
+		helpFormatter.printHelp("java -jar owl2vowl.jar", options);
 		System.exit(0);
 	}
 
