@@ -23,10 +23,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Vincent Link
@@ -38,6 +35,7 @@ public class Main {
 	private static final boolean CONVERSION = false;
 	private static final String IRI_OPTION_NAME = "iri";
 	private static final String FILE_OPTION_NAME = "file";
+	private static final String DEPENDENCIES_OPTION_NAME = "dependencies";
 	private static final String HELP_OPTION_NAME = "h";
 	private static final String ECHO_OPTION_NAME = "echo";
 	public static org.apache.logging.log4j.Logger logger = LogManager.getRootLogger();
@@ -77,7 +75,16 @@ public class Main {
 
 		try {
 			if (line.hasOption(FILE_OPTION_NAME)) {
-				mainO.loadOntologies(new File(line.getOptionValue(FILE_OPTION_NAME)));
+				List<File> dependencies;
+				if (line.hasOption(DEPENDENCIES_OPTION_NAME)) {
+					dependencies = new ArrayList<File>();
+					for (String path : line.getOptionValues(DEPENDENCIES_OPTION_NAME)) {
+						dependencies.add(new File(path));
+					}
+				} else {
+					dependencies = Collections.emptyList();
+				}
+				mainO.loadOntologies(new File(line.getOptionValue(FILE_OPTION_NAME)), dependencies);
 			} else {
 				mainO.loadOntologies(line.getOptionValue(IRI_OPTION_NAME));
 			}
@@ -110,6 +117,11 @@ public class Main {
 				.hasArg()
 				.withDescription("the local path to an ontology")
 				.create(FILE_OPTION_NAME));
+
+		options.addOption(OptionBuilder.withArgName("PATHS")
+				.hasArgs()
+				.withDescription("paths to dependencies of a local ontology")
+				.create(DEPENDENCIES_OPTION_NAME));
 
 		OptionGroup outputOptions = new OptionGroup();
 		outputOptions.addOption(new Option(ECHO_OPTION_NAME, "prints the converted ontology on the console"));
