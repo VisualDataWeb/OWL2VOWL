@@ -35,6 +35,7 @@ public class Main {
 	private static final boolean DEBUG_EXPORT = false;
 	private static final boolean CONVERSION = false;
 	private static final String IRI_OPTION_NAME = "iri";
+	private static final String FILE_OPTION_NAME = "file";
 	private static final String HELP_OPTION_NAME = "h";
 	private static final String ECHO_OPTION_NAME = "echo";
 	public static org.apache.logging.log4j.Logger logger = LogManager.getRootLogger();
@@ -58,7 +59,6 @@ public class Main {
 		CommandLine line = null;
 		Options options = createOptions();
 
-		String ontologyIri = null;
 
 		try {
 			line = new BasicParser().parse(options, args);
@@ -69,15 +69,17 @@ public class Main {
 		if (line.hasOption(HELP_OPTION_NAME)) {
 			printHelpMenuAndExit(options);
 		}
-		ontologyIri = line.getOptionValue(IRI_OPTION_NAME);
-
 
 		Main mainO = new Main();
 		mainO.initializeAPI();
 //		System.out.println("API loaded ...");
 
 		try {
-			mainO.loadOntologies(ontologyIri);
+			if (line.hasOption(FILE_OPTION_NAME)) {
+				mainO.loadOntologies(new File(line.getOptionValue(FILE_OPTION_NAME)));
+			} else {
+				mainO.loadOntologies(line.getOptionValue(IRI_OPTION_NAME));
+			}
 //			System.out.println("Ontologie >" + ontologyIri + "< loaded! Starting convertion ...");
 			mainO.startConvertion(line.hasOption(ECHO_OPTION_NAME));
 			mainO.reset();
@@ -106,6 +108,10 @@ public class Main {
 				.hasArg()
 				.withDescription("the iri of an ontology")
 				.create(IRI_OPTION_NAME));
+		inputOptions.addOption(OptionBuilder.withArgName("PATH")
+				.hasArg()
+				.withDescription("the local path to an ontology")
+				.create(FILE_OPTION_NAME));
 
 		OptionGroup outputOptions = new OptionGroup();
 		outputOptions.addOption(new Option(ECHO_OPTION_NAME, "prints the converted ontology on the console"));
