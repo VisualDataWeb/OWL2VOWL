@@ -36,6 +36,7 @@ public class Main {
 	private static final boolean CONVERSION = false;
 	private static final String IRI_OPTION_NAME = "iri";
 	private static final String HELP_OPTION_NAME = "h";
+	private static final String ECHO_OPTION_NAME = "echo";
 	public static org.apache.logging.log4j.Logger logger = LogManager.getRootLogger();
 	public static OWLOntologyManager manager;
 	public static OWLDataFactory factory;
@@ -78,7 +79,7 @@ public class Main {
 		try {
 			mainO.loadOntologies(ontologyIri);
 //			System.out.println("Ontologie >" + ontologyIri + "< loaded! Starting convertion ...");
-			mainO.startConvertion(true);
+			mainO.startConvertion(line.hasOption(ECHO_OPTION_NAME));
 			mainO.reset();
 		} catch (OWLOntologyCreationException e) {
 			//e.printStackTrace();
@@ -98,14 +99,20 @@ public class Main {
 
 		Option helpOption = new Option(HELP_OPTION_NAME, "views this help text");
 
-		Option iriOption = OptionBuilder.withArgName("IRI")
+		OptionGroup inputOptions = new OptionGroup();
+		inputOptions.setRequired(true);
+		inputOptions.addOption(OptionBuilder.withArgName("IRI")
 				.isRequired()
 				.hasArg()
 				.withDescription("the iri of an ontology")
-				.create(IRI_OPTION_NAME);
+				.create(IRI_OPTION_NAME));
 
+		OptionGroup outputOptions = new OptionGroup();
+		outputOptions.addOption(new Option(ECHO_OPTION_NAME, "prints the converted ontology on the console"));
+
+		options.addOptionGroup(inputOptions);
+		options.addOptionGroup(outputOptions);
 		options.addOption(helpOption);
-		options.addOption(iriOption);
 
 		return options;
 	}
