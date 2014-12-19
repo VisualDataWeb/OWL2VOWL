@@ -72,7 +72,6 @@ public class Main {
 
 		Main mainO = new Main();
 		mainO.initializeAPI();
-//		System.out.println("API loaded ...");
 
 		try {
 			if (line.hasOption(FILE_OPTION_NAME)) {
@@ -80,11 +79,9 @@ public class Main {
 			} else {
 				mainO.loadOntologies(line.getOptionValue(IRI_OPTION_NAME));
 			}
-//			System.out.println("Ontologie >" + ontologyIri + "< loaded! Starting convertion ...");
 			mainO.startConvertion(line.hasOption(ECHO_OPTION_NAME));
 			mainO.reset();
 		} catch (OWLOntologyCreationException e) {
-			//e.printStackTrace();
 			logger.error("FAILED TO LOAD " + Arrays.toString(args));
 			System.exit(1);
 		}
@@ -104,7 +101,6 @@ public class Main {
 		OptionGroup inputOptions = new OptionGroup();
 		inputOptions.setRequired(true);
 		inputOptions.addOption(OptionBuilder.withArgName("IRI")
-				.isRequired()
 				.hasArg()
 				.withDescription("the iri of an ontology")
 				.create(IRI_OPTION_NAME));
@@ -121,20 +117,6 @@ public class Main {
 		options.addOption(helpOption);
 
 		return options;
-	}
-
-	public static void debugLoading() {
-		Main mainO = new Main();
-		mainO.initializeAPI();
-		try {
-			mainO.loadOntologies(Constants.EXT_NICETAG);
-			//mainO.loadOntologies(new File(Constants.WINE));
-			mainO.startConvertion(false);
-			mainO.reset();
-		} catch (OWLOntologyCreationException e) {
-			//e.printStackTrace();
-			System.out.println(e.getMessage());
-		}
 	}
 
 	public static void convertAllOntologies() {
@@ -156,7 +138,6 @@ public class Main {
 				mainO.reset();
 				System.out.println();
 			} catch (OWLOntologyCreationException e) {
-				//e.printStackTrace();
 				System.out.println(e.getMessage());
 				System.out.println("FAILED TO LOAD " + externalOntology);
 				logger.error("FAILED TO LOAD " + externalOntology);
@@ -320,8 +301,6 @@ public class Main {
 		//processor.processDatatypes();
 		processor.processProperties();
 
-//		System.out.println("Ontology data parsed!");
-
 		JsonGenerator exporter;
 
 		if (exportToConsole) {
@@ -332,7 +311,7 @@ public class Main {
 			if (DEBUG_EXPORT) {
 				String exportName = getDebugExportName(ontology);
 
-				if(exportName != null) {
+				if (exportName != null) {
 					String filePath = System.getProperty("user.dir") + "/WebVOWL/src/js/data/";
 					exportFile = new File(filePath, exportName + ".json");
 				} else {
