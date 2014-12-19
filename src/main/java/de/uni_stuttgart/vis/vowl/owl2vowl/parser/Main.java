@@ -8,7 +8,6 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.ConsoleExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.FileExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGenerator;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.Constants;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ExportNames;
@@ -29,6 +28,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
+ * @author Vincent Link
  * @author Eduard Marbach
  */
 public class Main {
