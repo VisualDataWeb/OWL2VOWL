@@ -91,7 +91,7 @@ public class Main {
 	private static Options createOptions() {
 		Options options = new Options();
 
-		Option helpOption = new Option(HELP_OPTION_NAME, "views this help text");
+		options.addOption(new Option(HELP_OPTION_NAME, "views this help text"));
 
 		OptionGroup inputOptions = new OptionGroup();
 		inputOptions.setRequired(true);
@@ -109,7 +109,6 @@ public class Main {
 
 		options.addOptionGroup(inputOptions);
 		options.addOptionGroup(outputOptions);
-		options.addOption(helpOption);
 
 		return options;
 	}
