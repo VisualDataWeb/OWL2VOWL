@@ -17,6 +17,14 @@ import java.util.*;
  *
  */
 public class AxiomParser extends GeneralParser {
+
+	/**
+	 * MUST BE CALLED FIRST!
+	 * Parses the axioms of the given entity.
+	 * Stores the extracted axioms directly in the global data map.
+	 *
+	 * @param entity The entity to extract the axioms from.
+	 */
 	public void parseAxioms(OWLEntity entity) {
 		Map<String, Map<String, List<OWLAxiom>>> mapping = mapData.getEntityToAxiom();
 		Map<String, List<OWLAxiom>> axioms = new HashMap<String, List<OWLAxiom>>();
@@ -35,6 +43,11 @@ public class AxiomParser extends GeneralParser {
 		mapping.put(entity.getIRI().toString(), axioms);
 	}
 
+	/**
+	 * Returns the disjoint class expressions.
+	 * @param entity The entity to get the disjoint expressions from.
+	 * @return The disjoint expressions set.
+	 */
 	public Set<OWLClassExpression> getDisjoints(OWLEntity entity) {
 		Map<String, Map<String, List<OWLAxiom>>> mapping = mapData.getEntityToAxiom();
 		Map<String, List<OWLAxiom>> i = mapping.get(entity.getIRI().toString());
@@ -52,6 +65,13 @@ public class AxiomParser extends GeneralParser {
 		return disjoints;
 	}
 
+	/**
+	 * Returns a set of VOWL DisjointUnions.
+	 * ATTENTION: It automatically adds this disjoint unions to the mapdata. Probably it shouldn't
+	 * to that right away?
+	 * @param entity The entity to get the disjoint unions from.
+	 * @return A set with disjoint union classes.
+	 */
 	public Set<DisjointUnion> getDisjointUnions(OWLEntity entity) {
 		Map<String, Map<String, List<OWLAxiom>>> mapping = mapData.getEntityToAxiom();
 		Map<String, List<OWLAxiom>> i = mapping.get(entity.getIRI().toString());
@@ -100,6 +120,13 @@ public class AxiomParser extends GeneralParser {
 		return null;
 	}
 
+	/**
+	 * TODO Think of what this really is doing.
+	 * Searches in equivalent axioms for given axiom.
+	 * @param entity The entity to search in.
+	 * @param axiom The axiom to search in the equivalent axioms.
+	 * @return A set of owl classes.
+	 */
 	public List<Set<OWLClass>> searchInEquivalents(OWLEntity entity, String axiom) {
 		List<Set<OWLClass>> listOfNested = new ArrayList<Set<OWLClass>>();
 
@@ -116,6 +143,14 @@ public class AxiomParser extends GeneralParser {
 		return listOfNested;
 	}
 
+	/**
+	 * Search for a given axiom in the direction false = range, true = domain of the property.
+	 *
+	 * @param property The property to search in.
+	 * @param axiom The axiom to search for.
+	 * @param direction The desired direction. False = Range, True = Domain.
+	 * @return A set of owl classes.
+	 */
 	public Set<OWLClass> search(OWLEntity property, String axiom, boolean direction) {
 		List<String> searchString = new ArrayList<String>();
 
