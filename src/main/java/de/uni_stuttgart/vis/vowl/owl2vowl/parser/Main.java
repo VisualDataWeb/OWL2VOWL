@@ -51,11 +51,6 @@ public class Main {
 			return;
 		}
 
-		if (DEBUG_EXPORT) {
-			debugLoading();
-			return;
-		}
-
 		CommandLine line = null;
 		Options options = createOptions();
 
