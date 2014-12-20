@@ -5,7 +5,6 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.Main;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProperty;
@@ -86,12 +85,12 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 
 			parseAnnotations(currentProperty);
 
-			Main.logger.info("ObjectProperty: " + currentProperty);
+			logger.info("ObjectProperty: " + currentProperty);
 			for (OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)) {
-				Main.logger.info("\tAxiom: " + currentAxiom);
+				logger.info("\tAxiom: " + currentAxiom);
 
 				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
-					Main.logger.info("\t\tNested: " + nestExpr);
+					logger.info("\t\tNested: " + nestExpr);
 				}
 			}
 

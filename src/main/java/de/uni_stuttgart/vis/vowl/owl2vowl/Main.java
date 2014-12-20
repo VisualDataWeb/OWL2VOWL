@@ -31,7 +31,7 @@ public class Main {
 	private static final String DEPENDENCIES_OPTION_NAME = "dependencies";
 	private static final String HELP_OPTION_NAME = "h";
 	private static final String ECHO_OPTION_NAME = "echo";
-	public static Logger logger = LogManager.getRootLogger();
+	private static final Logger logger = LogManager.getRootLogger();
 
 	public static void main(String[] args) {
 		if (CONVERT_ONE) {

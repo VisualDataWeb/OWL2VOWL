@@ -5,7 +5,6 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.Main;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
@@ -42,12 +41,12 @@ public class ClassParser extends GeneralNodeParser {
 				continue;
 			}
 
-			Main.logger.info("Class: " + currentClass);
+			logger.info("Class: " + currentClass);
 			for (OWLAxiom currentAxiom : currentClass.getReferencingAxioms(ontology)) {
-				Main.logger.info("\tAxiom: " + currentAxiom);
+				logger.info("\tAxiom: " + currentAxiom);
 
 				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
-					Main.logger.info("\t\tNested: " + nestExpr);
+					logger.info("\t\tNested: " + nestExpr);
 				}
 			}
 

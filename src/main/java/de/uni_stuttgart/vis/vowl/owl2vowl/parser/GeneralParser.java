@@ -11,6 +11,8 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
@@ -23,6 +25,7 @@ import java.util.Set;
  */
 public class GeneralParser {
 	private static final boolean LOG_ANNOTATIONS = false;
+	protected static final Logger logger = LogManager.getRootLogger();
 	protected OWLOntology ontology;
 	protected OWLDataFactory factory;
 	protected MapData mapData;

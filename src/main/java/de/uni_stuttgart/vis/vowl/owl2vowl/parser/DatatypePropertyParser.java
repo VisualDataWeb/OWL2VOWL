@@ -5,7 +5,6 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.Main;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
@@ -48,12 +47,12 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 			parseAnnotations(currentProperty);
 
-			Main.logger.info("DatatypeProperty: " + currentProperty);
+			logger.info("DatatypeProperty: " + currentProperty);
 			for (OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)) {
-				Main.logger.info("\tAxiom: " + currentAxiom);
+				logger.info("\tAxiom: " + currentAxiom);
 
 				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
-					Main.logger.info("\t\tNested: " + nestExpr);
+					logger.info("\t\tNested: " + nestExpr);
 				}
 			}
 
@@ -67,12 +66,12 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 			String resourceName = extractNameFromIRI(rdfsRange);
 			boolean isGeneric = false;
 
-			Main.logger.info(currentProperty);
+			logger.info(currentProperty);
 			for (OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)) {
-				Main.logger.info("\t" + currentAxiom);
+				logger.info("\t" + currentAxiom);
 
 				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
-					Main.logger.info("\t\t" + nestExpr);
+					logger.info("\t\t" + nestExpr);
 				}
 			}
 

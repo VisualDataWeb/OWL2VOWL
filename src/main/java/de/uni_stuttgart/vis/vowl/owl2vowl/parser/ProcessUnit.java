@@ -5,7 +5,6 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.Main;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Axiom_Annotations;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
@@ -20,6 +19,8 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.AxiomParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.*;
@@ -27,6 +28,7 @@ import java.util.*;
 /**
  */
 public class ProcessUnit {
+	private static final Logger logger = LogManager.getRootLogger();
 	private OWLDataFactory factory;
 	private MapData mapData;
 	private OWLOntology ontology;
@@ -144,7 +146,7 @@ public class ProcessUnit {
 			BaseClass aClass = mapData.getClassMap().get(currentUnion.getIRI().toString());
 
 			if (aClass == null) {
-				Main.logger.error("Could not find correct intersection element in map: " + currentUnion);
+				logger.error("Could not find correct intersection element in map: " + currentUnion);
 				continue;
 			}
 
@@ -156,7 +158,7 @@ public class ProcessUnit {
 			BaseClass aClass = mapData.getClassMap().get(curInteresection.getIRI().toString());
 
 			if (aClass == null) {
-				Main.logger.error("Could not find correct intersection element in map: " + curInteresection);
+				logger.error("Could not find correct intersection element in map: " + curInteresection);
 				continue;
 			}
 
