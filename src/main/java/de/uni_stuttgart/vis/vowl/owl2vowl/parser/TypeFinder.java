@@ -48,8 +48,8 @@ public class TypeFinder {
 				}
 			}
 
-			if(baseAxiom.getAxiomType().toString().equals("DisjointUnion")) {
-				if(((OWLDisjointUnionAxiom)baseAxiom).getOWLClass() == theClass) {
+			if (baseAxiom.getAxiomType().toString().equals("DisjointUnion")) {
+				if (((OWLDisjointUnionAxiom) baseAxiom).getOWLClass() == theClass) {
 					return true;
 				}
 			}
@@ -83,7 +83,7 @@ public class TypeFinder {
 
 	// TODO braucht man das überhaupt noch, da external nur noch ein Attribut ist?
 	private boolean isExternal(OWLClass theClass) {
-		return ComparisonHelper.hasDifferentNameSpace(theClass, ontology);
+		return ComparisonHelper.hasDifferentNameSpace(theClass, ontology, factory);
 	}
 
 	private boolean isEquivalentClass(OWLClass theClass) {

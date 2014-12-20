@@ -14,7 +14,7 @@ public class OwlIntersectionOf extends SpecialClass {
 	}
 
 	public void addIntersection(BaseNode node) {
-		if(node == null) {
+		if (node == null) {
 			return;
 		}
 
@@ -35,8 +35,8 @@ public class OwlIntersectionOf extends SpecialClass {
 		int equalIris = 0;
 
 		for (String aIri : iriList) {
-			for(BaseNode aUnion : intersections) {
-				if(aUnion.getIri().equals(aIri)) {
+			for (BaseNode aUnion : intersections) {
+				if (aUnion.getIri().equals(aIri)) {
 					equalIris++;
 					break;
 				}

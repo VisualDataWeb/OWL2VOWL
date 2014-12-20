@@ -10,6 +10,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.IntersectionParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.UnionParser;
@@ -26,15 +27,19 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	protected String rdfsDomain = "";
 	protected String rdfsRange = "";
 	protected String rdfsInversOf = "";
-	private UnionParser unionParser = new UnionParser();
-	private IntersectionParser intersectionParser = new IntersectionParser();
+	private UnionParser unionParser = new UnionParser(ontology, factory, mapData, ontologyManager);
+	private IntersectionParser intersectionParser = new IntersectionParser(ontology, factory, mapData, ontologyManager);
+
+	public GeneralPropertyParser(OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
+		super(ontology, factory, mapData, ontologyManager);
+	}
 
 	public static void reset() {
 
 	}
 
 	protected String retrieveRange(OWLObjectProperty currentProperty) {
-		for (OWLClassExpression range : currentProperty.getRanges(GeneralParser.ontology)) {
+		for (OWLClassExpression range : currentProperty.getRanges(this.ontology)) {
 			if (!range.isAnonymous()) {
 				return range.asOWLClass().getIRI().toString();
 			} else {
@@ -50,9 +55,9 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		BaseClass union = unionParser.searchUnion(currentProperty, false);
 		BaseClass intersection = intersectionParser.searchIntersection(currentProperty, false);
 
-		if(union != null){
+		if (union != null) {
 			return union.getId();
-		} else if(intersection != null) {
+		} else if (intersection != null) {
 			return intersection.getId();
 		} else {
 			return "";
@@ -62,7 +67,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	protected String retrieveRange(OWLDataProperty currentProperty) {
 		String rangeIRI;
 
-		for (OWLDataRange range : currentProperty.getRanges(GeneralParser.ontology)) {
+		for (OWLDataRange range : currentProperty.getRanges(ontology)) {
 			rangeIRI = range.asOWLDatatype().getIRI().toString();
 
 			if (!rangeIRI.isEmpty()) {
@@ -73,9 +78,9 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		BaseClass union = unionParser.searchUnion(currentProperty, false);
 		BaseClass intersection = intersectionParser.searchIntersection(currentProperty, false);
 
-		if(union != null){
+		if (union != null) {
 			return union.getId();
-		} else if(intersection != null) {
+		} else if (intersection != null) {
 			return intersection.getId();
 		} else {
 			return "";
@@ -83,7 +88,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	}
 
 	protected String retrieveDomain(OWLPropertyExpression currentProperty) {
-		for (Object domainObject : currentProperty.getDomains(GeneralParser.ontology)) {
+		for (Object domainObject : currentProperty.getDomains(ontology)) {
 			OWLClassExpression domain = (OWLClassExpression) domainObject;
 
 			if (!domain.isAnonymous()) {
@@ -101,9 +106,9 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		BaseClass union = unionParser.searchUnion((OWLEntity) currentProperty, true);
 		BaseClass intersection = intersectionParser.searchIntersection((OWLProperty) currentProperty, true);
 
-		if(union != null){
+		if (union != null) {
 			return union.getId();
-		} else if(intersection != null) {
+		} else if (intersection != null) {
 			return intersection.getId();
 		} else {
 			return "";
@@ -197,7 +202,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		List<String> iriList = new ArrayList<String>();
 
 		// TODO Do not use external properties as base. But if there are equivalent external properties only?
-		if (ComparisonHelper.hasDifferentNameSpace((OWLEntity) property, ontology)) {
+		if (ComparisonHelper.hasDifferentNameSpace((OWLEntity) property, ontology, factory)) {
 			return iriList;
 		}
 

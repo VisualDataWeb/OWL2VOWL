@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.Main;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
@@ -14,10 +15,9 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -27,17 +27,18 @@ import java.util.Set;
  */
 public class DatatypePropertyParser extends GeneralPropertyParser {
 
-	private Set<OWLDataProperty> data;
+	private Set<OWLDataProperty> dataProperties;
 
-	public DatatypePropertyParser(Set<OWLDataProperty> data) {
-		this.data = data;
+	public DatatypePropertyParser(Set<OWLDataProperty> dataProperties, OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
+		super(ontology, factory, mapData, ontologyManager);
+		this.dataProperties = dataProperties;
 	}
 
 	protected void execute() {
 		Map<String, OwlDatatypeProperty> propertyMap = mapData.getDatatypePropertyMap();
 		Map<String, OWLDataProperty> owlDatatypeProperties = mapData.getOwlDatatypeProperties();
 
-		for (OWLDataProperty currentProperty : data) {
+		for (OWLDataProperty currentProperty : dataProperties) {
 			isDeprecated = false;
 			rdfsIsDefinedBy = "";
 			owlVersionInfo = "";
@@ -48,10 +49,10 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 			parseAnnotations(currentProperty);
 
 			Main.logger.info("DatatypeProperty: " + currentProperty);
-			for(OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)){
+			for (OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)) {
 				Main.logger.info("\tAxiom: " + currentAxiom);
 
-				for(OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
+				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
 					Main.logger.info("\t\tNested: " + nestExpr);
 				}
 			}
@@ -67,10 +68,10 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 			boolean isGeneric = false;
 
 			Main.logger.info(currentProperty);
-			for(OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)){
+			for (OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)) {
 				Main.logger.info("\t" + currentAxiom);
 
-				for(OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
+				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
 					Main.logger.info("\t\t" + nestExpr);
 				}
 			}
@@ -105,7 +106,7 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 			OwlDatatypeProperty property = new OwlDatatypeProperty();
 
-			if (ComparisonHelper.hasDifferentNameSpace(currentProperty, ontology)) {
+			if (ComparisonHelper.hasDifferentNameSpace(currentProperty, ontology, factory)) {
 				property.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_IMPORT);
 			}
 

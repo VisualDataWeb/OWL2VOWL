@@ -8,8 +8,8 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Axiom_Annotations;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLEntity;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +22,15 @@ import java.util.Set;
 public class UnionParser extends AxiomParser {
 	Map<String, OwlUnionOf> unionNodes = mapData.getUnionMap();
 
+	public UnionParser(OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
+		super(ontology, factory, mapData, ontologyManager);
+	}
+
 	/**
 	 * Searches for an union class of the property. If already exists take it an return else create
 	 * a new node. If no union found return null.
-	 * @param property The property to search in.
+	 *
+	 * @param property  The property to search in.
 	 * @param direction True for domain else range.
 	 */
 	public OwlUnionOf searchUnion(OWLEntity property, boolean direction) {
@@ -47,10 +52,10 @@ public class UnionParser extends AxiomParser {
 	private OwlUnionOf createUnionClass(Set<OWLClass> classesInSignature) {
 		OwlUnionOf unionOf = new OwlUnionOf();
 
-		for(OWLClass currentClass : classesInSignature){
+		for (OWLClass currentClass : classesInSignature) {
 			BaseNode theNode = findNode(currentClass.getIRI().toString());
 
-			if(theNode != null) {
+			if (theNode != null) {
 				unionOf.addUnion(theNode);
 			}
 		}
@@ -60,15 +65,15 @@ public class UnionParser extends AxiomParser {
 	}
 
 	private OwlUnionOf getExistingUnionClass(Set<OWLClass> classes) {
-		for(Map.Entry<String, OwlUnionOf> entry : unionNodes.entrySet()) {
+		for (Map.Entry<String, OwlUnionOf> entry : unionNodes.entrySet()) {
 			OwlUnionOf currentClass = entry.getValue();
 			List<String> test = new ArrayList<String>();
 
-			for(OWLClass curIri : classes){
+			for (OWLClass curIri : classes) {
 				test.add(curIri.getIRI().toString());
 			}
 
-			if(currentClass.equalUnionIris(test)){
+			if (currentClass.equalUnionIris(test)) {
 				return currentClass;
 			}
 		}

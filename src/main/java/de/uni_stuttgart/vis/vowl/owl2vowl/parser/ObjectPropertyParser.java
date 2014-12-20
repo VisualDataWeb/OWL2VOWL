@@ -5,11 +5,13 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.Main;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import org.semanticweb.owlapi.model.*;
 
@@ -22,7 +24,8 @@ import java.util.Set;
 public class ObjectPropertyParser extends GeneralPropertyParser {
 	private Set<OWLObjectProperty> objectProperties;
 
-	public ObjectPropertyParser(Set<OWLObjectProperty> objectProperties) {
+	public ObjectPropertyParser(Set<OWLObjectProperty> objectProperties, OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
+		super(ontology, factory, mapData, ontologyManager);
 		this.objectProperties = objectProperties;
 	}
 
@@ -84,10 +87,10 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			parseAnnotations(currentProperty);
 
 			Main.logger.info("ObjectProperty: " + currentProperty);
-			for(OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)){
+			for (OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)) {
 				Main.logger.info("\tAxiom: " + currentAxiom);
 
-				for(OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
+				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
 					Main.logger.info("\t\tNested: " + nestExpr);
 				}
 			}
@@ -99,7 +102,7 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			rdfsRange = retrieveRange(currentProperty);
 
 			// get the IRI of the object property which is inverse to 'this' object property
-			Set<OWLObjectPropertyExpression> inversesExpressions = currentProperty.getInverses(GeneralParser.ontology);
+			Set<OWLObjectPropertyExpression> inversesExpressions = currentProperty.getInverses(ontology);
 
 			for (OWLObjectPropertyExpression owlOPE : inversesExpressions) {
 				rdfsInversOf = owlOPE.asOWLObjectProperty().getIRI().toString();
@@ -119,19 +122,19 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 				}
 			}
 
-			if (ComparisonHelper.hasDifferentNameSpace(currentProperty, ontology)) {
+			if (ComparisonHelper.hasDifferentNameSpace(currentProperty, ontology, factory)) {
 				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_IMPORT);
 			}
-			if (isFuntionalObjectProperty(GeneralParser.ontology, currentProperty)) {
+			if (isFuntionalObjectProperty(ontology, currentProperty)) {
 				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_FUNCT);
 			}
-			if (isSymmetricObjectProperty(GeneralParser.ontology, currentProperty)) {
+			if (isSymmetricObjectProperty(ontology, currentProperty)) {
 				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_SYM);
 			}
-			if (isTransitiveObjectProperty(GeneralParser.ontology, currentProperty)) {
+			if (isTransitiveObjectProperty(ontology, currentProperty)) {
 				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_TRANS);
 			}
-			if (isInverseFunctionalObjectProperty(GeneralParser.ontology, currentProperty)) {
+			if (isInverseFunctionalObjectProperty(ontology, currentProperty)) {
 				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_INV_FUNCT);
 			}
 

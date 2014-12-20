@@ -23,25 +23,24 @@ import java.util.Set;
  */
 public class GeneralParser {
 	private static final boolean LOG_ANNOTATIONS = false;
-	protected static OWLOntology ontology;
-	protected static OWLDataFactory factory;
-	protected static MapData mapData;
+	protected OWLOntology ontology;
+	protected OWLDataFactory factory;
+	protected MapData mapData;
 	protected String rdfsLabel = "";
 	protected String rdfsComment = "";
 	protected String rdfsIsDefinedBy = "";
 	protected String owlVersionInfo = "";
 	protected Boolean isDeprecated = false;
-
 	protected Map<String, String> comments;
 	protected Map<String, String> languageToLabel;
 	protected String iri;
+	protected OWLOntologyManager ontologyManager;
 
-	public GeneralParser() {
-	}
-	public GeneralParser(OWLOntology ontology, OWLDataFactory factory, MapData mapData) {
-		GeneralParser.ontology = ontology;
-		GeneralParser.factory = factory;
-		GeneralParser.mapData = mapData;
+	public GeneralParser(OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
+		this.ontology = ontology;
+		this.factory = factory;
+		this.mapData = mapData;
+		this.ontologyManager = ontologyManager;
 	}
 
 	public Map<String, String> getLanguageToLabel() {
@@ -115,7 +114,7 @@ public class GeneralParser {
 		languageToLabel.put(Vowl_Lang.LANG_DEFAULT, FormatText.cutQuote(extractNameFromIRI(entity.getIRI().toString())));
 		comments = parseLanguage(entity, commentProp);
 
-		for(OWLOntology currentOntology : Main.manager.getOntologies()) {
+		for (OWLOntology currentOntology : ontologyManager.getOntologies()) {
 			for (OWLAnnotation owlPropAno : entity.getAnnotations(currentOntology)) {
 				OWLAnnotationProperty annotationProperty = owlPropAno.getProperty();
 				OWLAnnotationValue annotationValue = owlPropAno.getValue();
@@ -130,7 +129,7 @@ public class GeneralParser {
 					rdfsIsDefinedBy = annotationValue.toString();
 				} else if (annotationProperty.toString().equals(Annotations.OWL_VERSIONINFO)) {
 					owlVersionInfo = annotationValue.toString();
-				} else if(LOG_ANNOTATIONS){
+				} else if (LOG_ANNOTATIONS) {
 					System.out.println("Not used annotation: " + owlPropAno);
 				}
 			}
@@ -139,20 +138,21 @@ public class GeneralParser {
 
 	/**
 	 * Processes all available languages in the given rdf property of the owl entity.
-	 * @param entity The entity to search in,
+	 *
+	 * @param entity   The entity to search in,
 	 * @param property The desired property like rdf:comment or rdfs:label
 	 * @return A mapping of language to the value.
 	 */
 	protected Map<String, String> parseLanguage(OWLEntity entity, OWLAnnotationProperty property) {
 		Map<String, String> workingMap = new HashMap<String, String>();
 
-		for (OWLOntology owlOntology : Main.manager.getOntologies()) {
+		for (OWLOntology owlOntology : ontologyManager.getOntologies()) {
 			for (OWLAnnotation owlAnnotation : entity.getAnnotations(owlOntology, property)) {
 				if (owlAnnotation.getValue() instanceof OWLLiteral) {
 					OWLLiteral val = (OWLLiteral) owlAnnotation.getValue();
 
 					if (val.isRDFPlainLiteral()) {
-						if(val.getLang().isEmpty()) {
+						if (val.getLang().isEmpty()) {
 							workingMap.put(Vowl_Lang.LANG_UNSET, val.getLiteral());
 							mapData.getAvailableLanguages().add(Vowl_Lang.LANG_UNSET);
 						} else {
@@ -208,27 +208,27 @@ public class GeneralParser {
 	}
 
 	public void handleOntologyInfo() {
-		OntoInfoParser parser = new OntoInfoParser();
+		OntoInfoParser parser = new OntoInfoParser(ontology, factory, mapData, ontologyManager);
 		parser.execute();
 	}
 
-	public void handleClass(Set<OWLClass> data) {
-		GeneralParser parser = new ClassParser(data);
+	public void handleClass(Set<OWLClass> classes) {
+		GeneralParser parser = new ClassParser(classes, ontology, factory, mapData, ontologyManager);
 		parser.execute();
 	}
 
-	public void handleDatatype(Set<OWLDatatype> data) {
-		GeneralParser parser = new DatatypeParser(data);
+	public void handleDatatype(Set<OWLDatatype> datatypes) {
+		GeneralParser parser = new DatatypeParser(datatypes, ontology, factory, mapData, ontologyManager);
 		parser.execute();
 	}
 
-	public void handleObjectProperty(Set<OWLObjectProperty> data) {
-		GeneralParser parser = new ObjectPropertyParser(data);
+	public void handleObjectProperty(Set<OWLObjectProperty> objectProperties) {
+		GeneralParser parser = new ObjectPropertyParser(objectProperties, ontology, factory, mapData, ontologyManager);
 		parser.execute();
 	}
 
-	public void handleDatatypeProperty(Set<OWLDataProperty> data) {
-		GeneralParser parser = new DatatypePropertyParser(data);
+	public void handleDatatypeProperty(Set<OWLDataProperty> dataProperties) {
+		GeneralParser parser = new DatatypePropertyParser(dataProperties, ontology, factory, mapData, ontologyManager);
 		parser.execute();
 	}
 

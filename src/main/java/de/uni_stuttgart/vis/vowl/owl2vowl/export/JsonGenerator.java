@@ -33,11 +33,9 @@ public class JsonGenerator {
 	private JSONArray datatypeAttribute;
 	private JSONArray objectProperty;
 	private JSONArray objectPropertyAttribute;
-	private Exporter exporter;
 	private MapData mapData;
 
-	public JsonGenerator(Exporter exporter) {
-		this.exporter = exporter;
+	public JsonGenerator() {
 		initialize();
 	}
 
@@ -67,7 +65,6 @@ public class JsonGenerator {
 
 	public void execute(MapData mapData) throws Exception {
 		this.mapData = mapData;
-//		System.out.println("Start Export...");
 		processNamespace();
 		processHeader(mapData.getOntologyInfo());
 		processMetrics(mapData.getOntologyMetric());
@@ -76,11 +73,9 @@ public class JsonGenerator {
 		processProperties(mapData.getMergedProperties());
 		processThings(mapData.getThingMap());
 		processUnions(mapData.getUnionMap());
-		export();
-//		System.out.println("Export finished!");
 	}
 
-	public void export() throws Exception {
+	public void export(Exporter exporter) throws Exception {
 		exporter.write(root.toString(INDENT_FACTOR));
 	}
 

@@ -13,7 +13,7 @@ public class OwlUnionOf extends SpecialClass {
 	}
 
 	public void addUnion(BaseNode node) {
-		if(node == null) {
+		if (node == null) {
 			return;
 		}
 
@@ -34,8 +34,8 @@ public class OwlUnionOf extends SpecialClass {
 		int equalIris = 0;
 
 		for (String aIri : iriList) {
-			for(BaseNode aUnion : unions) {
-				if(aUnion.getIri().equals(aIri)) {
+			for (BaseNode aUnion : unions) {
+				if (aUnion.getIri().equals(aIri)) {
 					equalIris++;
 					break;
 				}

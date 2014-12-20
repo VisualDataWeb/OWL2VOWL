@@ -5,11 +5,11 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.Main;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
-import org.semanticweb.owlapi.model.OWLAxiom;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +20,8 @@ import java.util.Set;
 public class DatatypeParser extends GeneralNodeParser {
 	private Set<OWLDatatype> datatypes;
 
-	public DatatypeParser(Set<OWLDatatype> datatypes) {
+	public DatatypeParser(Set<OWLDatatype> datatypes, OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
+		super(ontology, factory, mapData, ontologyManager);
 		this.datatypes = datatypes;
 	}
 
@@ -33,14 +34,14 @@ public class DatatypeParser extends GeneralNodeParser {
 			rdfsIsDefinedBy = "";
 			owlVersionInfo = "";
 			iri = currentDatatype.getIRI().toString();
-			TypeFinder finder = new TypeFinder(GeneralParser.ontology, GeneralParser.factory);
+			TypeFinder finder = new TypeFinder(ontology, factory);
 			BaseDatatype theDatatype = finder.findVowlDatatype(currentDatatype);
 
 			Main.logger.info("Datatype: " + currentDatatype);
-			for(OWLAxiom currentAxiom : currentDatatype.getReferencingAxioms(ontology)){
+			for (OWLAxiom currentAxiom : currentDatatype.getReferencingAxioms(ontology)) {
 				Main.logger.info("\tAxiom: " + currentAxiom);
 
-				for(OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
+				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
 					Main.logger.info("\t\tNested: " + nestExpr);
 				}
 			}

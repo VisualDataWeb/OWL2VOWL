@@ -3,10 +3,9 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Ontology_Info;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -15,6 +14,10 @@ import java.util.Map;
  * Parser for the ontology information.
  */
 public class OntoInfoParser extends GeneralParser {
+	public OntoInfoParser(OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
+		super(ontology, factory, mapData, ontologyManager);
+	}
+
 	public void execute() {
 		OntologyInfo info = mapData.getOntologyInfo();
 
@@ -100,6 +103,7 @@ enum PROPMAP {
 	EMPTY(new String[0]);
 
 	private final String[] values;
+
 	/**
 	 * @param values All matching strings.
 	 */
@@ -107,28 +111,9 @@ enum PROPMAP {
 		this.values = values;
 	}
 
-	@Override
-	public String toString() {
-		return Arrays.toString(values);
-	}
-
-	/**
-	 * Checks if the string array contains the search string.
-	 * @param search String to search for.
-	 * @return True if found else false.
-	 */
-	public boolean contains(String search) {
-		for (String value : values) {
-			if (value.equals(search)) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
 	/**
 	 * Returns the enum value if found.
+	 *
 	 * @param searchProp The search string.
 	 * @return The matching enum or EMPTY if not found.
 	 */
@@ -140,5 +125,26 @@ enum PROPMAP {
 		}
 
 		return EMPTY;
+	}
+
+	@Override
+	public String toString() {
+		return Arrays.toString(values);
+	}
+
+	/**
+	 * Checks if the string array contains the search string.
+	 *
+	 * @param search String to search for.
+	 * @return True if found else false.
+	 */
+	public boolean contains(String search) {
+		for (String value : values) {
+			if (value.equals(search)) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

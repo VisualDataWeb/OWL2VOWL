@@ -31,7 +31,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.parser.Main</mainClass>
+							<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.Main</mainClass>
 						</manifest>
 						<manifestEntries>
 							<Version>${project.version}</Version>

@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.Main;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Axiom_Annotations;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
@@ -24,7 +25,6 @@ import org.semanticweb.owlapi.model.*;
 import java.util.*;
 
 /**
- * @author Vincent Link, Eduard Marbach
  */
 public class ProcessUnit {
 	private OWLDataFactory factory;
@@ -32,11 +32,11 @@ public class ProcessUnit {
 	private OWLOntology ontology;
 	private AxiomParser axiomParser;
 
-	public ProcessUnit(OWLOntology ontology, OWLDataFactory factory, MapData mapData) {
+	public ProcessUnit(OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
 		this.ontology = ontology;
 		this.factory = factory;
 		this.mapData = mapData;
-		axiomParser = new AxiomParser();
+		axiomParser = new AxiomParser(ontology, factory, mapData, ontologyManager);
 	}
 
 	public void processClasses() {
@@ -129,7 +129,7 @@ public class ProcessUnit {
 	}
 
 	private void processSpecialBehaviour(BaseClass currentClass) {
-		if(!(currentClass instanceof SpecialClass)) {
+		if (!(currentClass instanceof SpecialClass)) {
 			return;
 		}
 
@@ -140,7 +140,7 @@ public class ProcessUnit {
 		List<Set<OWLClass>> intersections = axiomParser.searchInEquivalents(theClass, Axiom_Annotations.AXIOM_OBJ_INTERSECTION);
 		List<Set<OWLClass>> complements = axiomParser.searchInEquivalents(theClass, Axiom_Annotations.AXIOM_OBJ_COMPLEMENT);
 
-		for(OWLClass currentUnion : retrieveMainUnit(unions, theClass)) {
+		for (OWLClass currentUnion : retrieveMainUnit(unions, theClass)) {
 			BaseClass aClass = mapData.getClassMap().get(currentUnion.getIRI().toString());
 
 			if (aClass == null) {
@@ -174,8 +174,8 @@ public class ProcessUnit {
 	private Set<OWLClass> retrieveMainUnit(List<Set<OWLClass>> elementList, OWLEntity entity) {
 		Set<OWLClass> merged = new TreeSet<OWLClass>();
 
-		for(Set<OWLClass> currentSet : elementList) {
-			if(!currentSet.contains(entity.asOWLClass())) {
+		for (Set<OWLClass> currentSet : elementList) {
+			if (!currentSet.contains(entity.asOWLClass())) {
 				merged.addAll(currentSet);
 			}
 		}
@@ -317,7 +317,7 @@ public class ProcessUnit {
 	// TODO duplicated code
 	private boolean isExternal(OWLClass theClass) {
 		if (true) {
-			boolean b = ComparisonHelper.hasDifferentNameSpace(theClass, ontology);
+			boolean b = ComparisonHelper.hasDifferentNameSpace(theClass, ontology, factory);
 			return b;
 		}
 

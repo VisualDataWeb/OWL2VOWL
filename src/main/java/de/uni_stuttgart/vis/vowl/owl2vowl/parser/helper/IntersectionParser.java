@@ -8,8 +8,8 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Axiom_Annotations;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlIntersectionOf;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,10 @@ import java.util.Set;
  */
 public class IntersectionParser extends AxiomParser {
 	Map<String, OwlIntersectionOf> intersectionNodes = mapData.getIntersectionMap();
+
+	public IntersectionParser(OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
+		super(ontology, factory, mapData, ontologyManager);
+	}
 
 	/**
 	 * Searches for an union class of the property. If already exists take it an return else create

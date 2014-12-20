@@ -5,11 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.Main;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.Set;
 
@@ -46,11 +42,11 @@ public class ComparisonHelper {
 		return !(newElement.equals(newOntology));
 	}
 
-	public static boolean hasDifferentNameSpace(OWLEntity entity, OWLOntology ontology) {
-		if (entity.getAnnotations(ontology, Main.factory.getRDFSIsDefinedBy()).isEmpty()) {
+	public static boolean hasDifferentNameSpace(OWLEntity entity, OWLOntology ontology, OWLDataFactory dataFactory) {
+		if (entity.getAnnotations(ontology, dataFactory.getRDFSIsDefinedBy()).isEmpty()) {
 			return hasDifferentNamespace(entity.getIRI().toString(), ontology.getOntologyID().getOntologyIRI());
 		} else {
-			Set<OWLAnnotation> test = entity.getAnnotations(ontology, Main.factory.getRDFSIsDefinedBy());
+			Set<OWLAnnotation> test = entity.getAnnotations(ontology, dataFactory.getRDFSIsDefinedBy());
 			OWLAnnotation first = test.iterator().next();
 			return hasDifferentNamespace(first.getValue().toString(), ontology.getOntologyID().getOntologyIRI());
 		}

@@ -5,9 +5,11 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.Main;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.semanticweb.owlapi.model.*;
 
@@ -20,7 +22,8 @@ import java.util.Set;
 public class ClassParser extends GeneralNodeParser {
 	private Set<OWLClass> classes;
 
-	public ClassParser(Set<OWLClass> classes) {
+	public ClassParser(Set<OWLClass> classes, OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
+		super(ontology, factory, mapData, ontologyManager);
 		this.classes = classes;
 	}
 
@@ -40,15 +43,15 @@ public class ClassParser extends GeneralNodeParser {
 			}
 
 			Main.logger.info("Class: " + currentClass);
-			for(OWLAxiom currentAxiom : currentClass.getReferencingAxioms(ontology)){
+			for (OWLAxiom currentAxiom : currentClass.getReferencingAxioms(ontology)) {
 				Main.logger.info("\tAxiom: " + currentAxiom);
 
-				for(OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
+				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
 					Main.logger.info("\t\tNested: " + nestExpr);
 				}
 			}
 
-			TypeFinder finder = new TypeFinder(GeneralParser.ontology, GeneralParser.factory);
+			TypeFinder finder = new TypeFinder(ontology, factory);
 			BaseClass theClass = finder.findVowlClass(currentClass);
 
 			parseAnnotations(currentClass);
@@ -75,7 +78,7 @@ public class ClassParser extends GeneralNodeParser {
 	private void setIndividuals(BaseClass theClass, OWLClass clazz) {
 		int size = 0;
 
-		for (OWLOntology owlOntology : Main.manager.getOntologies()) {
+		for (OWLOntology owlOntology : ontologyManager.getOntologies()) {
 			Set<OWLIndividual> individuals = clazz.getIndividuals(owlOntology);
 			size += individuals.size();
 		}

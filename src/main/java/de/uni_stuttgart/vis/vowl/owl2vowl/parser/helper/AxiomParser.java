@@ -9,6 +9,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Axiom_Annotations;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.containerElements.DisjointUnion;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.GeneralParser;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.*;
@@ -17,6 +18,10 @@ import java.util.*;
  *
  */
 public class AxiomParser extends GeneralParser {
+
+	public AxiomParser(OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
+		super(ontology, factory, mapData, ontologyManager);
+	}
 
 	/**
 	 * MUST BE CALLED FIRST!
@@ -45,6 +50,7 @@ public class AxiomParser extends GeneralParser {
 
 	/**
 	 * Returns the disjoint class expressions.
+	 *
 	 * @param entity The entity to get the disjoint expressions from.
 	 * @return The disjoint expressions set.
 	 */
@@ -69,6 +75,7 @@ public class AxiomParser extends GeneralParser {
 	 * Returns a set of VOWL DisjointUnions.
 	 * ATTENTION: It automatically adds this disjoint unions to the mapdata. Probably it shouldn't
 	 * to that right away?
+	 *
 	 * @param entity The entity to get the disjoint unions from.
 	 * @return A set with disjoint union classes.
 	 */
@@ -123,8 +130,9 @@ public class AxiomParser extends GeneralParser {
 	/**
 	 * TODO Think of what this really is doing.
 	 * Searches in equivalent axioms for given axiom.
+	 *
 	 * @param entity The entity to search in.
-	 * @param axiom The axiom to search in the equivalent axioms.
+	 * @param axiom  The axiom to search in the equivalent axioms.
 	 * @return A set of owl classes.
 	 */
 	public List<Set<OWLClass>> searchInEquivalents(OWLEntity entity, String axiom) {
@@ -146,8 +154,8 @@ public class AxiomParser extends GeneralParser {
 	/**
 	 * Search for a given axiom in the direction false = range, true = domain of the property.
 	 *
-	 * @param property The property to search in.
-	 * @param axiom The axiom to search for.
+	 * @param property  The property to search in.
+	 * @param axiom     The axiom to search for.
 	 * @param direction The desired direction. False = Range, True = Domain.
 	 * @return A set of owl classes.
 	 */
