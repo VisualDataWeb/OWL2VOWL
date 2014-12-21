@@ -129,4 +129,8 @@ public class Converter {
 
 		ontologyMetric.calculateSums();
 	}
+
+	public IRI getOntologyIri() {
+		return ontology.getOntologyID().getOntologyIRI();
+	}
 }

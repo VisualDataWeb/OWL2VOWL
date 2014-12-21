@@ -136,6 +136,7 @@ public class Main {
 		File exportFile;
 
 		String filename = searchExportFilename(ontologyIri) + ".json";
+
 		if (CONVERT_REQUIRED_ONTOLOGIES) {
 			String filePath = System.getProperty("user.dir") + "/WebVOWL/src/js/data/";
 			exportFile = new File(filePath, filename);
@@ -145,7 +146,6 @@ public class Main {
 
 		return new FileExporter(exportFile);
 	}
-
 
 	private static String searchExportFilename(IRI ontologyIri) {
 		String iri = ontologyIri.toString();
@@ -201,12 +201,13 @@ public class Main {
 	}
 
 	private static void convertOneOntology() {
-		IRI ontologyIri = IRI.create(new File(Ontology_Path.FOAF));
+		IRI fileIri = IRI.create(new File(Ontology_Path.BENCHMARK1));
+		IRI requiredIri = IRI.create(new File(Ontology_Path.BENCHMARK2));
 
 		try {
-			Converter converter = new Converter(ontologyIri);
+			Converter converter = new Converter(fileIri, Arrays.asList(requiredIri));
 			converter.convert();
-			converter.export(generateFileExporter(ontologyIri));
+			converter.export(generateFileExporter(converter.getOntologyIri()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(e.getMessage());
