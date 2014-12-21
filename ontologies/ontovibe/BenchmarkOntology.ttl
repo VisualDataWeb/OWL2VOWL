@@ -3,13 +3,13 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-@prefix this: <http://purl.org/BenchmarkOntology#> .
-@prefix other: <http://purl.org/BenchmarkOntologyModule#> .
+@prefix this: <http://ontovibe.visualdataweb.org/1.0#> .
+@prefix other: <http://ontovibe.visualdataweb.org/1.0/imported#> .
 
-<http://purl.org/BenchmarkOntology> a owl:Ontology ;
-	owl:versionIRI <http://purl.org/BenchmarkOntology> ;
-	owl:imports <http://purl.org/BenchmarkOntologyModule> ;
-	<http://purl.org/dc/elements/1.1/title> "Benchmark Ontology, Main Module" .
+<http://ontovibe.visualdataweb.org/1.0#> a owl:Ontology ;
+	owl:versionIRI <http://ontovibe.visualdataweb.org/1.0#> ;
+	owl:imports <http://ontovibe.visualdataweb.org/1.0/imported#> ;
+	<http://purl.org/dc/elements/1.1/title> "Ontology Visualization Benchmark (OntoViBe)" .
 
 # classes
 
@@ -193,7 +193,8 @@ this:deprecatedDatatypeProperty a owl:DatatypeProperty ;
 
 this:deprecatedObjectProperty a owl:ObjectProperty ;
 	owl:deprecated true ;
-	rdfs:domain this:PropertyOwner .
+	rdfs:domain this:PropertyOwner ;
+	rdfs:range owl:Thing .
 
 this:dummyProperty a owl:ObjectProperty ;
 	rdfs:domain this:PropertyOwner ;

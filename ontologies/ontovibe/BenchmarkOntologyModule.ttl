@@ -3,10 +3,10 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-@prefix this: <http://purl.org/BenchmarkOntologyModule#> .
+@prefix this: <http://ontovibe.visualdataweb.org/1.0/imported#> .
 
-<http://purl.org/BenchmarkOntologyModule> a owl:Ontology ;
-	owl:versionIRI <http://purl.org/BenchmarkOntologyModule> .
+<http://ontovibe.visualdataweb.org/1.0/imported#> a owl:Ontology ;
+	owl:versionIRI <http://ontovibe.visualdataweb.org/1.0/imported#> .
 
 this:ImportedClass a owl:Class .
 
