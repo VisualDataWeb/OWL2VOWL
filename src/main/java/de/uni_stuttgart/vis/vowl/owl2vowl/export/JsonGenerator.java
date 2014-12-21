@@ -326,6 +326,23 @@ public class JsonGenerator {
 			dataAttrJson.put("superproperty", superProperty);
 			dataAttrJson.put("disjoint", disjoints);
 
+			// Cardinality
+			int exact = currentProperty.getExactCardinality();
+			int min = currentProperty.getMinCardinality();
+			int max = currentProperty.getMaxCardinality();
+
+			if (exact != -1){
+				dataAttrJson.put("cardinality", currentProperty.getExactCardinality());
+			}
+
+			if (min != -1) {
+				dataAttrJson.put("minCardinality", currentProperty.getMinCardinality());
+			}
+
+			if (max != -1) {
+				dataAttrJson.put("maxCardinality", currentProperty.getMaxCardinality());
+			}
+
 			// Apply attributes
 			for (String attribute : currentProperty.getAttributes()) {
 				attributes.put(attribute);

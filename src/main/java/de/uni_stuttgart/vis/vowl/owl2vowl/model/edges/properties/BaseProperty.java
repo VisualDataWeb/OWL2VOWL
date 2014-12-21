@@ -21,12 +21,39 @@ public class BaseProperty extends BaseEdge {
 	protected List<String> equivalents = new ArrayList<String>();
 	protected String inverseIRI;
 	protected String inverseID;
+	protected int exactCardinality = -1;
+	protected int minCardinality = -1;
+	protected int maxCardinality = -1;
 
 	public BaseProperty() {
 		super();
 		setType("rdfs:Property");
 		setId("property" + indexCounter);
 		indexCounter++;
+	}
+
+	public int getExactCardinality() {
+		return exactCardinality;
+	}
+
+	public void setExactCardinality(int exactCardinality) {
+		this.exactCardinality = exactCardinality;
+	}
+
+	public int getMinCardinality() {
+		return minCardinality;
+	}
+
+	public void setMinCardinality(int minCardinality) {
+		this.minCardinality = minCardinality;
+	}
+
+	public int getMaxCardinality() {
+		return maxCardinality;
+	}
+
+	public void setMaxCardinality(int maxCardinality) {
+		this.maxCardinality = maxCardinality;
 	}
 
 	public List<String> getSuperProperties() {
