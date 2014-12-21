@@ -468,4 +468,8 @@ public class ProcessUnit {
 			processPropFieldConvert(currentProperty);
 		}
 	}
+
+	public void processAxioms() {
+		axiomParser.processAxioms(ontology);
+	}
 }

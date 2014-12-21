@@ -90,6 +90,7 @@ public class Converter {
 		processor.processClasses();
 		//processor.processDatatypes();
 		processor.processProperties();
+		processor.processAxioms();
 	}
 
 	public void export(Exporter exporter) throws Exception {
