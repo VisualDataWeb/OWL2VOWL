@@ -31,4 +31,12 @@ public class BaseEdge extends BaseEntity {
 	public void setRange(BaseNode range) {
 		this.range = range;
 	}
+
+	@Override
+	public String toString() {
+		return "BaseEdge{" +
+				"domain=" + domain +
+				", range=" + range +
+				"} " + super.toString();
+	}
 }
