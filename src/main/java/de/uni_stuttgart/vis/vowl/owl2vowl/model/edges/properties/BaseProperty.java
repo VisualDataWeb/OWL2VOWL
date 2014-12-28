@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Property_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.BaseEdge;
 
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class BaseProperty extends BaseEdge {
 
 	public BaseProperty() {
 		super();
-		setType("rdfs:Property");
+		setType(Property_Types.PROP_TYPE_RDF);
 		setId("property" + indexCounter);
 		indexCounter++;
 	}
