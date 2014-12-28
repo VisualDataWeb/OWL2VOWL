@@ -8,6 +8,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Axiom_Annotations;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.containerElements.DisjointUnion;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.*;
@@ -19,6 +20,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.AxiomParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors.IndividualVisitorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
@@ -48,12 +50,33 @@ public class ProcessUnit {
 			processEquivalents(currentClass);
 			processSubClasses(currentClass);
 			processSuperClasses(currentClass);
+			processIndividuals(currentClass);
 			processAxioms(currentClass);
 			processSpecialBehaviour(currentClass);
 		}
 
 		for (BaseNode baseNode : this.mapData.getMergedMap().values()) {
 			removeExternalEquivalents(baseNode);
+		}
+	}
+
+	private void processIndividuals(BaseClass currentClass) {
+		OWLClass owlClass = mapData.getOwlClasses().get(currentClass.getIri());
+		Set<OWLIndividual> individuals = owlClass.getIndividuals(ontology.getOWLOntologyManager().getOntologies());
+		IndividualVisitorImpl visitor = new IndividualVisitorImpl(individuals.size(), mapData, ontology);
+
+		for (OWLIndividual individual : individuals) {
+			individual.accept(visitor);
+		}
+
+		currentClass.setNumberOfIndividuals(visitor.getSetSize());
+
+		for (OWLClass aClass : visitor.getInstances()) {
+			BaseProperty newProp = new BaseProperty();
+			newProp.setDomain(currentClass);
+			newProp.setRange(mapData.getClassMap().get(aClass.getIRI().toString()));
+			newProp.getLabels().put(Vowl_Lang.LANG_DEFAULT, "instance of");
+			mapData.getRdfProperties().put(newProp.getId(), newProp);
 		}
 	}
 
