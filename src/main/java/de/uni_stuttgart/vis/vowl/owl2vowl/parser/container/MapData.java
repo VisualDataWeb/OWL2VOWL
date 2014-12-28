@@ -41,6 +41,7 @@ public class MapData {
 	private Map<String, OwlObjectProperty> objectPropertyMap = new MergePropertyMap<String, OwlObjectProperty>(mergedProperties);
 	private Map<String, OwlDatatypeProperty> datatypePropertyMap = new MergePropertyMap<String, OwlDatatypeProperty>(mergedProperties);
 	private Map<String, DisjointProperty> disjointPropertyMap = new MergePropertyMap<String, DisjointProperty>(mergedProperties);
+	private Map<String, BaseProperty> rdfProperties = new MergePropertyMap<String, BaseProperty>(mergedProperties);
 	/* Helper collections */
 	private Set<DisjointUnion> disjointUnions = new HashSet<DisjointUnion>();
 	/*
@@ -217,6 +218,10 @@ public class MapData {
 
 	public BaseNode findNode(String iriOrString) {
 		return mergedMap.get(iriOrString);
+	}
+
+	public Map<String, BaseProperty> getRdfProperties() {
+		return rdfProperties;
 	}
 }
 
