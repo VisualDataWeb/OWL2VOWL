@@ -63,8 +63,6 @@ public class ClassParser extends GeneralNodeParser {
 			theClass.setDefinedBy(FormatText.cutQuote(rdfsIsDefinedBy));
 			theClass.setOwlVersion(FormatText.cutQuote(owlVersionInfo));
 
-			setIndividuals(theClass, currentClass);
-
 			if (isDeprecated) {
 				theClass.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_DEPR);
 			}
@@ -72,16 +70,5 @@ public class ClassParser extends GeneralNodeParser {
 			owlClasses.put(currentClass.getIRI().toString(), currentClass);
 			classMap.put(theClass.getIri(), theClass);
 		}
-	}
-
-	private void setIndividuals(BaseClass theClass, OWLClass clazz) {
-		int size = 0;
-
-		for (OWLOntology owlOntology : ontologyManager.getOntologies()) {
-			Set<OWLIndividual> individuals = clazz.getIndividuals(owlOntology);
-			size += individuals.size();
-		}
-
-		theClass.setNumberOfIndividuals(size);
 	}
 }
