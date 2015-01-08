@@ -44,13 +44,4 @@ public class OwlUnionOf extends SpecialClass {
 
 		return equalIris == iriList.size();
 	}
-
-	@Override
-	public String toString() {
-		return "OwlUnionOf_" +
-				this.id +
-				"_{" +
-				"unions=" + unions +
-				'}';
-	}
 }

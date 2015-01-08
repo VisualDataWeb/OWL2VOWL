@@ -104,19 +104,4 @@ public class BaseProperty extends BaseEdge {
 	public void setInverseID(String inverseID) {
 		this.inverseID = inverseID;
 	}
-
-	@Override
-	public String toString() {
-		return "BaseProperty{" +
-				"subProperties=" + subProperties +
-				", superProperties=" + superProperties +
-				", disjoints=" + disjoints +
-				", equivalents=" + equivalents +
-				", inverseIRI='" + inverseIRI + '\'' +
-				", inverseID='" + inverseID + '\'' +
-				", exactCardinality=" + exactCardinality +
-				", minCardinality=" + minCardinality +
-				", maxCardinality=" + maxCardinality +
-				"} " + super.toString();
-	}
 }

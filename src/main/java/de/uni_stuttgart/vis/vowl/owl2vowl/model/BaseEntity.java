@@ -136,20 +136,4 @@ public class BaseEntity {
 	public void setDefinedBy(String definedBy) {
 		this.definedBy = definedBy;
 	}
-
-	@Override
-	public String toString() {
-		return "BaseEntity{" +
-				"name='" + name + '\'' +
-				", comment='" + comment + '\'' +
-				", type='" + type + '\'' +
-				", iri='" + iri + '\'' +
-				", id='" + id + '\'' +
-				", definedBy='" + definedBy + '\'' +
-				", owlVersion='" + owlVersion + '\'' +
-				", attributes=" + attributes +
-				", subClasses=" + subClasses +
-				", superClasses=" + superClasses +
-				'}';
-	}
 }

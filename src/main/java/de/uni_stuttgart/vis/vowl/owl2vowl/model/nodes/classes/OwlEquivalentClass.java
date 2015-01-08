@@ -29,10 +29,4 @@ public class OwlEquivalentClass extends BaseClass {
 
 		this.equivalentClasses = bufList;
 	}
-
-	@Override
-	public void printClass() {
-		super.printClass();
-		System.out.println("   equivalents=" + equivalentClasses + ",");
-	}
 }
