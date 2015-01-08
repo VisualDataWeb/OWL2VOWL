@@ -13,6 +13,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.SerializationConfig;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -79,6 +80,7 @@ public class JsonGenerator {
 	public void export(Exporter exporter) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
 		//mapper.enable(SerializationConfig.Feature.INDENT_OUTPUT);
+		mapper.configure(SerializationConfig.Feature.WRITE_NULL_MAP_VALUES, false);
 		exporter.write(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
 	}
 
