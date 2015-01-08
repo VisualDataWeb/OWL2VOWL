@@ -7,14 +7,11 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Axiom_Annotations;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.containerElements.DisjointUnion;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.GeneralParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors.CardinalityVisitorImpl;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;
 
 import java.util.*;
 
@@ -190,19 +187,19 @@ public class AxiomParser extends GeneralParser {
 	}
 
 	public void processAxioms(OWLOntology ontology) {
-		OWLAxiomVisitor objectVisitor = new OWLObjectVisitor(mapData);
+		OWLAxiomVisitor objectVisitor = new CardinalityVisitorImpl(mapData);
 
 		if (ontology != null) {
 			Set<OWLAxiom> axiomSet = ontology.getAxioms();
-			HashMap<String, Integer> axiomsMap = new HashMap<String, Integer>();
 
 			if (axiomSet != null && axiomSet.size() > 0) {
 				Iterator<OWLAxiom> setIter = axiomSet.iterator();
-				OWLAxiom axiom = null;
+				OWLAxiom axiom;
 
 				while (setIter.hasNext()) {
 					axiom = setIter.next();
 					axiom.accept(objectVisitor);
+
 					if (axiom.getNestedClassExpressions().size() > 0) {
 						for (OWLClassExpression owlClassExpression : axiom.getNestedClassExpressions()) {
 							owlClassExpression.accept((OWLClassExpressionVisitor) objectVisitor);
@@ -213,66 +210,5 @@ public class AxiomParser extends GeneralParser {
 
 		}
 
-	}
-}
-
-class OWLObjectVisitor extends OWLObjectVisitorAdapter {
-	private static final Logger logger = LogManager.getRootLogger();
-	MapData data;
-
-	public OWLObjectVisitor(MapData data) {
-		this.data = data;
-	}
-
-	@Override
-	public void visit(OWLDataMaxCardinality desc) {
-		BaseProperty prop = getProperty(desc.getProperty().asOWLDataProperty().getIRI().toString());
-		prop.setMinCardinality(desc.getCardinality());
-		super.visit(desc);
-		logger.info("Max Cardinality =[" + desc.getCardinality() + "]");
-	}
-
-	@Override
-	public void visit(OWLDataMinCardinality desc) {
-		BaseProperty prop = getProperty(desc.getProperty().asOWLDataProperty().getIRI().toString());
-		prop.setMinCardinality(desc.getCardinality());
-		super.visit(desc);
-		logger.info("Min Cardinality =[" + desc.getCardinality() + "]");
-	}
-
-	@Override
-	public void visit(OWLObjectMaxCardinality desc) {
-		BaseProperty prop = getProperty(desc.getProperty().asOWLObjectProperty().getIRI().toString());
-		prop.setMinCardinality(desc.getCardinality());
-		super.visit(desc);
-		logger.info("Object Max Cardinality =[" + desc.getCardinality() + "]");
-	}
-
-	@Override
-	public void visit(OWLObjectMinCardinality desc) {
-		BaseProperty prop = getProperty(desc.getProperty().asOWLObjectProperty().getIRI().toString());
-		prop.setMinCardinality(desc.getCardinality());
-		super.visit(desc);
-		logger.info("Object Min Cardinality =[" + desc.getCardinality() + "]");
-	}
-
-	@Override
-	public void visit(OWLDataExactCardinality desc) {
-		BaseProperty prop = getProperty(desc.getProperty().asOWLDataProperty().getIRI().toString());
-		prop.setMinCardinality(desc.getCardinality());
-		super.visit(desc);
-		logger.info("Exact Data Cardinality =[" + desc.getCardinality() + "]");
-	}
-
-	@Override
-	public void visit(OWLObjectExactCardinality desc) {
-		BaseProperty prop = getProperty(desc.getProperty().asOWLObjectProperty().getIRI().toString());
-		prop.setMinCardinality(desc.getCardinality());
-		super.visit(desc);
-		logger.info("Exact Object Cardinality =[" + desc.getCardinality() + "]");
-	}
-
-	private BaseProperty getProperty(String iri) {
-		return data.getMergedProperties().get(iri);
 	}
 }
