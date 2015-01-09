@@ -4,6 +4,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
+import java.util.Collection;
 import java.util.List;
 
 public class OwlIntersectionOf extends SpecialClass {
@@ -19,6 +20,14 @@ public class OwlIntersectionOf extends SpecialClass {
 		}
 
 		intersections.add(node);
+	}
+
+	public void addIntersections(Collection<? extends BaseNode> nodes) {
+		if (nodes == null) {
+			return;
+		}
+
+		intersections.addAll(nodes);
 	}
 
 	public boolean equalsIntersections(List<BaseNode> classes) {

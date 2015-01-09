@@ -71,6 +71,7 @@ public class JsonGenerator {
 		processHeader(mapData.getOntologyInfo());
 		processMetrics(mapData.getOntologyMetric());
 		processClasses(mapData.getClassMap());
+		processGlobalNodes(mapData.getIntersectionMap());
 		processDatatypes(mapData.getDatatypeMap());
 		processProperties(mapData.getMergedProperties());
 		processThings(mapData.getThingMap());
@@ -177,6 +178,84 @@ public class JsonGenerator {
 			classAttribute.add(classAttrJson);
 		}
 
+	}
+
+	public void processGlobalNodes(Map<String, ? extends BaseClass> nodes) {
+
+		for (Map.Entry<String, ? extends BaseClass> baseClass : nodes.entrySet()) {
+			BaseClass currentClass = baseClass.getValue();
+
+			Map<String, Object> classJson = new LinkedHashMap<String, Object>();
+
+			List<Object> equivalent = new ArrayList<Object>();
+			List<Object> attributes = new ArrayList<Object>();
+			List<Object> union = new ArrayList<Object>();
+			List<Object> intersection = new ArrayList<Object>();
+			List<Object> complement = new ArrayList<Object>();
+			List<Object> subClasses = new ArrayList<Object>();
+			List<Object> superClasses = new ArrayList<Object>();
+
+			classJson.put("id", currentClass.getId());
+			classJson.put("type", currentClass.getType());
+
+			_class.add(classJson);
+
+			Map<String, Object> classAttrJson = new LinkedHashMap<String, Object>();
+
+			classAttrJson.put("id", currentClass.getId());
+			classAttrJson.put("label", currentClass.getLabels());
+			classAttrJson.put("uri", currentClass.getIri());
+			classAttrJson.put("comment", currentClass.getComments());
+			classAttrJson.put("instances", currentClass.getNumberOfIndividuals());
+			classAttrJson.put("equivalent", equivalent);
+			classAttrJson.put("attributes", attributes);
+			classAttrJson.put("union", union);
+			classAttrJson.put("intersection", intersection);
+			classAttrJson.put("complement", complement);
+			classAttrJson.put("subClasses", subClasses);
+			classAttrJson.put("superClasses", superClasses);
+
+			if (currentClass.getClass() == OwlEquivalentClass.class) {
+				OwlEquivalentClass equivalentClass = (OwlEquivalentClass) currentClass;
+
+				for (BaseNode entity : equivalentClass.getEquivalentClasses()) {
+					equivalent.add(entity.getId());
+				}
+			}
+
+			if (currentClass instanceof SpecialClass) {
+				SpecialClass equivalentClass = (SpecialClass) currentClass;
+
+				for (BaseNode entity : equivalentClass.getUnions()) {
+					union.add(entity.getId());
+				}
+
+				for (BaseNode entity : equivalentClass.getIntersections()) {
+					intersection.add(entity.getId());
+				}
+
+				for (BaseNode entity : equivalentClass.getComplements()) {
+					complement.add(entity.getId());
+				}
+			}
+
+			// Apply attributes
+			for (String attribute : currentClass.getAttributes()) {
+				attributes.add(attribute);
+			}
+
+			// Apply sub classes
+			for (BaseNode entity : currentClass.getSubClasses()) {
+				subClasses.add(entity.getId());
+			}
+
+			// Apply super classes
+			for (BaseNode entity : currentClass.getSuperClasses()) {
+				superClasses.add(entity.getId());
+			}
+
+			classAttribute.add(classAttrJson);
+		}
 	}
 
 	public void processDatatypes(Map<String, BaseDatatype> datatypes) {
