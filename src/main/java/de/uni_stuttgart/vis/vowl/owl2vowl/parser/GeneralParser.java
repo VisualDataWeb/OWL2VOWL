@@ -166,27 +166,27 @@ public class GeneralParser {
 	}
 
 	public void handleOntologyInfo() {
-		OntoInfoParser parser = new OntoInfoParser(ontology, factory, mapData, ontologyManager);
+		OntoInfoParser parser = new OntoInfoParser(ontologyInformation, mapData);
 		parser.execute();
 	}
 
 	public void handleClass(Set<OWLClass> classes) {
-		GeneralParser parser = new ClassParser(classes, ontology, factory, mapData, ontologyManager);
+		GeneralParser parser = new ClassParser(ontologyInformation, mapData, classes);
 		parser.execute();
 	}
 
 	public void handleDatatype(Set<OWLDatatype> datatypes) {
-		GeneralParser parser = new DatatypeParser(datatypes, ontology, factory, mapData, ontologyManager);
+		GeneralParser parser = new DatatypeParser(ontologyInformation, mapData, datatypes);
 		parser.execute();
 	}
 
 	public void handleObjectProperty(Set<OWLObjectProperty> objectProperties) {
-		GeneralParser parser = new ObjectPropertyParser(objectProperties, ontology, factory, mapData, ontologyManager);
+		GeneralParser parser = new ObjectPropertyParser(ontologyInformation, mapData, objectProperties);
 		parser.execute();
 	}
 
 	public void handleDatatypeProperty(Set<OWLDataProperty> dataProperties) {
-		GeneralParser parser = new DatatypePropertyParser(dataProperties, ontology, factory, mapData, ontologyManager);
+		GeneralParser parser = new DatatypePropertyParser(ontologyInformation, mapData, dataProperties);
 		parser.execute();
 	}
 

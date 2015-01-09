@@ -207,7 +207,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		List<String> iriList = new ArrayList<String>();
 
 		// TODO Do not use external properties as base. But if there are equivalent external properties only?
-		if (ComparisonHelper.hasDifferentNameSpace((OWLEntity) property, ontology, factory)) {
+		if (ComparisonHelper.hasDifferentNameSpace((OWLEntity) property, ontologyInformation)) {
 			return iriList;
 		}
 

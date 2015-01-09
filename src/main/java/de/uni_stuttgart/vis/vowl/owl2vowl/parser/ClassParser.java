@@ -51,7 +51,7 @@ public class ClassParser extends GeneralNodeParser {
 				}
 			}
 
-			TypeFinder finder = new TypeFinder(ontology, factory);
+			TypeFinder finder = new TypeFinder(ontologyInformation);
 			BaseClass theClass = finder.findVowlClass(currentClass);
 
 			parseAnnotations(currentClass);

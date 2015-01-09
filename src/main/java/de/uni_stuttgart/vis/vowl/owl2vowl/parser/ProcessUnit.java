@@ -246,7 +246,7 @@ public class ProcessUnit {
 					}
 
 					// Move class to first position if the namespace is same with ontology.
-					if (!hasDifferentNamespace(iri, ontology.getOntologyID().getOntologyIRI())) {
+					if (!ComparisonHelper.hasDifferentNameSpace(equiClassExpression.asOWLClass(), ontologyInformation)) {
 						equivalents.add(0, equivClass);
 					} else {
 						equivalents.add(equivClass);
@@ -261,7 +261,7 @@ public class ProcessUnit {
 
 					if (equivClass != null) {
 						// Move class to first position if the namespace is same with ontology.
-						if (!hasDifferentNamespace(equiClassIRI, ontology.getOntologyID().getOntologyIRI())) {
+						if (!ComparisonHelper.hasDifferentNameSpace(owl_class_entity, ontologyInformation)) {
 							equivalents.add(0, equivClass);
 						} else {
 							equivalents.add(equivClass);
@@ -345,7 +345,7 @@ public class ProcessUnit {
 	// TODO duplicated code
 	private boolean isExternal(OWLClass theClass) {
 		if (true) {
-			boolean b = ComparisonHelper.hasDifferentNameSpace(theClass, ontology, factory);
+			boolean b = ComparisonHelper.hasDifferentNameSpace(theClass, ontologyInformation);
 			return b;
 		}
 
@@ -360,23 +360,11 @@ public class ProcessUnit {
 			ontoIRI = IRI.create(definedBy);
 		}
 
-		return this.hasDifferentNamespace(theClass.getIRI().toString(), ontoIRI);
+		return ComparisonHelper.hasDifferentNameSpace(theClass, ontologyInformation);
 	}
 
 	private boolean isEquivalentClass(OWLClass theClass) {
 		return !ontology.getEquivalentClassesAxioms(theClass).isEmpty();
-	}
-
-	/**
-	 * Checks if an element has a different namespace as an other element.
-	 * The function will return true if the element's namespace doesn't contain the namespace of the URI.
-	 *
-	 * @param elementNamespace  the namespace of an element as string (URI to string)
-	 * @param ontologyNamespace the namespace of the ontology as IRI
-	 * @return true, if the namespace is different
-	 */
-	private boolean hasDifferentNamespace(String elementNamespace, IRI ontologyNamespace) {
-		return ComparisonHelper.hasDifferentNamespace(elementNamespace, ontologyNamespace);
 	}
 
 	public void processProperties() {

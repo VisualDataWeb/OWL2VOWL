@@ -34,7 +34,7 @@ public class DatatypeParser extends GeneralNodeParser {
 			rdfsIsDefinedBy = "";
 			owlVersionInfo = "";
 			iri = currentDatatype.getIRI().toString();
-			TypeFinder finder = new TypeFinder(ontology, factory);
+			TypeFinder finder = new TypeFinder(ontologyInformation);
 			BaseDatatype theDatatype = finder.findVowlDatatype(currentDatatype);
 
 			logger.info("Datatype: " + currentDatatype);

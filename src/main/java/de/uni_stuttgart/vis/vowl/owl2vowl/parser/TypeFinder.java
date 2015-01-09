@@ -6,6 +6,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import org.semanticweb.owlapi.model.*;
 
@@ -16,10 +17,12 @@ public class TypeFinder {
 	private OWLOntology ontology;
 	private OWLDataFactory factory;
 	private List<String> specialAxioms;
+	private OntologyInformation information;
 
-	public TypeFinder(OWLOntology ontology, OWLDataFactory factory) {
-		this.ontology = ontology;
-		this.factory = factory;
+	public TypeFinder(OntologyInformation information) {
+		this.information = information;
+		ontology = information.getOntology();
+		factory = information.getFactory();
 		specialAxioms = Arrays.asList(Axiom_Annotations.AXIOM_OBJ_INTERSECTION, Axiom_Annotations.AXIOM_OBJ_UNION, Axiom_Annotations.AXIOM_OBJ_COMPLEMENT);
 	}
 
@@ -83,22 +86,10 @@ public class TypeFinder {
 
 	// TODO braucht man das überhaupt noch, da external nur noch ein Attribut ist?
 	private boolean isExternal(OWLClass theClass) {
-		return ComparisonHelper.hasDifferentNameSpace(theClass, ontology, factory);
+		return ComparisonHelper.hasDifferentNameSpace(theClass, information);
 	}
 
 	private boolean isEquivalentClass(OWLClass theClass) {
 		return !ontology.getEquivalentClassesAxioms(theClass).isEmpty();
-	}
-
-	/**
-	 * Checks if an element has a different namespace as an other element.
-	 * The function will return true if the element's namespace doesn't contain the namespace of the URI.
-	 *
-	 * @param elementNamespace  the namespace of an element as string (URI to string)
-	 * @param ontologyNamespace the namespace of the ontology as IRI
-	 * @return true, if the namespace is different
-	 */
-	private boolean hasDifferentNamespace(String elementNamespace, IRI ontologyNamespace) {
-		return ComparisonHelper.hasDifferentNamespace(elementNamespace, ontologyNamespace);
 	}
 }

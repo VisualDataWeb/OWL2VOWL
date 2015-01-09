@@ -122,7 +122,7 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 				}
 			}
 
-			if (ComparisonHelper.hasDifferentNameSpace(currentProperty, ontology, factory)) {
+			if (ComparisonHelper.hasDifferentNameSpace(currentProperty, ontologyInformation)) {
 				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_IMPORT);
 			}
 			if (isFuntionalObjectProperty(ontology, currentProperty)) {

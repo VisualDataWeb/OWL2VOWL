@@ -105,7 +105,7 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 			OwlDatatypeProperty property = new OwlDatatypeProperty();
 
-			if (ComparisonHelper.hasDifferentNameSpace(currentProperty, ontology, factory)) {
+			if (ComparisonHelper.hasDifferentNameSpace(currentProperty, ontologyInformation)) {
 				property.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_IMPORT);
 			}
 
