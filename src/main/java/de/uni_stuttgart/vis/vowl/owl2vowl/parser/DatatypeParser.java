@@ -34,7 +34,6 @@ public class DatatypeParser extends GeneralNodeParser {
 		Map<String, OWLDatatype> owlDatatypes = mapData.getOwlDatatypes();
 
 		for (OWLDatatype currentDatatype : datatypes) {
-			reset();
 			iri = currentDatatype.getIRI().toString();
 			TypeFinder finder = new TypeFinder(ontologyInformation);
 			BaseDatatype theDatatype = finder.findVowlDatatype(currentDatatype);
