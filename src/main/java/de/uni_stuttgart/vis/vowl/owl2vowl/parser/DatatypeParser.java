@@ -25,26 +25,19 @@ public class DatatypeParser extends GeneralNodeParser {
 		this.datatypes = datatypes;
 	}
 
+	public void reset() {
+		super.reset();
+	}
+
 	public void execute() {
 		Map<String, BaseDatatype> datatypeMap = mapData.getDatatypeMap();
 		Map<String, OWLDatatype> owlDatatypes = mapData.getOwlDatatypes();
 
 		for (OWLDatatype currentDatatype : datatypes) {
-			isDeprecated = false;
-			rdfsIsDefinedBy = "";
-			owlVersionInfo = "";
+			reset();
 			iri = currentDatatype.getIRI().toString();
 			TypeFinder finder = new TypeFinder(ontologyInformation);
 			BaseDatatype theDatatype = finder.findVowlDatatype(currentDatatype);
-
-			logger.info("Datatype: " + currentDatatype);
-			for (OWLAxiom currentAxiom : currentDatatype.getReferencingAxioms(ontology)) {
-				logger.info("\tAxiom: " + currentAxiom);
-
-				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
-					logger.info("\t\tNested: " + nestExpr);
-				}
-			}
 
 			parseAnnotations(currentDatatype);
 
@@ -61,6 +54,7 @@ public class DatatypeParser extends GeneralNodeParser {
 
 			owlDatatypes.put(currentDatatype.getIRI().toString(), currentDatatype);
 			datatypeMap.put(theDatatype.getIri(), theDatatype);
+			logAxioms(currentDatatype);
 		}
 	}
 }

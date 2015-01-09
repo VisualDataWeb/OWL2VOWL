@@ -66,34 +66,22 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 		return !onto.getSymmetricObjectPropertyAxioms(owlOPE).isEmpty();
 	}
 
+	@Override
+	public void reset() {
+		super.reset();
+	}
+
 	public void execute() {
 		Map<String, OwlObjectProperty> objectPropertyMap = mapData.getObjectPropertyMap();
 		Map<String, OwlThing> thingMap = mapData.getThingMap();
 		Map<String, OWLObjectProperty> owlObjectProperties = mapData.getOwlObjectProperties();
 
-		int indexCounter = objectPropertyMap.size() + 1;
-
 		for (OWLObjectProperty currentProperty : objectProperties) {
-			isDeprecated = false;
-			rdfsIsDefinedBy = "";
-			owlVersionInfo = "";
-			rdfsRange = "";
-			rdfsDomain = "";
-			rdfsInversOf = "";
 			iri = currentProperty.getIRI().toString();
-
 			OwlObjectProperty theProperty = new OwlObjectProperty();
 
+			reset();
 			parseAnnotations(currentProperty);
-
-			logger.info("ObjectProperty: " + currentProperty);
-			for (OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)) {
-				logger.info("\tAxiom: " + currentAxiom);
-
-				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
-					logger.info("\t\tNested: " + nestExpr);
-				}
-			}
 
 			// get the domain of the property
 			rdfsDomain = retrieveDomain(currentProperty);
@@ -102,6 +90,7 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			rdfsRange = retrieveRange(currentProperty);
 
 			// get the IRI of the object property which is inverse to 'this' object property
+			// TODO Mehrfache Inversen speichern
 			Set<OWLObjectPropertyExpression> inversesExpressions = currentProperty.getInverses(ontology);
 
 			for (OWLObjectPropertyExpression owlOPE : inversesExpressions) {
@@ -217,10 +206,9 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_DEPR);
 			}
 
-			indexCounter++;
-
 			owlObjectProperties.put(currentProperty.getIRI().toString(), currentProperty);
 			objectPropertyMap.put(theProperty.getIri(), theProperty);
+
+			logAxioms(currentProperty);
 		}
 	}
-}

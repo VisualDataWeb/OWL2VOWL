@@ -40,7 +40,10 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	}
 
 	protected void reset() {
-
+		super.reset();
+		rdfsDomains = null;
+		rdfsRanges = null;
+		rdfsInversOf = "";
 	}
 
 	protected String retrieveRange(OWLObjectProperty currentProperty) {

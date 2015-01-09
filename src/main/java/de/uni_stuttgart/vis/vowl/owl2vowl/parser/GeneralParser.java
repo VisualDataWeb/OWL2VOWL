@@ -58,12 +58,7 @@ public class GeneralParser {
 	}
 
 	public void parseAnnotations(OWLEntity entity) {
-		rdfsLabel = "";
-		rdfsComment = "";
-		isDeprecated = false;
-		rdfsIsDefinedBy = "";
-		owlVersionInfo = "";
-		languageToLabel = new HashMap<String, String>();
+		reset();
 
 		OWLAnnotationProperty labelProp = factory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_LABEL.getIRI());
 		OWLAnnotationProperty commentProp = factory.getOWLAnnotationProperty(OWLRDFVocabulary.RDFS_COMMENT.getIRI());
@@ -91,6 +86,28 @@ public class GeneralParser {
 					System.out.println("Not used annotation: " + owlPropAno);
 				}
 			}
+		}
+	}
+
+	protected void reset() {
+		rdfsLabel = "";
+		rdfsComment = "";
+		isDeprecated = false;
+		rdfsIsDefinedBy = "";
+		owlVersionInfo = "";
+		languageToLabel = null;
+	}
+
+	/**
+	 * Logs all axioms of the given entity.
+	 *
+	 * @param entity The desired entity.
+	 */
+	protected void logAxioms(OWLEntity entity) {
+		logger.info(entity);
+
+		for (OWLAxiom owlAxiom : entity.getReferencingAxioms(ontology)) {
+			logger.info("\tAxiom: " + owlAxiom);
 		}
 	}
 

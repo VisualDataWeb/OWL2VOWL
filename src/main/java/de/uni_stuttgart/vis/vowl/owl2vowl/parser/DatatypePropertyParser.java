@@ -38,23 +38,10 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 		Map<String, OWLDataProperty> owlDatatypeProperties = mapData.getOwlDatatypeProperties();
 
 		for (OWLDataProperty currentProperty : dataProperties) {
-			isDeprecated = false;
-			rdfsIsDefinedBy = "";
-			owlVersionInfo = "";
-			rdfsRange = "";
-			rdfsDomain = "";
+			reset();
 			iri = currentProperty.getIRI().toString();
 
 			parseAnnotations(currentProperty);
-
-			logger.info("DatatypeProperty: " + currentProperty);
-			for (OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)) {
-				logger.info("\tAxiom: " + currentAxiom);
-
-				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
-					logger.info("\t\tNested: " + nestExpr);
-				}
-			}
 
 			rdfsDomain = retrieveDomain(currentProperty);
 
@@ -136,6 +123,8 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 			owlDatatypeProperties.put(currentProperty.getIRI().toString(), currentProperty);
 			propertyMap.put(property.getIri(), property);
+
+			logAxioms(currentProperty);
 		}
 	}
 
