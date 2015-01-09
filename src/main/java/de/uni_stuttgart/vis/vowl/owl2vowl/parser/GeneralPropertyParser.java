@@ -5,20 +5,21 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlIntersectionOf;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlUnionOf;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.IntersectionParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.UnionParser;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -27,14 +28,18 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	protected String rdfsDomain = "";
 	protected String rdfsRange = "";
 	protected String rdfsInversOf = "";
-	private UnionParser unionParser = new UnionParser(ontology, factory, mapData, ontologyManager);
-	private IntersectionParser intersectionParser = new IntersectionParser(ontology, factory, mapData, ontologyManager);
+	private UnionParser unionParser;
+	private IntersectionParser intersectionParser;
 
-	public GeneralPropertyParser(OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
-		super(ontology, factory, mapData, ontologyManager);
+	public GeneralPropertyParser(OntologyInformation ontologyInformation, MapData mapData) {
+		super(ontologyInformation, mapData);
+		unionParser = new UnionParser(ontologyInformation, mapData);
+		intersectionParser = new IntersectionParser(ontologyInformation, mapData);
+		rdfsDomains = new ArrayList<String>();
+		rdfsRanges = new ArrayList<String>();
 	}
 
-	public static void reset() {
+	protected void reset() {
 
 	}
 

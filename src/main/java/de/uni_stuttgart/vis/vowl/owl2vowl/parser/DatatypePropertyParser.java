@@ -15,11 +15,11 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -28,8 +28,8 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 	private Set<OWLDataProperty> dataProperties;
 
-	public DatatypePropertyParser(Set<OWLDataProperty> dataProperties, OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
-		super(ontology, factory, mapData, ontologyManager);
+	public DatatypePropertyParser(OntologyInformation ontologyInformation, MapData mapData, Set<OWLDataProperty> dataProperties) {
+		super(ontologyInformation, mapData);
 		this.dataProperties = dataProperties;
 	}
 

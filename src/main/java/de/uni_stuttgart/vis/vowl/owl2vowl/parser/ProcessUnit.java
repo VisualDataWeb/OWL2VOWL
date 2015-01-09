@@ -18,6 +18,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlEquivalentClass
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.SpecialClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.AxiomParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors.IndividualVisitorImpl;
@@ -35,12 +36,14 @@ public class ProcessUnit {
 	private MapData mapData;
 	private OWLOntology ontology;
 	private AxiomParser axiomParser;
+	private OntologyInformation ontologyInformation;
 
-	public ProcessUnit(OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
-		this.ontology = ontology;
-		this.factory = factory;
+	public ProcessUnit(OntologyInformation ontologyInformation, MapData mapData) {
+		this.ontologyInformation = ontologyInformation;
 		this.mapData = mapData;
-		axiomParser = new AxiomParser(ontology, factory, mapData, ontologyManager);
+		ontology = ontologyInformation.getOntology();
+		factory = ontologyInformation.getFactory();
+		axiomParser = new AxiomParser(ontologyInformation, mapData);
 	}
 
 	public void processClasses() {

@@ -11,6 +11,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.GeneralParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.ProcessUnit;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -30,6 +31,7 @@ public class Converter {
 	private static final Logger logger = LogManager.getRootLogger();
 	private static MapData mapData;
 	private final JsonGenerator jsonGenerator = new JsonGenerator();
+	private OntologyInformation ontologyInformation;
 	private OWLOntologyManager ontologyManager;
 	private OWLOntology ontology;
 	private OWLDataFactory dataFactory;
@@ -51,7 +53,17 @@ public class Converter {
 		}
 
 		ontology = ontologyManager.loadOntology(ontologyIRI);
-		logger.info("Ontologies loaded! Main Ontology: " + ontology.getOntologyID().getOntologyIRI().getFragment());
+		String logOntoName = ontologyIRI.toString();
+
+		ontologyInformation = new OntologyInformation(ontology, ontologyIRI);
+
+		if (!ontology.isAnonymous()) {
+			logOntoName = ontology.getOntologyID().getOntologyIRI().getFragment();
+		} else {
+			logger.info("Ontology IRI is anonymous. Use loaded URI/IRI instead.");
+		}
+
+		logger.info("Ontologies loaded! Main Ontology: " + logOntoName);
 	}
 
 	private void initializeAPI() {
@@ -70,8 +82,8 @@ public class Converter {
 		Set<OWLObjectProperty> objectProperties = ontology.getObjectPropertiesInSignature();
 		Set<OWLDataProperty> dataProperties = ontology.getDataPropertiesInSignature();
 
-		ProcessUnit processor = new ProcessUnit(ontology, dataFactory, mapData, ontologyManager);
-		GeneralParser parser = new GeneralParser(ontology, dataFactory, mapData, ontologyManager);
+		ProcessUnit processor = new ProcessUnit(ontologyInformation, mapData);
+		GeneralParser parser = new GeneralParser(ontologyInformation, mapData);
 
 		/*
 		Parsing of the raw data gained from the OWL API. Will be transformed to useable data

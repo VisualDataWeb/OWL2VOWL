@@ -9,13 +9,14 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlIntersectionOf;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import org.semanticweb.owlapi.model.*;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
@@ -23,8 +24,8 @@ import java.util.Set;
 public class ObjectPropertyParser extends GeneralPropertyParser {
 	private Set<OWLObjectProperty> objectProperties;
 
-	public ObjectPropertyParser(Set<OWLObjectProperty> objectProperties, OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
-		super(ontology, factory, mapData, ontologyManager);
+	public ObjectPropertyParser(OntologyInformation ontologyInformation, MapData mapData, Set<OWLObjectProperty> objectProperties) {
+		super(ontologyInformation, mapData);
 		this.objectProperties = objectProperties;
 	}
 

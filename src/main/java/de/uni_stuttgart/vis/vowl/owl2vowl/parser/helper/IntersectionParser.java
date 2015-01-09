@@ -9,6 +9,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Axiom_Annotations;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlIntersectionOf;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.ArrayList;
@@ -20,10 +21,11 @@ import java.util.Set;
  *
  */
 public class IntersectionParser extends AxiomParser {
-	Map<String, OwlIntersectionOf> intersectionNodes = mapData.getIntersectionMap();
+	protected Map<String, OwlIntersectionOf> intersectionNodes;
 
-	public IntersectionParser(OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
-		super(ontology, factory, mapData, ontologyManager);
+	public IntersectionParser(OntologyInformation ontologyInformation, MapData mapData) {
+		super(ontologyInformation, mapData);
+		intersectionNodes = mapData.getIntersectionMap();
 	}
 
 	/**

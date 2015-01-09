@@ -8,6 +8,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.Map;
@@ -19,8 +20,8 @@ import java.util.Set;
 public class DatatypeParser extends GeneralNodeParser {
 	private Set<OWLDatatype> datatypes;
 
-	public DatatypeParser(Set<OWLDatatype> datatypes, OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
-		super(ontology, factory, mapData, ontologyManager);
+	public DatatypeParser(OntologyInformation ontologyInformation, MapData mapData, Set<OWLDatatype> datatypes) {
+		super(ontologyInformation, mapData);
 		this.datatypes = datatypes;
 	}
 

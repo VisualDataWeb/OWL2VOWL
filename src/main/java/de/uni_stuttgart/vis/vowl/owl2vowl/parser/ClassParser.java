@@ -9,6 +9,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.semanticweb.owlapi.model.*;
 
@@ -21,8 +22,8 @@ import java.util.Set;
 public class ClassParser extends GeneralNodeParser {
 	private Set<OWLClass> classes;
 
-	public ClassParser(Set<OWLClass> classes, OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
-		super(ontology, factory, mapData, ontologyManager);
+	public ClassParser(OntologyInformation ontologyInformation, MapData mapData, Set<OWLClass> classes) {
+		super(ontologyInformation, mapData);
 		this.classes = classes;
 	}
 

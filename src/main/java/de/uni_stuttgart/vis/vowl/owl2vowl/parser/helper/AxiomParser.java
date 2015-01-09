@@ -10,6 +10,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.containerElements.DisjointUnion;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.GeneralParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors.CardinalityVisitorImpl;
 import org.semanticweb.owlapi.model.*;
 
@@ -19,9 +20,8 @@ import java.util.*;
  *
  */
 public class AxiomParser extends GeneralParser {
-
-	public AxiomParser(OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
-		super(ontology, factory, mapData, ontologyManager);
+	public AxiomParser(OntologyInformation ontologyInformation, MapData mapData) {
+		super(ontologyInformation, mapData);
 	}
 
 	/**

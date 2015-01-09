@@ -4,6 +4,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Ontology_Info;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.semanticweb.owlapi.model.*;
 
@@ -14,8 +15,8 @@ import java.util.Map;
  * Parser for the ontology information.
  */
 public class OntoInfoParser extends GeneralParser {
-	public OntoInfoParser(OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
-		super(ontology, factory, mapData, ontologyManager);
+	public OntoInfoParser(OntologyInformation ontologyInformation, MapData mapData) {
+		super(ontologyInformation, mapData);
 	}
 
 	public void execute() {

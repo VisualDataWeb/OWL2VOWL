@@ -6,26 +6,27 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Annotations;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.vocab.OWLRDFVocabulary;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  *
  */
 public class GeneralParser {
+	private static final Logger logger = LogManager.getLogger(GeneralParser.class);
 	private static final boolean LOG_ANNOTATIONS = false;
-	protected static final Logger logger = LogManager.getRootLogger();
+	protected OntologyInformation ontologyInformation;
 	protected OWLOntology ontology;
 	protected OWLDataFactory factory;
 	protected MapData mapData;
@@ -39,19 +40,13 @@ public class GeneralParser {
 	protected String iri;
 	protected OWLOntologyManager ontologyManager;
 
-	public GeneralParser(OWLOntology ontology, OWLDataFactory factory, MapData mapData, OWLOntologyManager ontologyManager) {
-		this.ontology = ontology;
-		this.factory = factory;
+	public GeneralParser(OntologyInformation ontologyInformation, MapData mapData) {
+		this.ontologyInformation = ontologyInformation;
 		this.mapData = mapData;
-		this.ontologyManager = ontologyManager;
-	}
-
-	public Map<String, String> getLanguageToLabel() {
-		return languageToLabel;
-	}
-
-	public void setLanguageToLabel(Map<String, String> languageToLabel) {
-		this.languageToLabel = languageToLabel;
+		ontology = ontologyInformation.getOntology();
+		factory = ontologyInformation.getFactory();
+		ontologyManager = ontologyInformation.getManager();
+		languageToLabel = new HashMap<String, String>();
 	}
 
 	public String getIri() {
@@ -60,46 +55,6 @@ public class GeneralParser {
 
 	public void setIri(String iri) {
 		this.iri = iri;
-	}
-
-	public String getRdfsLabel() {
-		return rdfsLabel;
-	}
-
-	public void setRdfsLabel(String rdfsLabel) {
-		this.rdfsLabel = rdfsLabel;
-	}
-
-	public String getRdfsComment() {
-		return rdfsComment;
-	}
-
-	public void setRdfsComment(String rdfsComment) {
-		this.rdfsComment = rdfsComment;
-	}
-
-	public String getRdfsIsDefinedBy() {
-		return rdfsIsDefinedBy;
-	}
-
-	public void setRdfsIsDefinedBy(String rdfsIsDefinedBy) {
-		this.rdfsIsDefinedBy = rdfsIsDefinedBy;
-	}
-
-	public String getOwlVersionInfo() {
-		return owlVersionInfo;
-	}
-
-	public void setOwlVersionInfo(String owlVersionInfo) {
-		this.owlVersionInfo = owlVersionInfo;
-	}
-
-	public Boolean getIsDeprecated() {
-		return isDeprecated;
-	}
-
-	public void setIsDeprecated(Boolean isDeprecated) {
-		this.isDeprecated = isDeprecated;
 	}
 
 	public void parseAnnotations(OWLEntity entity) {
