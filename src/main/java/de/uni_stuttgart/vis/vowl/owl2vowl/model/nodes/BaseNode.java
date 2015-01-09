@@ -56,4 +56,26 @@ public abstract class BaseNode extends BaseEntity {
 
 		return null;
 	}
+
+	public boolean containsConnectedThing(BaseNode node) {
+		for (BaseProperty out : getOutGoingEdges()) {
+			BaseNode range = out.getRange();
+			String type = range.getType();
+
+			if (type.equals(Node_Types.TYPE_THING) && range.getId().equals(node.getId())) {
+				return true;
+			}
+		}
+
+		for (BaseProperty in : getInGoingEdges()) {
+			BaseNode domain = in.getDomain();
+			String type = domain.getType();
+
+			if (type.equals(Node_Types.TYPE_THING) && domain.getId().equals(node.getId())) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 }
