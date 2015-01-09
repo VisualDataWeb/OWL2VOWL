@@ -27,28 +27,22 @@ public class ClassParser extends GeneralNodeParser {
 		this.classes = classes;
 	}
 
+	@Override
+	protected void reset() {
+		super.reset();
+	}
+
 	protected void execute() {
 		Map<String, BaseClass> classMap = mapData.getClassMap();
 		Map<String, OWLClass> owlClasses = mapData.getOwlClasses();
 
 		for (OWLClass currentClass : classes) {
-			isDeprecated = false;
-			rdfsIsDefinedBy = "";
-			owlVersionInfo = "";
+			reset();
 			iri = currentClass.getIRI().toString();
 
 			// If thing is found skip it! It only gets created where necessary.
-			if (iri.equals(Standard_Iris.OWL_THING_CLASS_URI)) {
+			if (currentClass.isOWLThing() || iri.equals(Standard_Iris.OWL_THING_CLASS_URI)) {
 				continue;
-			}
-
-			logger.info("Class: " + currentClass);
-			for (OWLAxiom currentAxiom : currentClass.getReferencingAxioms(ontology)) {
-				logger.info("\tAxiom: " + currentAxiom);
-
-				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
-					logger.info("\t\tNested: " + nestExpr);
-				}
 			}
 
 			TypeFinder finder = new TypeFinder(ontologyInformation);
@@ -70,6 +64,8 @@ public class ClassParser extends GeneralNodeParser {
 
 			owlClasses.put(currentClass.getIRI().toString(), currentClass);
 			classMap.put(theClass.getIri(), theClass);
+
+			logAxioms(currentClass);
 		}
 	}
 }
