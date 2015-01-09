@@ -166,11 +166,38 @@ public class GeneralParser {
 	}
 
 	/**
+	 * Returns a list of nodes which could be found.
+	 * Logs the iri if the corresponding node couldn't be found.
+	 * @param nodeIRIS The desired IRIs.
+	 * @return A list of nodes.
+	 */
+	protected List<BaseNode> findNodes(List<String> nodeIRIS) {
+		List<BaseNode> nodes = new ArrayList<BaseNode>();
+
+		for (String s : nodeIRIS) {
+			// Skip Things
+			if (s.equals(Standard_Iris.OWL_THING_CLASS_URI)) {
+				continue;
+			}
+
+			BaseNode node = mapData.findNode(s);
+
+			if (node != null) {
+				nodes.add(node);
+			} else {
+				logger.error("Could not find node: " + s);
+			}
+		}
+
+		return nodes;
+	}
+
+	/**
 	 * Searches for a thing which is not connected to any class. Only possible connections are:
 	 * Things, Literal and Datatypes
 	 * TODO vielleicht sofort neues erzeugen, wenn keins vorhanden?
 	 *
-	 * @return The id of a not connected thing. If not available null.
+	 * @return The id of a not connected thing.
 	 */
 	protected BaseNode getDisconnectedThing() {
 		for (Map.Entry<String, OwlThing> i : mapData.getThingMap().entrySet()) {
@@ -179,7 +206,10 @@ public class GeneralParser {
 			}
 		}
 
-		return null;
+		OwlThing newThing = new OwlThing();
+		mapData.getThingMap().put(newThing.getId(), newThing);
+
+		return newThing;
 	}
 
 	public void handleOntologyInfo() {
