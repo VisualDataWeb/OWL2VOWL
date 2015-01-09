@@ -43,51 +43,17 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 			parseAnnotations(currentProperty);
 
-			rdfsDomain = retrieveDomain(currentProperty);
+			rdfsDomains = retrieveDomains(currentProperty);
 
-			rdfsRange = retrieveRange(currentProperty);
+			rdfsRanges = retrieveRanges(currentProperty);
 
-			BaseNode domainNode = findNode(rdfsDomain);
+			Collection<? extends BaseDatatype> ranges = createRanges(rdfsRanges);
 
-			BaseDatatype rangeNode;
-			String resourceName = extractNameFromIRI(rdfsRange);
-			boolean isGeneric = false;
-
-			logger.info(currentProperty);
-			for (OWLAxiom currentAxiom : currentProperty.getReferencingAxioms(ontology)) {
-				logger.info("\t" + currentAxiom);
-
-				for (OWLClassExpression nestExpr : currentAxiom.getNestedClassExpressions()) {
-					logger.info("\t\t" + nestExpr);
-				}
-			}
-
-			if (resourceName.isEmpty()) {
-				resourceName = "Literal";
-				isGeneric = true;
-			}
-
-			if (rdfsRange.equals(Standard_Iris.GENERIC_LITERAL_URI)) {
-				isGeneric = true;
-			}
-
-			if (isGeneric) {
-				rangeNode = new RdfsLiteral();
-			} else {
-				rangeNode = new RdfsDatatype();
-			}
-
-			rangeNode.setName(resourceName);
-			mapData.getDatatypeMap().put(rangeNode.getId(), rangeNode);
+			BaseNode domainNode = mergeTargets(getDatatypeDomainNodes(rdfsDomains, ranges));
+			BaseNode rangeNode = mergeTargets(new ArrayList<BaseNode>(ranges));
 
 			if (domainNode == null) {
 				domainNode = getDisconnectedThing();
-
-				if (domainNode == null) {
-					OwlThing newThing = new OwlThing();
-					mapData.getThingMap().put(newThing.getId(), newThing);
-					domainNode = newThing;
-				}
 			}
 
 			OwlDatatypeProperty property = new OwlDatatypeProperty();
@@ -126,6 +92,45 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 			logAxioms(currentProperty);
 		}
+	}
+
+	private Collection<? extends BaseDatatype> createRanges(List<String> rdfsRanges) {
+		List<BaseDatatype> datatypes = new ArrayList<BaseDatatype>();
+
+		if (rdfsRanges.isEmpty()) {
+			BaseDatatype datatype = new RdfsLiteral();
+			mapData.getDatatypeMap().put(datatype.getId(), datatype);
+			datatypes.add(datatype);
+
+			return datatypes;
+		}
+
+		for (String rdfsRange : rdfsRanges) {
+			BaseDatatype rangeNode;
+			String resourceName = extractNameFromIRI(rdfsRange);
+			boolean isGeneric = false;
+
+			if (resourceName.isEmpty()) {
+				resourceName = "Literal";
+				isGeneric = true;
+			}
+
+			if (rdfsRange.equals(Standard_Iris.GENERIC_LITERAL_URI)) {
+				isGeneric = true;
+			}
+
+			if (isGeneric) {
+				rangeNode = new RdfsLiteral();
+			} else {
+				rangeNode = new RdfsDatatype();
+			}
+
+			rangeNode.setName(resourceName);
+			mapData.getDatatypeMap().put(rangeNode.getId(), rangeNode);
+			datatypes.add(rangeNode);
+		}
+
+		return datatypes;
 	}
 
 	/**

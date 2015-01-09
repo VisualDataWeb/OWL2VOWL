@@ -25,8 +25,8 @@ import java.util.*;
  *
  */
 public abstract class GeneralPropertyParser extends GeneralParser {
-	protected String rdfsDomain = "";
-	protected String rdfsRange = "";
+	protected List<String> rdfsDomains;
+	protected List<String> rdfsRanges;
 	protected String rdfsInversOf = "";
 	private UnionParser unionParser;
 	private IntersectionParser intersectionParser;
@@ -46,10 +46,12 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		rdfsInversOf = "";
 	}
 
-	protected String retrieveRange(OWLObjectProperty currentProperty) {
+	protected List<String> retrieveRanges(OWLObjectProperty currentProperty) {
+		List<String> ranges = new ArrayList<String>();
+
 		for (OWLClassExpression range : currentProperty.getRanges(this.ontology)) {
 			if (!range.isAnonymous()) {
-				return range.asOWLClass().getIRI().toString();
+				ranges.add(range.asOWLClass().getIRI().toString());
 			} else {
 				// TODO
 				String classExpressionType = range.getClassExpressionType().toString();
@@ -64,43 +66,41 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		BaseClass intersection = intersectionParser.searchIntersection(currentProperty, false);
 
 		if (union != null) {
-			return union.getId();
+			ranges.add(union.getId());
 		} else if (intersection != null) {
-			return intersection.getId();
-		} else {
-			return "";
+			ranges.add(intersection.getId());
 		}
+
+		return ranges;
 	}
 
-	protected String retrieveRange(OWLDataProperty currentProperty) {
-		String rangeIRI;
+	protected List<String> retrieveRanges(OWLDataProperty currentProperty) {
+		List<String> ranges = new ArrayList<String>();
 
 		for (OWLDataRange range : currentProperty.getRanges(ontology)) {
-			rangeIRI = range.asOWLDatatype().getIRI().toString();
-
-			if (!rangeIRI.isEmpty()) {
-				return rangeIRI;
-			}
+			ranges.add(range.asOWLDatatype().getIRI().toString());
 		}
 
 		BaseClass union = unionParser.searchUnion(currentProperty, false);
 		BaseClass intersection = intersectionParser.searchIntersection(currentProperty, false);
 
 		if (union != null) {
-			return union.getId();
+			ranges.add(union.getId());
 		} else if (intersection != null) {
-			return intersection.getId();
-		} else {
-			return "";
+			ranges.add(intersection.getId());
 		}
+
+		return ranges;
 	}
 
-	protected String retrieveDomain(OWLPropertyExpression currentProperty) {
+	protected List<String> retrieveDomains(OWLPropertyExpression currentProperty) {
+		List<String> domains = new ArrayList<String>();
+
 		for (Object domainObject : currentProperty.getDomains(ontology)) {
 			OWLClassExpression domain = (OWLClassExpression) domainObject;
 
 			if (!domain.isAnonymous()) {
-				return domain.asOWLClass().getIRI().toString();
+				domains.add(domain.asOWLClass().getIRI().toString());
 			} else {
 				// TODO
 				String classExpressionType = domain.getClassExpressionType().toString();
@@ -115,12 +115,12 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		BaseClass intersection = intersectionParser.searchIntersection((OWLProperty) currentProperty, true);
 
 		if (union != null) {
-			return union.getId();
+			domains.add(union.getId());
 		} else if (intersection != null) {
-			return intersection.getId();
-		} else {
-			return "";
+			domains.add(intersection.getId());
 		}
+
+		return domains;
 	}
 
 	protected BaseNode findDomain(BaseNode rdfsDomain) {
@@ -228,5 +228,114 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 
 	protected OwlUnionOf getUnionRange(OWLEntity property) {
 		return unionParser.searchUnion(property, false);
+	}
+
+	protected BaseNode mergeTargets(Collection<? extends BaseNode> domains) {
+		if (domains.size() == 1) {
+			return domains.iterator().next();
+		}
+
+		OwlIntersectionOf intersectionOf = new OwlIntersectionOf();
+		System.out.println(intersectionOf.getId());
+		mapData.getIntersectionMap().put(intersectionOf.getId(), intersectionOf);
+		intersectionOf.addIntersections(domains);
+
+		return intersectionOf;
+	}
+
+	protected boolean hasThingConstruct(List<String> rdfsDomains, List<String> rdfsRanges) {
+		return hasThingConstruct(rdfsDomains) || hasThingConstruct(rdfsRanges);
+	}
+
+	protected boolean hasThingConstruct(List<String> iriList) {
+		int size = iriList.size();
+
+		if (size == 0 || iriList.contains(Standard_Iris.OWL_THING_CLASS_URI)) {
+			return true;
+		}
+
+		return false;
+	}
+
+	protected Collection<? extends BaseNode> getNodesWithThings(List<String> iriList, Collection<? extends BaseNode> targetNodes) {
+		List<BaseNode> nodes = findNodes(iriList);
+		boolean oneNodeThing = iriList.size() == 0 || iriList.size() == 1 && iriList.contains(Standard_Iris.OWL_THING_CLASS_URI);
+
+		if (oneNodeThing) {
+			boolean createNew = false;
+			BaseNode thing = targetNodes.iterator().next().getConnectedThing();
+
+			for (BaseNode targetNode : targetNodes) {
+				if (!targetNode.containsConnectedThing(thing)) {
+					createNew = true;
+					break;
+				}
+			}
+
+			if (createNew) {
+				OwlThing created = new OwlThing();
+				mapData.getThingMap().put(created.getId(), created);
+				thing = created;
+			}
+
+			return Arrays.asList(thing);
+		}
+
+		if (nodes.size() == iriList.size()) {
+			return nodes;
+		}
+
+		OwlThing created = new OwlThing();
+		mapData.getThingMap().put(created.getId(), created);
+		nodes.add(created);
+
+		return nodes;
+
+	}
+
+	protected Collection<? extends BaseNode> getDatatypeDomainNodes(List<String> iriList, Collection<? extends BaseNode> targetNodes) {
+		List<BaseNode> nodes = findNodes(iriList);
+		boolean oneNodeThing = iriList.size() == 0 || iriList.size() == 1 && iriList.contains(Standard_Iris.OWL_THING_CLASS_URI);
+
+		if (oneNodeThing) {
+			BaseNode thing = getDisconnectedThing();
+
+			return Arrays.asList(thing);
+		}
+
+		if (nodes.size() == iriList.size()) {
+			return nodes;
+		}
+
+		OwlThing created = new OwlThing();
+		mapData.getThingMap().put(created.getId(), created);
+		nodes.add(created);
+
+		return nodes;
+
+	}
+
+	/**
+	 * Checks wether the domains and ranges contains any classes, datatypes or literals.
+	 * @return True if is completely free. Else false.
+	 * @param rdfsDomains
+	 * @param rdfsRanges
+	 */
+	protected boolean isClassLess(List<String> rdfsDomains, List<String> rdfsRanges) {
+		int sizeDom = rdfsDomains.size();
+		int sizeRan = rdfsRanges.size();
+		boolean domainConstruct = sizeDom == 0 || rdfsDomains.contains(Standard_Iris.OWL_THING_CLASS_URI);
+		boolean rangeConstruct = sizeRan == 0 || rdfsRanges.contains(Standard_Iris.OWL_THING_CLASS_URI);
+
+
+		if (sizeDom > 1 || sizeRan > 1) {
+			return false;
+		}
+
+		if (domainConstruct && rangeConstruct) {
+		   return true;
+		}
+
+		return false;
 	}
 }

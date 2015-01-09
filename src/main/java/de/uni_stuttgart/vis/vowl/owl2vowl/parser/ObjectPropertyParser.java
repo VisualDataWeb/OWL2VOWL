@@ -73,7 +73,6 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 
 	public void execute() {
 		Map<String, OwlObjectProperty> objectPropertyMap = mapData.getObjectPropertyMap();
-		Map<String, OwlThing> thingMap = mapData.getThingMap();
 		Map<String, OWLObjectProperty> owlObjectProperties = mapData.getOwlObjectProperties();
 
 		for (OWLObjectProperty currentProperty : objectProperties) {
@@ -84,10 +83,10 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			parseAnnotations(currentProperty);
 
 			// get the domain of the property
-			rdfsDomain = retrieveDomain(currentProperty);
+			rdfsDomains = retrieveDomains(currentProperty);
 
 			// get the range of the property
-			rdfsRange = retrieveRange(currentProperty);
+			rdfsRanges = retrieveRanges(currentProperty);
 
 			// get the IRI of the object property which is inverse to 'this' object property
 			// TODO Mehrfache Inversen speichern
@@ -100,12 +99,12 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 				for (OWLObjectProperty owlProp2 : objectProperties) {
 					if (owlProp2.getIRI().toString().equals(rdfsInversOf)) {
 
-						if (rdfsRange.isEmpty()) {
-							rdfsRange = retrieveDomain(owlProp2);
+						if (rdfsRanges.isEmpty()) {
+							rdfsRanges = retrieveDomains(owlProp2);
 						}
 
-						if (rdfsDomain.isEmpty()) {
-							rdfsDomain = retrieveRange(owlProp2);
+						if (rdfsDomains.isEmpty()) {
+							rdfsDomains = retrieveRanges(owlProp2);
 						}
 					}
 				}
@@ -127,57 +126,29 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 				theProperty.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_INV_FUNCT);
 			}
 
-			// TODO
-			BaseNode sourceNodeID = findNode(rdfsDomain);
-			BaseNode targetNodeID = findNode(rdfsRange);
+			List<BaseNode> domains = new ArrayList<BaseNode>();
+			List<BaseNode> ranges = new ArrayList<BaseNode>();
 
-			if (Standard_Iris.OWL_THING_CLASS_URI.equals(rdfsDomain)) {
-				sourceNodeID = null;
+			// Not any class detected
+			if (isClassLess(rdfsDomains, rdfsRanges)) {
+				BaseNode thing = getDisconnectedThing();
+				domains.add(thing);
+				ranges.add(thing);
 			}
-			if (Standard_Iris.OWL_THING_CLASS_URI.equals(rdfsRange)) {
-				targetNodeID = null;
-			}
-
-			// If domain AND range are not owl:Thing
-			if (sourceNodeID == null || targetNodeID == null) {
-				// If domain AND range are owl:Thing
-				if (sourceNodeID == null && targetNodeID == null) {
-					// neither source nor target is given
-					sourceNodeID = getDisconnectedThing();
-
-					if (sourceNodeID == null) {
-						OwlThing newThing = new OwlThing();
-						thingMap.put(newThing.getId(), newThing);
-						sourceNodeID = newThing;
-					}
-
-					targetNodeID = sourceNodeID;
+			// Check if there exists a thing construct.
+			else if(hasThingConstruct(rdfsDomains, rdfsRanges)){
+				if (hasThingConstruct(rdfsDomains)) {
+					ranges.addAll(findNodes(rdfsRanges));
+					domains.addAll(getNodesWithThings(rdfsDomains, ranges));
 				} else {
-					// no sourceID for object property? Take OWLClassThing as source
-					if (sourceNodeID == null) {
-						// check if OWLClassThing exists already.
-						sourceNodeID = targetNodeID.getConnectedThing();
-
-						// no OWLClassThing connected to this class foudn, we have to create one
-						if (sourceNodeID == null) {
-							OwlThing newThing = new OwlThing();
-							thingMap.put(newThing.getId(), newThing);
-							sourceNodeID = newThing;
-						}
-					}
-
-					// no sourceID for object property? Take OWLClassThing as source
-					if (targetNodeID == null) {
-						// check if OWLClassThing exists already. If not create one
-						targetNodeID = sourceNodeID.getConnectedThing();
-
-						if (targetNodeID == null) {
-							OwlThing newThing = new OwlThing();
-							thingMap.put(newThing.getId(), newThing);
-							targetNodeID = newThing;
-						}
-					}
+					domains.addAll(findNodes(rdfsDomains));
+					ranges.addAll(getNodesWithThings(rdfsRanges, domains));
 				}
+			}
+			// No things detected!
+			else {
+				domains.addAll(findNodes(rdfsDomains));
+				ranges.addAll(findNodes(rdfsRanges));
 			}
 
 			theProperty.setDisjoints(retrieveDisjoints(currentProperty));
@@ -193,8 +164,8 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			theProperty.setOwlVersion(owlVersionInfo);
 			theProperty.setInverseIRI(rdfsInversOf);
 
-			BaseNode domain = sourceNodeID;
-			BaseNode range = targetNodeID;
+			BaseNode domain = mergeTargets(domains);
+			BaseNode range = mergeTargets(ranges);
 
 			domain.getOutGoingEdges().add(theProperty);
 			theProperty.setDomain(domain);
@@ -212,3 +183,5 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			logAxioms(currentProperty);
 		}
 	}
+
+}
