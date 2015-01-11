@@ -41,8 +41,6 @@ public class IndividualVisitorImpl implements OWLIndividualVisitor {
 
 		if (owlClass != null) {
 			addInstance(owlClass);
-		} else {
-			System.out.println(owlNamedIndividual);
 		}
 	}
 

@@ -236,7 +236,6 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		}
 
 		OwlIntersectionOf intersectionOf = new OwlIntersectionOf();
-		System.out.println(intersectionOf.getId());
 		mapData.getIntersectionMap().put(intersectionOf.getId(), intersectionOf);
 		intersectionOf.addIntersections(domains);
 
