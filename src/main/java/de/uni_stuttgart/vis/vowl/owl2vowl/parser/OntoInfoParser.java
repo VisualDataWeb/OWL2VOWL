@@ -3,6 +3,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Ontology_Info;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.Annotation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
@@ -10,87 +11,6 @@ import org.semanticweb.owlapi.model.*;
 
 import java.util.Arrays;
 import java.util.Map;
-
-/**
- * Parser for the ontology information.
- */
-public class OntoInfoParser extends GeneralParser {
-	public OntoInfoParser(OntologyInformation ontologyInformation, MapData mapData) {
-		super(ontologyInformation, mapData);
-	}
-
-	public void execute() {
-		OntologyInfo info = mapData.getOntologyInfo();
-
-		IRI ontoIri = ontology.getOntologyID().getOntologyIRI();
-		IRI versionIri = ontology.getOntologyID().getVersionIRI();
-
-		if (ontoIri != null) {
-			info.setIri(ontoIri.toString());
-		}
-
-		if (versionIri != null) {
-			info.setVersion(versionIri.toString());
-		}
-
-		/* Save available annotations */
-		for (OWLAnnotation annotation : ontology.getAnnotations()) {
-			switch (PROPMAP.getValue(annotation.getProperty().toString())) {
-				case CREATOR:
-					info.setAuthor(FormatText.cutQuote(annotation.getValue().toString()));
-					break;
-				case DESCRIPTION:
-					addLanguage(info.getLanguageToDescription(), annotation);
-					info.setDescription(FormatText.cutQuote(annotation.getValue().toString()));
-					break;
-				case ISSUED:
-					info.setIssued(FormatText.cutQuote(annotation.getValue().toString()));
-					break;
-				case LICENSE:
-					info.setLicense(FormatText.cutQuote(annotation.getValue().toString()));
-					break;
-				case LABEL:
-					addLanguage(info.getLanguageToLabel(), annotation);
-					info.setRdfsLabel(FormatText.cutQuote(annotation.getValue().toString()));
-					break;
-				case SEE_ALSO:
-					info.setSeeAlso(FormatText.cutQuote(annotation.getValue().toString()));
-					break;
-				case TITLE:
-					addLanguage(info.getLanguageToTitle(), annotation);
-					info.setTitle(FormatText.cutQuote(annotation.getValue().toString()));
-					break;
-				case VERSION:
-					info.setVersion(FormatText.cutQuote(annotation.getValue().toString()));
-					break;
-				default:
-					// Nothing
-			}
-		}
-	}
-
-	/**
-	 * Adds a language found in the owl annotation into the given map.
-	 *
-	 * @param mapToAdd      Map where the language should be added.
-	 * @param owlAnnotation The desired annotation which should contain a language.
-	 */
-	private void addLanguage(Map<String, String> mapToAdd, OWLAnnotation owlAnnotation) {
-		if (owlAnnotation.getValue() instanceof OWLLiteral) {
-			OWLLiteral val = (OWLLiteral) owlAnnotation.getValue();
-
-			if (val.isRDFPlainLiteral()) {
-				if (val.getLang().isEmpty()) {
-					mapToAdd.put(Vowl_Lang.LANG_UNSET, val.getLiteral());
-					mapData.getAvailableLanguages().add(Vowl_Lang.LANG_UNSET);
-				} else {
-					mapToAdd.put(val.getLang(), val.getLiteral());
-					mapData.getAvailableLanguages().add(val.getLang());
-				}
-			}
-		}
-	}
-}
 
 enum PROPMAP {
 	CREATOR(new String[]{Ontology_Info.INFO_CREATOR_DC, Ontology_Info.INFO_CREATOR_DCTERMS}),
@@ -147,5 +67,122 @@ enum PROPMAP {
 		}
 
 		return false;
+	}
+}
+
+/**
+ * Parser for the ontology information.
+ */
+public class OntoInfoParser extends GeneralParser {
+	public OntoInfoParser(OntologyInformation ontologyInformation, MapData mapData) {
+		super(ontologyInformation, mapData);
+	}
+
+	public void execute() {
+		OntologyInfo info = mapData.getOntologyInfo();
+
+		IRI ontoIri = ontology.getOntologyID().getOntologyIRI();
+		IRI versionIri = ontology.getOntologyID().getVersionIRI();
+
+		if (ontoIri != null) {
+			info.setIri(ontoIri.toString());
+		}
+
+		if (versionIri != null) {
+			info.setVersion(versionIri.toString());
+		}
+
+		/* Save available annotations */
+		for (OWLAnnotation annotation : ontology.getAnnotations()) {
+			OWLAnnotationProperty prop = annotation.getProperty();
+			OWLAnnotationValue val = annotation.getValue();
+
+			switch (PROPMAP.getValue(prop.toString())) {
+				case CREATOR:
+					info.addAuthor(FormatText.cutQuote(val.toString()));
+					break;
+				case DESCRIPTION:
+					addLanguage(info.getLanguageToDescription(), annotation);
+					info.setDescription(FormatText.cutQuote(val.toString()));
+					break;
+				case ISSUED:
+					info.addIssued(FormatText.cutQuote(val.toString()));
+					break;
+				case LICENSE:
+					info.addLicense(FormatText.cutQuote(val.toString()));
+					break;
+				case LABEL:
+					addLanguage(info.getLanguageToLabel(), annotation);
+					info.setRdfsLabel(FormatText.cutQuote(val.toString()));
+					break;
+				case SEE_ALSO:
+					info.addSeeAlso(FormatText.cutQuote(val.toString()));
+					break;
+				case TITLE:
+					addLanguage(info.getLanguageToTitle(), annotation);
+					info.setTitle(FormatText.cutQuote(val.toString()));
+					break;
+				case VERSION:
+					info.setVersion(FormatText.cutQuote(val.toString()));
+					break;
+				default:
+					info.addAnnotation(getAnnotation(annotation));
+			}
+		}
+
+		for (Annotation annotation : info.getOtherAnnotations()) {
+			System.out.println(annotation);
+		}
+	}
+
+	/**
+	 * Adds a language found in the owl annotation into the given map.
+	 *
+	 * @param mapToAdd      Map where the language should be added.
+	 * @param owlAnnotation The desired annotation which should contain a language.
+	 */
+	private void addLanguage(Map<String, String> mapToAdd, OWLAnnotation owlAnnotation) {
+		if (owlAnnotation.getValue() instanceof OWLLiteral) {
+			OWLLiteral val = (OWLLiteral) owlAnnotation.getValue();
+
+			if (val.isRDFPlainLiteral()) {
+				if (val.getLang().isEmpty()) {
+					mapToAdd.put(Vowl_Lang.LANG_UNSET, val.getLiteral());
+					mapData.getAvailableLanguages().add(Vowl_Lang.LANG_UNSET);
+				} else {
+					mapToAdd.put(val.getLang(), val.getLiteral());
+					mapData.getAvailableLanguages().add(val.getLang());
+				}
+			}
+		}
+	}
+
+	private Annotation getAnnotation(OWLAnnotation annotation) {
+		Annotation anno;
+
+		if (annotation.getValue() instanceof OWLLiteral) {
+			OWLLiteral val = (OWLLiteral) annotation.getValue();
+			String language;
+
+			if (val.isRDFPlainLiteral()) {
+				if (val.getLang().isEmpty()) {
+					language = Vowl_Lang.LANG_UNSET;
+					mapData.getAvailableLanguages().add(Vowl_Lang.LANG_UNSET);
+				} else {
+					language = val.getLang();
+					mapData.getAvailableLanguages().add(val.getLang());
+				}
+				anno = new Annotation(annotation.getProperty().toString(), val.getLiteral());
+				anno.setLanguage(language);
+
+				return anno;
+			} else {
+				anno = new Annotation(annotation.getProperty().toString(), val.getLiteral());
+			}
+		} else {
+			anno = new Annotation(annotation.getProperty().toString(), annotation.getValue().toString());
+		}
+
+		return anno;
 	}
 }
