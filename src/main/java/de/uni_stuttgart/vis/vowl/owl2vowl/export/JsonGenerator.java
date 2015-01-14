@@ -108,12 +108,16 @@ public class JsonGenerator {
 
 	public void processHeader(OntologyInfo info) {
 		// Apply header
+		header.put("languages", mapData.getAvailableLanguages());
 		header.put("title", info.getLanguageToTitle());
 		header.put("uri", info.getIri());
 		header.put("version", info.getVersion());
 		header.put("author", info.getAuthor());
 		header.put("description", info.getLanguageToDescription());
-		header.put("languages", mapData.getAvailableLanguages());
+		header.put("seeAlso", info.getSeeAlso());
+		header.put("issued", info.getIssued());
+		header.put("license", info.getLicense());
+		header.put("other", info.getOtherAnnotations());
 	}
 
 	public void processClasses(Map<String, BaseClass> classes) {
