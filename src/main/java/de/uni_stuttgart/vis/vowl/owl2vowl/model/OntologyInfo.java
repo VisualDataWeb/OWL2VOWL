@@ -24,7 +24,7 @@ public class OntologyInfo {
 	private List<String> seeAlso;
 	private List<String> issued;
 	private List<String> license;
-	private String rdfsLabel;
+	private List<String> rdfsLabel;
 	private Map<String, String> languageToTitle;
 	private Map<String, String> languageToDescription;
 	private Map<String, String> languageToLabel;
@@ -106,12 +106,8 @@ public class OntologyInfo {
 		this.license = license;
 	}
 
-	public String getRdfsLabel() {
+	public List<String> getRdfsLabel() {
 		return rdfsLabel;
-	}
-
-	public void setRdfsLabel(String rdfsLabel) {
-		this.rdfsLabel = rdfsLabel;
 	}
 
 	public Map<String, String> getLanguageToTitle() {
@@ -152,6 +148,10 @@ public class OntologyInfo {
 
 	public void addSeeAlso(String s) {
 		seeAlso.add(s);
+	}
+
+	public void addLabel(String s) {
+		rdfsLabel.add(s);
 	}
 
 	public List<Annotation> getOtherAnnotations() {

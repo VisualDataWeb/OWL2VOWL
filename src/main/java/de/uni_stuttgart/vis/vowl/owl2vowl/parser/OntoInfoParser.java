@@ -86,6 +86,8 @@ public class OntoInfoParser extends GeneralParser {
 
 		if (ontoIri != null) {
 			info.setIri(ontoIri.toString());
+		} else {
+			info.setIri(ontologyInformation.getLoadedIri().toString());
 		}
 
 		if (versionIri != null) {
@@ -113,7 +115,7 @@ public class OntoInfoParser extends GeneralParser {
 					break;
 				case LABEL:
 					addLanguage(info.getLanguageToLabel(), annotation);
-					info.setRdfsLabel(FormatText.cutQuote(val.toString()));
+					info.addLabel(FormatText.cutQuote(val.toString()));
 					break;
 				case SEE_ALSO:
 					info.addSeeAlso(FormatText.cutQuote(val.toString()));

@@ -117,6 +117,7 @@ public class JsonGenerator {
 		header.put("seeAlso", info.getSeeAlso());
 		header.put("issued", info.getIssued());
 		header.put("license", info.getLicense());
+		header.put("rdfsLabel", info.getRdfsLabel());
 		header.put("other", info.getOtherAnnotations());
 	}
 
