@@ -36,6 +36,7 @@ public class JsonGenerator {
 	private List<Object> objectProperty;
 	private List<Object> objectPropertyAttribute;
 	private MapData mapData;
+	private Map<String, Object> license;
 
 	public JsonGenerator() {
 		initialize();
@@ -43,6 +44,7 @@ public class JsonGenerator {
 
 	private void initialize() {
 		root = new LinkedHashMap<String, Object>();
+		license = new LinkedHashMap<String, Object>();
 		namespace = new ArrayList<Object>();
 		header = new LinkedHashMap<String, Object>();
 		metrics = new LinkedHashMap<String, Object>();
@@ -54,6 +56,7 @@ public class JsonGenerator {
 		objectPropertyAttribute = new ArrayList<Object>();
 
 		// Sets root
+		root.put("license", license);
 		root.put("namespace", namespace);
 		root.put("header", header);
 		root.put("metrics", metrics);
@@ -68,6 +71,7 @@ public class JsonGenerator {
 	public void execute(MapData mapData) throws Exception {
 		this.mapData = mapData;
 		processNamespace();
+		processLicense();
 		processHeader(mapData.getOntologyInfo());
 		processMetrics(mapData.getOntologyMetric());
 		processClasses(mapData.getClassMap());
@@ -83,6 +87,16 @@ public class JsonGenerator {
 		//mapper.enable(SerializationConfig.Feature.INDENT_OUTPUT);
 		mapper.configure(SerializationConfig.Feature.WRITE_NULL_MAP_VALUES, false);
 		exporter.write(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
+	}
+
+	private void processLicense() {
+		List<Object> authors = new ArrayList<Object>();
+		authors.add("Vincent Link");
+		authors.add("Steffem Lohmann");
+		authors.add("Eduard Marbach");
+
+		license.put("authors", authors);
+		license.put("license-type", "The MIT License (MIT) Copyright (c) 2015 Vincent Link, Steffen Lohmann, Eduard Marbach");
 	}
 
 	// TODO
