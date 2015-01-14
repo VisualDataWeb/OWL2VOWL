@@ -129,10 +129,6 @@ public class OntoInfoParser extends GeneralParser {
 					info.addAnnotation(getAnnotation(annotation));
 			}
 		}
-
-		for (Annotation annotation : info.getOtherAnnotations()) {
-			System.out.println(annotation);
-		}
 	}
 
 	/**
