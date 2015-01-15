@@ -78,7 +78,7 @@ public class ProcessUnit {
 			BaseProperty newProp = new BaseProperty();
 			newProp.setDomain(currentClass);
 			newProp.setRange(mapData.getClassMap().get(aClass.getIRI().toString()));
-			newProp.getLabels().put(Vowl_Lang.LANG_DEFAULT, "instance of");
+			newProp.getLabels().put(Vowl_Lang.LANG_DEFAULT, "is a");
 			mapData.getRdfProperties().put(newProp.getId(), newProp);
 		}
 	}
