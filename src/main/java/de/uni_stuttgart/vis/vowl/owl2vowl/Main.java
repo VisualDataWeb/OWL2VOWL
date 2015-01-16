@@ -160,8 +160,8 @@ public class Main {
 			return ExportNames.FILENAME_MARINE2;
 		} else if (iri.equals(ExportNames.EXPORT_MUTO)) {
 			return ExportNames.FILENAME_MUTO;
-		} else if (iri.equals(ExportNames.EXPORT_ONTOVIVBE)) {
-			return ExportNames.FILENAME_ONTOVIVBE;
+		} else if (iri.equals(ExportNames.EXPORT_ONTOVIBE)) {
+			return ExportNames.FILENAME_ONTOVIBE;
 		} else if (iri.equals(ExportNames.EXPORT_PERSONAS)) {
 			return ExportNames.FILENAME_PERSONAS;
 		} else if (iri.equals(ExportNames.EXPORT_PROV)) {
@@ -181,7 +181,7 @@ public class Main {
 		externalOntologies.add(ExportNames.EXPORT_MUTO);
 		externalOntologies.add(ExportNames.EXPORT_PERSONAS);
 		externalOntologies.add(ExportNames.EXPORT_SIOC);
-		externalOntologies.add(ExportNames.EXPORT_ONTOVIVBE);
+		externalOntologies.add(ExportNames.EXPORT_ONTOVIBE);
 
 		for (String externalOntology : externalOntologies) {
 			try {
