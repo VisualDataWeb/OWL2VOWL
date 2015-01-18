@@ -40,6 +40,7 @@ public class OntologyInfo {
 		languageToDescription = new HashMap<String, String>();
 		languageToTitle = new HashMap<String, String>();
 		otherAnnotations = new ArrayList<Annotation>();
+		rdfsLabel = new ArrayList<String>();
 	}
 
 	public List<String> getAuthor() {
