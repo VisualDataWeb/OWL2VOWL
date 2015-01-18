@@ -128,7 +128,8 @@ public class OntoInfoParser extends GeneralParser {
 					info.setVersion(FormatText.cutQuote(val.toString()));
 					break;
 				default:
-					info.addAnnotation(getAnnotation(annotation));
+					Annotation theAnno = getAnnotation(annotation);
+					info.addAnnotatin(theAnno.getIdentifier(), theAnno);
 			}
 		}
 	}
@@ -172,13 +173,17 @@ public class OntoInfoParser extends GeneralParser {
 				}
 				anno = new Annotation(annotation.getProperty().toString(), val.getLiteral());
 				anno.setLanguage(language);
-
-				return anno;
+				anno.setType(Annotation.TYPE_LABEL);
 			} else {
 				anno = new Annotation(annotation.getProperty().toString(), val.getLiteral());
+				anno.setType(Annotation.TYPE_LABEL);
 			}
+		} else if (annotation.getValue() instanceof IRI) {
+			anno = new Annotation(annotation.getProperty().toString(), annotation.getValue().toString());
+			anno.setType(Annotation.TYPE_IRI);
 		} else {
 			anno = new Annotation(annotation.getProperty().toString(), annotation.getValue().toString());
+			anno.setType(Annotation.TYPE_LABEL);
 		}
 
 		return anno;
