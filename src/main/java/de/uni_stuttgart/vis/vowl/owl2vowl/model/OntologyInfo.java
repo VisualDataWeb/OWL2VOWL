@@ -6,6 +6,8 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.Annotation;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +18,7 @@ import java.util.Map;
  * This class saves all information of the processed ontology.
  */
 public class OntologyInfo {
+	private static final Logger logger = LogManager.getLogger(OntologyInfo.class);
 	private List<String> author;
 	private String iri;
 	private String version;
@@ -28,7 +31,7 @@ public class OntologyInfo {
 	private Map<String, String> languageToTitle;
 	private Map<String, String> languageToDescription;
 	private Map<String, String> languageToLabel;
-	private List<Annotation> otherAnnotations;
+	private Map<String, List<Annotation>> others;
 
 	public OntologyInfo() {
 		super();
@@ -39,8 +42,27 @@ public class OntologyInfo {
 		languageToLabel = new HashMap<String, String>();
 		languageToDescription = new HashMap<String, String>();
 		languageToTitle = new HashMap<String, String>();
-		otherAnnotations = new ArrayList<Annotation>();
 		rdfsLabel = new ArrayList<String>();
+		others = new HashMap<String, List<Annotation>>();
+	}
+
+	public Map<String, List<Annotation>> getOthers() {
+		return others;
+	}
+
+	public void addAnnotatin(String key, Annotation annotation) {
+		if (key == null || annotation == null) {
+			logger.error("An ontology info annotation with key: " + key + " is null!");
+			return;
+		}
+
+		if (others.containsKey(key)) {
+			others.get(key).add(annotation);
+		} else {
+			List<Annotation> annotations = new ArrayList<Annotation>();
+			annotations.add(annotation);
+			others.put(key, annotations);
+		}
 	}
 
 	public List<String> getAuthor() {
@@ -153,17 +175,5 @@ public class OntologyInfo {
 
 	public void addLabel(String s) {
 		rdfsLabel.add(s);
-	}
-
-	public List<Annotation> getOtherAnnotations() {
-		return otherAnnotations;
-	}
-
-	public void addAnnotation(Annotation annotation) {
-		if (annotation == null) {
-			return;
-		}
-
-		otherAnnotations.add(annotation);
 	}
 }
