@@ -118,7 +118,7 @@ public class JsonGenerator {
 		header.put("issued", info.getIssued());
 		header.put("license", info.getLicense());
 		header.put("rdfsLabel", info.getRdfsLabel());
-		header.put("other", info.getOtherAnnotations());
+		header.put("other", info.getOthers());
 	}
 
 	public void processClasses(Map<String, BaseClass> classes) {
