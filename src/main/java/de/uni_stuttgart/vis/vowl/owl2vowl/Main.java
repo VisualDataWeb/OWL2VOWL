@@ -81,7 +81,7 @@ public class Main {
 			Converter converter = new Converter(ontologyIri, dependencies);
 			converter.convert();
 
-			converter.export(createExporterFromOption(options, ontologyIri));
+			converter.export(createExporterFromOption(line, ontologyIri));
 		} catch (Exception e) {
 			logger.error("FAILED TO LOAD " + Arrays.toString(args));
 			System.exit(1);
@@ -124,8 +124,8 @@ public class Main {
 		System.exit(0);
 	}
 
-	private static Exporter createExporterFromOption(Options options, IRI ontologyIri) {
-		if (options.hasOption(ECHO_OPTION_NAME)) {
+	private static Exporter createExporterFromOption(CommandLine line, IRI ontologyIri) {
+		if (line.hasOption(ECHO_OPTION_NAME)) {
 			return new ConsoleExporter();
 		} else {
 			return generateFileExporter(ontologyIri);
