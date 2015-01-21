@@ -154,6 +154,10 @@ public class Main {
 			return ExportNames.FILENAME_FOAF;
 		} else if (iri.equals(ExportNames.EXPORT_GEONAMES)) {
 			return ExportNames.FILENAME_GEONAMES;
+		} else if (iri.equals(ExportNames.EXPORT_GOOD_RELATIONS)) {
+			return ExportNames.FILENAME_GOOD_RELATIONS;
+		} else if (iri.equals(ExportNames.EXPORT_GS1)) {
+			return ExportNames.FILENAME_GS1;
 		} else if (iri.equals(ExportNames.EXPORT_MARINE)) {
 			return ExportNames.FILENAME_MARINE;
 		} else if (iri.equals(ExportNames.EXPORT_MARINE2)) {

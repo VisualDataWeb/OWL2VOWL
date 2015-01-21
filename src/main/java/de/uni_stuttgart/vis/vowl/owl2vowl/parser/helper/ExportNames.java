@@ -10,6 +10,8 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper;
  */
 public class ExportNames {
 	public static final String EXPORT_FOAF = "http://xmlns.com/foaf/0.1/";
+	public static final String EXPORT_GOOD_RELATIONS = "http://purl.org/goodrelations/v1";
+	public static final String EXPORT_GS1 = "http://dydra.com/nlv01111/gs1.ttl";
 	public static final String EXPORT_MARINE = "http://www.ics.forth.gr/isl/MarineTLO/v3/marinetlo.owl";
 	public static final String EXPORT_MARINE2 = "http://www.ics.forth.gr/isl/MarineTLO/v3/marinetloimarine.owl";
 	public static final String EXPORT_MUTO = "http://purl.org/muto/core";
@@ -24,6 +26,8 @@ public class ExportNames {
 	public static final String EXPORT_PROV = "http://www.w3.org/ns/prov-o#";
 
 	public static final String FILENAME_FOAF = "foaf";
+	public static final String FILENAME_GOOD_RELATIONS = "goodrelations";
+	public static final String FILENAME_GS1 = "gs1";
 	public static final String FILENAME_MARINE = "marinetlo";
 	public static final String FILENAME_MARINE2 = "marinetloimarine";
 	public static final String FILENAME_MUTO = "muto";
