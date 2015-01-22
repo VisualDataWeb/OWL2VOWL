@@ -92,7 +92,7 @@ public class JsonGenerator {
 	private void processLicense() {
 		List<Object> authors = new ArrayList<Object>();
 		authors.add("Vincent Link");
-		authors.add("Steffem Lohmann");
+		authors.add("Steffen Lohmann");
 		authors.add("Eduard Marbach");
 
 		license.put("authors", authors);
