@@ -73,12 +73,8 @@ public class ComparisonHelper {
 		OWLOntology ontology = information.getOntology();
 		OWLDataFactory dataFactory = information.getFactory();
 
-		if (entity.getAnnotations(ontology, dataFactory.getRDFSIsDefinedBy()).isEmpty()) {
-			return hasDifferentNameSpace(entity.getIRI().toString(), information);
-		} else {
-			Set<OWLAnnotation> test = entity.getAnnotations(ontology, dataFactory.getRDFSIsDefinedBy());
-			OWLAnnotation first = test.iterator().next();
-			return hasDifferentNameSpace(first.getValue().toString(), information);
-		}
+		Set<OWLAnnotation> test = entity.getAnnotations(ontology, dataFactory.getRDFSIsDefinedBy());
+		OWLAnnotation first = test.iterator().next();
+		return hasDifferentNameSpace(first.getValue().toString(), information);
 	}
 }
