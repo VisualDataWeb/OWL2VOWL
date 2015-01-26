@@ -21,6 +21,10 @@ import java.util.Set;
 public class ComparisonHelper {
 	private static final Logger logger = LogManager.getLogger(ComparisonHelper.class);
 
+	public static boolean hasDifferentNameSpace(OWLEntity entity, OntologyInformation information) {
+		return hasDifferentNameSpace(entity.getIRI().toString(), information);
+	}
+
 	private static boolean hasDifferentNameSpace(String elementNamespace, OntologyInformation information) {
 		if (elementNamespace == null) {
 			logger.info("Namespace check: Element has no namespace!");
@@ -40,11 +44,11 @@ public class ComparisonHelper {
 	}
 
 	public static boolean hasDifferentNameSpace(String elementNamespace, String ontologyIri) {
-		if (elementNamespace.equals(ontologyIri)) {
-			return false;
-		}
+		// The trailing hash has no meaning and can be removed
+		elementNamespace = removeTrailingHash(elementNamespace);
+		ontologyIri = removeTrailingHash(ontologyIri);
 
-		if (elementNamespace.equals(ontologyIri + "#")) {
+		if (elementNamespace.equals(ontologyIri)) {
 			return false;
 		}
 
@@ -69,7 +73,7 @@ public class ComparisonHelper {
 		return true;
 	}
 
-	public static boolean hasDifferentNameSpace(OWLEntity entity, OntologyInformation information) {
-		return hasDifferentNameSpace(entity.getIRI().toString(), information);
+	private static String removeTrailingHash(String text) {
+		return text.replaceAll("#$", "");
 	}
 }

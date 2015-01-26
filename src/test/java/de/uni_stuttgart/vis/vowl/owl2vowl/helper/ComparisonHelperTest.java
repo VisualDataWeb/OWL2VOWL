@@ -25,6 +25,7 @@ public class ComparisonHelperTest {
 	@Test
 	public void testHashAndLiteralAtEndOfOntologyIri() {
 		assertFalse(compare("http://ontovibe.visualdataweb.org#PlainClass", "http://ontovibe.visualdataweb.org"));
+		assertFalse(compare("http://rdfs.org/sioc/ns#Thread", "http://rdfs.org/sioc/ns#"));
 	}
 
 	@Test
