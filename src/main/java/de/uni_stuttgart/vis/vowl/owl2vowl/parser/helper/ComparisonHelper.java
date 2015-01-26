@@ -70,11 +70,6 @@ public class ComparisonHelper {
 	}
 
 	public static boolean hasDifferentNameSpace(OWLEntity entity, OntologyInformation information) {
-		OWLOntology ontology = information.getOntology();
-		OWLDataFactory dataFactory = information.getFactory();
-
-		Set<OWLAnnotation> test = entity.getAnnotations(ontology, dataFactory.getRDFSIsDefinedBy());
-		OWLAnnotation first = test.iterator().next();
-		return hasDifferentNameSpace(first.getValue().toString(), information);
+		return hasDifferentNameSpace(entity.getIRI().toString(), information);
 	}
 }
