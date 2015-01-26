@@ -43,29 +43,29 @@ public class ComparisonHelper {
 		return hasDifferentNameSpace(elementNamespace, ontologyIri);
 	}
 
-	public static boolean hasDifferentNameSpace(String elementNamespace, String ontologyIri) {
+	public static boolean hasDifferentNameSpace(String elementIri, String ontologyIri) {
 		// The trailing hash has no meaning and can be removed
-		elementNamespace = removeTrailingHash(elementNamespace);
-		ontologyIri = removeTrailingHash(ontologyIri);
+		String trimmedElementIri = removeTrailingHash(elementIri);
+		String trimmedOntologyIri = removeTrailingHash(ontologyIri);
 
-		if (elementNamespace.equals(ontologyIri)) {
+		if (trimmedElementIri.equals(trimmedOntologyIri)) {
 			return false;
 		}
 
-		if (elementNamespace.contains("#")) {
-			String elementNamespaceWithoutHashParameter = elementNamespace.split("#")[0];
-			if (elementNamespaceWithoutHashParameter.equals(ontologyIri)) {
+		if (trimmedElementIri.contains("#")) {
+			String elementNamespaceWithoutHashParameter = trimmedElementIri.split("#")[0];
+			if (elementNamespaceWithoutHashParameter.equals(trimmedOntologyIri)) {
 				return false;
 			}
 		}
 
-		if (elementNamespace.contains("/") && !elementNamespace.endsWith("/")) {
-			int lastSlashIndex = elementNamespace.lastIndexOf("/");
+		if (trimmedElementIri.contains("/") && !trimmedElementIri.endsWith("/")) {
+			int lastSlashIndex = trimmedElementIri.lastIndexOf("/");
 			int indexAfterSlash = lastSlashIndex + 1;
 
-			String elementNamespaceWithoutLastPart = elementNamespace.substring(0, indexAfterSlash);
+			String elementNamespaceWithoutLastPart = trimmedElementIri.substring(0, indexAfterSlash);
 
-			if (elementNamespaceWithoutLastPart.equals(ontologyIri)) {
+			if (elementNamespaceWithoutLastPart.equals(trimmedOntologyIri)) {
 				return false;
 			}
 		}
