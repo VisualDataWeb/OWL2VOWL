@@ -21,8 +21,7 @@ public class ExportNames {
 	public static final String EXPORT_RELATIONS = "http://purl.org/goodrelations/v1";
 	public static final String EXPORT_WINE = "http://www.w3.org/TR/2003/PR-owl-guide-20031209/wine";
 	public static final String EXPORT_GEONAMES = "http://www.geonames.org/ontology";
-	public static final String EXPORT_ONTOVIBE = "http://ontovibe.visualdataweb.org/1.0#";
-	public static final String EXPORT_ONTOVIBE_2 = "http://ontovibe.visualdataweb.org/2.0#";
+	public static final String EXPORT_ONTOVIBE = "http://ontovibe.visualdataweb.org/";
 	public static final String EXPORT_PIZZA = "http://www.co-ode.org/ontologies/pizza/pizza.owl";
 	public static final String EXPORT_PROV = "http://www.w3.org/ns/prov-o#";
 
@@ -39,7 +38,6 @@ public class ExportNames {
 	public static final String FILENAME_WINE = "wine";
 	public static final String FILENAME_GEONAMES = "geonames";
 	public static final String FILENAME_ONTOVIBE = "ontovibe";
-	public static final String FILENAME_ONTOVIBE_2 = "ontovibe2";
 	public static final String FILENAME_PIZZA = "pizza";
 	public static final String FILENAME_PROV = "prov";
 }

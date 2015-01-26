@@ -168,8 +168,6 @@ public class Main {
 			return ExportNames.FILENAME_MUTO;
 		} else if (iri.equals(ExportNames.EXPORT_ONTOVIBE)) {
 			return ExportNames.FILENAME_ONTOVIBE;
-		} else if (iri.equals(ExportNames.EXPORT_ONTOVIBE_2)) {
-			return ExportNames.FILENAME_ONTOVIBE_2;
 		} else if (iri.equals(ExportNames.EXPORT_PERSONAS)) {
 			return ExportNames.FILENAME_PERSONAS;
 		} else if (iri.equals(ExportNames.EXPORT_PROV)) {
