@@ -39,7 +39,7 @@ public class Main {
 			return;
 		}
 		if (CONVERT_REQUIRED_ONTOLOGIES) {
-			convertAllOntologies();
+			convertRequiredOntologies();
 			return;
 		}
 
@@ -183,7 +183,7 @@ public class Main {
 		return FilenameUtils.removeExtension(ontologyIri.getFragment());
 	}
 
-	private static void convertAllOntologies() {
+	private static void convertRequiredOntologies() {
 		List<String> externalOntologies = new ArrayList<String>();
 		externalOntologies.add(ExportNames.EXPORT_FOAF);
 		externalOntologies.add(ExportNames.EXPORT_MUTO);
