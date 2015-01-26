@@ -150,7 +150,9 @@ public class Main {
 	private static String searchExportFilename(IRI ontologyIri) {
 		String iri = ontologyIri.toString();
 
-		if (iri.equals(ExportNames.EXPORT_FOAF)) {
+		if (iri.equals(ExportNames.EXPORT_DOAP)) {
+			return ExportNames.FILENAME_DOAP;
+		} else if (iri.equals(ExportNames.EXPORT_FOAF)) {
 			return ExportNames.FILENAME_FOAF;
 		} else if (iri.equals(ExportNames.EXPORT_GEONAMES)) {
 			return ExportNames.FILENAME_GEONAMES;
@@ -186,7 +188,9 @@ public class Main {
 		externalOntologies.add(ExportNames.EXPORT_FOAF);
 		externalOntologies.add(ExportNames.EXPORT_MUTO);
 		externalOntologies.add(ExportNames.EXPORT_PERSONAS);
+		externalOntologies.add(ExportNames.EXPORT_GOOD_RELATIONS);
 		externalOntologies.add(ExportNames.EXPORT_SIOC);
+		externalOntologies.add(ExportNames.EXPORT_DOAP);
 		externalOntologies.add(ExportNames.EXPORT_ONTOVIBE);
 
 		for (String externalOntology : externalOntologies) {

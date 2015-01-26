@@ -9,6 +9,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper;
  * Constants used for exporting ontologies into correct names for WebVOWL only.
  */
 public class ExportNames {
+	public static final String EXPORT_DOAP = "http://usefulinc.com/ns/doap#";
 	public static final String EXPORT_FOAF = "http://xmlns.com/foaf/0.1/";
 	public static final String EXPORT_GOOD_RELATIONS = "http://purl.org/goodrelations/v1";
 	public static final String EXPORT_GS1 = "http://dydra.com/nlv01111/gs1.ttl";
@@ -25,6 +26,7 @@ public class ExportNames {
 	public static final String EXPORT_PIZZA = "http://www.co-ode.org/ontologies/pizza/pizza.owl";
 	public static final String EXPORT_PROV = "http://www.w3.org/ns/prov-o#";
 
+	public static final String FILENAME_DOAP = "doap";
 	public static final String FILENAME_FOAF = "foaf";
 	public static final String FILENAME_GOOD_RELATIONS = "goodrelations";
 	public static final String FILENAME_GS1 = "gs1";
