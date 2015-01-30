@@ -12,6 +12,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.util.ProjectInformations;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 
@@ -36,7 +37,8 @@ public class JsonGenerator {
 	private List<Object> objectProperty;
 	private List<Object> objectPropertyAttribute;
 	private MapData mapData;
-	private Map<String, Object> license;
+	private final String VERSION_INFORMATION = "Created with OWL2VOWL (version " + ProjectInformations.getVersion()
+			+ "), http://vowl.visualdataweb.org";
 
 	public JsonGenerator() {
 		initialize();
@@ -44,7 +46,6 @@ public class JsonGenerator {
 
 	private void initialize() {
 		root = new LinkedHashMap<String, Object>();
-		license = new LinkedHashMap<String, Object>();
 		namespace = new ArrayList<Object>();
 		header = new LinkedHashMap<String, Object>();
 		metrics = new LinkedHashMap<String, Object>();
@@ -56,7 +57,7 @@ public class JsonGenerator {
 		objectPropertyAttribute = new ArrayList<Object>();
 
 		// Sets root
-		root.put("license", license);
+		root.put("_comment", VERSION_INFORMATION);
 		root.put("namespace", namespace);
 		root.put("header", header);
 		root.put("metrics", metrics);
@@ -71,7 +72,6 @@ public class JsonGenerator {
 	public void execute(MapData mapData) throws Exception {
 		this.mapData = mapData;
 		processNamespace();
-		processLicense();
 		processHeader(mapData.getOntologyInfo());
 		processMetrics(mapData.getOntologyMetric());
 		processClasses(mapData.getClassMap());
@@ -87,16 +87,6 @@ public class JsonGenerator {
 		//mapper.enable(SerializationConfig.Feature.INDENT_OUTPUT);
 		mapper.configure(SerializationConfig.Feature.WRITE_NULL_MAP_VALUES, false);
 		exporter.write(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
-	}
-
-	private void processLicense() {
-		List<Object> authors = new ArrayList<Object>();
-		authors.add("Vincent Link");
-		authors.add("Steffen Lohmann");
-		authors.add("Eduard Marbach");
-
-		license.put("authors", authors);
-		license.put("license-type", "The MIT License (MIT) Copyright (c) 2015 Vincent Link, Steffen Lohmann, Eduard Marbach");
 	}
 
 	// TODO
@@ -433,7 +423,7 @@ public class JsonGenerator {
 			int min = currentProperty.getMinCardinality();
 			int max = currentProperty.getMaxCardinality();
 
-			if (exact != -1){
+			if (exact != -1) {
 				dataAttrJson.put("cardinality", currentProperty.getExactCardinality());
 			}
 

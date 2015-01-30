@@ -21,6 +21,10 @@ import java.util.Set;
 public class ComparisonHelper {
 	private static final Logger logger = LogManager.getLogger(ComparisonHelper.class);
 
+	public static boolean hasDifferentNameSpace(OWLEntity entity, OntologyInformation information) {
+		return hasDifferentNameSpace(entity.getIRI().toString(), information);
+	}
+
 	private static boolean hasDifferentNameSpace(String elementNamespace, OntologyInformation information) {
 		if (elementNamespace == null) {
 			logger.info("Namespace check: Element has no namespace!");
@@ -39,29 +43,29 @@ public class ComparisonHelper {
 		return hasDifferentNameSpace(elementNamespace, ontologyIri);
 	}
 
-	public static boolean hasDifferentNameSpace(String elementNamespace, String ontologyIri) {
-		if (elementNamespace.equals(ontologyIri)) {
+	public static boolean hasDifferentNameSpace(String elementIri, String ontologyIri) {
+		// The trailing hash has no meaning and can be removed
+		String trimmedElementIri = removeTrailingHash(elementIri);
+		String trimmedOntologyIri = removeTrailingHash(ontologyIri);
+
+		if (trimmedElementIri.equals(trimmedOntologyIri)) {
 			return false;
 		}
 
-		if (elementNamespace.equals(ontologyIri + "#")) {
-			return false;
-		}
-
-		if (elementNamespace.contains("#")) {
-			String elementNamespaceWithoutHashParameter = elementNamespace.split("#")[0];
-			if (elementNamespaceWithoutHashParameter.equals(ontologyIri)) {
+		if (trimmedElementIri.contains("#")) {
+			String elementNamespaceWithoutHashParameter = trimmedElementIri.split("#")[0];
+			if (elementNamespaceWithoutHashParameter.equals(trimmedOntologyIri)) {
 				return false;
 			}
 		}
 
-		if (elementNamespace.contains("/") && !elementNamespace.endsWith("/")) {
-			int lastSlashIndex = elementNamespace.lastIndexOf("/");
+		if (trimmedElementIri.contains("/") && !trimmedElementIri.endsWith("/")) {
+			int lastSlashIndex = trimmedElementIri.lastIndexOf("/");
 			int indexAfterSlash = lastSlashIndex + 1;
 
-			String elementNamespaceWithoutLastPart = elementNamespace.substring(0, indexAfterSlash);
+			String elementNamespaceWithoutLastPart = trimmedElementIri.substring(0, indexAfterSlash);
 
-			if (elementNamespaceWithoutLastPart.equals(ontologyIri)) {
+			if (elementNamespaceWithoutLastPart.equals(trimmedOntologyIri)) {
 				return false;
 			}
 		}
@@ -69,7 +73,7 @@ public class ComparisonHelper {
 		return true;
 	}
 
-	public static boolean hasDifferentNameSpace(OWLEntity entity, OntologyInformation information) {
-		return hasDifferentNameSpace(entity.getIRI().toString(), information);
+	private static String removeTrailingHash(String text) {
+		return text.replaceAll("#$", "");
 	}
 }

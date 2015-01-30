@@ -10,6 +10,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.ConsoleExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.Exporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.FileExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ExportNames;
+import de.uni_stuttgart.vis.vowl.owl2vowl.util.ProjectInformations;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
@@ -168,8 +169,6 @@ public class Main {
 			return ExportNames.FILENAME_MUTO;
 		} else if (iri.equals(ExportNames.EXPORT_ONTOVIBE)) {
 			return ExportNames.FILENAME_ONTOVIBE;
-		} else if (iri.equals(ExportNames.EXPORT_ONTOVIBE_2)) {
-			return ExportNames.FILENAME_ONTOVIBE_2;
 		} else if (iri.equals(ExportNames.EXPORT_PERSONAS)) {
 			return ExportNames.FILENAME_PERSONAS;
 		} else if (iri.equals(ExportNames.EXPORT_PROV)) {
