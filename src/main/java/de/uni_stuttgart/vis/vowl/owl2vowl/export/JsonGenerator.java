@@ -120,9 +120,14 @@ public class JsonGenerator {
 			JsonGeneratorVisitor visitor = new JsonGeneratorVisitorImpl();
 			baseEntity.accept(visitor);
 
-			if (baseEntity instanceof BaseNode) {
+			if (baseEntity instanceof BaseClass) {
 				_class.add(visitor.getEntityJson());
 				classAttribute.add(visitor.getEntityAttributes());
+			}
+
+			if (baseEntity instanceof BaseDatatype) {
+				datatype.add(visitor.getEntityJson());
+				datatypeAttribute.add(visitor.getEntityAttributes());
 			}
 
 			if (baseEntity instanceof BaseEdge) {
