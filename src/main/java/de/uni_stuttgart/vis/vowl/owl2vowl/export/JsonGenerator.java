@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.export;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.BaseEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
@@ -15,7 +16,6 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.util.ProjectInformations;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -111,6 +111,46 @@ public class JsonGenerator {
 		header.put("license", info.getLicense());
 		header.put("rdfsLabel", info.getRdfsLabel());
 		header.put("other", info.getOthers());
+	}
+
+	public <V extends BaseEntity> void processEntities(Map<String, V> entityMap) {
+		for (Map.Entry<String, V> entry : entityMap.entrySet()) {
+			V baseEntity = entry.getValue();
+
+			// The general entities
+			Map<String, Object> entityJson = new LinkedHashMap<String, Object>();
+
+			entityJson.put("id", baseEntity.getId());
+			entityJson.put("type", baseEntity.getType());
+
+			// The attributes
+			Map<String, Object> entityAttributes = new LinkedHashMap<String, Object>();
+			List<Object> subClasses = new ArrayList<Object>();
+			List<Object> superClasses = new ArrayList<Object>();
+
+			// Apply sub classes
+			for (BaseNode entity : baseEntity.getSubClasses()) {
+				subClasses.add(entity.getId());
+			}
+
+			// Apply super classes
+			for (BaseNode entity : baseEntity.getSuperClasses()) {
+				superClasses.add(entity.getId());
+			}
+
+			entityAttributes.put("id", baseEntity.getId());
+			entityAttributes.put("label", baseEntity.getLabels());
+			entityAttributes.put("uri", baseEntity.getIri());
+			entityAttributes.put("comment", baseEntity.getComments());
+			entityAttributes.put("isDefinedBy", baseEntity.getDefinedBy());
+			entityAttributes.put("owlVersion", baseEntity.getOwlVersion());
+			entityAttributes.put("attributes", baseEntity.getAttributes());
+			entityAttributes.put("subClasses", baseEntity.getSubClasses());
+			entityAttributes.put("superClasses", baseEntity.getSuperClasses());
+			entityAttributes.put("annotations", baseEntity.getAnnotations());
+
+
+		}
 	}
 
 	public void processClasses(Map<String, BaseClass> classes) {
@@ -388,7 +428,6 @@ public class JsonGenerator {
 			BaseProperty currentProperty = baseProperty.getValue();
 
 			if (currentProperty.getDomain() == null || currentProperty.getRange() == null) {
-//				System.out.println("Skip " + currentProperty.getName() + " property.");
 				continue;
 			}
 
