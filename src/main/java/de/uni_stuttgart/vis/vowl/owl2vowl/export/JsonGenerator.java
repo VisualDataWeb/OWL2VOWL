@@ -8,6 +8,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.export;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.BaseEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.BaseEdge;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
@@ -75,12 +76,12 @@ public class JsonGenerator {
 		processNamespace();
 		processHeader(mapData.getOntologyInfo());
 		processMetrics(mapData.getOntologyMetric());
-		processClasses(mapData.getClassMap());
-		processGlobalNodes(mapData.getIntersectionMap());
-		processDatatypes(mapData.getDatatypeMap());
-		processProperties(mapData.getMergedProperties());
-		processThings(mapData.getThingMap());
-		processUnions(mapData.getUnionMap());
+		processEntities(mapData.getClassMap());
+		processEntities(mapData.getIntersectionMap());
+		processEntities(mapData.getDatatypeMap());
+		processEntities(mapData.getMergedProperties());
+		processEntities(mapData.getThingMap());
+		processEntities(mapData.getUnionMap());
 	}
 
 	public void export(Exporter exporter) throws Exception {
@@ -116,262 +117,22 @@ public class JsonGenerator {
 	public <V extends BaseEntity> void processEntities(Map<String, V> entityMap) {
 		for (Map.Entry<String, V> entry : entityMap.entrySet()) {
 			V baseEntity = entry.getValue();
+			JsonGeneratorVisitor visitor = new JsonGeneratorVisitorImpl();
+			visitor.visit(baseEntity);
 
-			// The general entities
-			Map<String, Object> entityJson = new LinkedHashMap<String, Object>();
-
-			entityJson.put("id", baseEntity.getId());
-			entityJson.put("type", baseEntity.getType());
-
-			// The attributes
-			Map<String, Object> entityAttributes = new LinkedHashMap<String, Object>();
-			List<Object> subClasses = new ArrayList<Object>();
-			List<Object> superClasses = new ArrayList<Object>();
-
-			// Apply sub classes
-			for (BaseNode entity : baseEntity.getSubClasses()) {
-				subClasses.add(entity.getId());
+			if (baseEntity instanceof BaseNode) {
+				_class.add(visitor.getEntityJson());
+				classAttribute.add(visitor.getEntityAttributes());
 			}
 
-			// Apply super classes
-			for (BaseNode entity : baseEntity.getSuperClasses()) {
-				superClasses.add(entity.getId());
-			}
-
-			entityAttributes.put("id", baseEntity.getId());
-			entityAttributes.put("label", baseEntity.getLabels());
-			entityAttributes.put("uri", baseEntity.getIri());
-			entityAttributes.put("comment", baseEntity.getComments());
-			entityAttributes.put("isDefinedBy", baseEntity.getDefinedBy());
-			entityAttributes.put("owlVersion", baseEntity.getOwlVersion());
-			entityAttributes.put("attributes", baseEntity.getAttributes());
-			entityAttributes.put("subClasses", baseEntity.getSubClasses());
-			entityAttributes.put("superClasses", baseEntity.getSuperClasses());
-			entityAttributes.put("annotations", baseEntity.getAnnotations());
-
-
-		}
-	}
-
-	public void processClasses(Map<String, BaseClass> classes) {
-		for (Map.Entry<String, BaseClass> baseClass : classes.entrySet()) {
-			BaseClass currentClass = baseClass.getValue();
-
-			Map<String, Object> classJson = new LinkedHashMap<String, Object>();
-
-			List<Object> equivalent = new ArrayList<Object>();
-			List<Object> attributes = new ArrayList<Object>();
-			List<Object> union = new ArrayList<Object>();
-			List<Object> intersection = new ArrayList<Object>();
-			List<Object> complement = new ArrayList<Object>();
-			List<Object> subClasses = new ArrayList<Object>();
-			List<Object> superClasses = new ArrayList<Object>();
-
-			classJson.put("id", currentClass.getId());
-			classJson.put("type", currentClass.getType());
-
-			_class.add(classJson);
-
-			Map<String, Object> classAttrJson = new LinkedHashMap<String, Object>();
-
-			classAttrJson.put("id", currentClass.getId());
-			classAttrJson.put("label", currentClass.getLabels());
-			classAttrJson.put("uri", currentClass.getIri());
-			classAttrJson.put("comment", currentClass.getComments());
-			classAttrJson.put("instances", currentClass.getNumberOfIndividuals());
-			classAttrJson.put("equivalent", equivalent);
-			classAttrJson.put("attributes", attributes);
-			classAttrJson.put("union", union);
-			classAttrJson.put("intersection", intersection);
-			classAttrJson.put("complement", complement);
-			classAttrJson.put("subClasses", subClasses);
-			classAttrJson.put("superClasses", superClasses);
-
-			if (currentClass.getClass() == OwlEquivalentClass.class) {
-				OwlEquivalentClass equivalentClass = (OwlEquivalentClass) currentClass;
-
-				for (BaseNode entity : equivalentClass.getEquivalentClasses()) {
-					equivalent.add(entity.getId());
+			if (baseEntity instanceof BaseEdge) {
+				if (!visitor.isFailure()) {
+					objectProperty.add(visitor.getEntityJson());
+					objectPropertyAttribute.add(visitor.getEntityAttributes());
+				} else {
+					// TODO
 				}
 			}
-
-			if (currentClass instanceof SpecialClass) {
-				SpecialClass equivalentClass = (SpecialClass) currentClass;
-
-				for (BaseNode entity : equivalentClass.getUnions()) {
-					union.add(entity.getId());
-				}
-
-				for (BaseNode entity : equivalentClass.getIntersections()) {
-					intersection.add(entity.getId());
-				}
-
-				for (BaseNode entity : equivalentClass.getComplements()) {
-					complement.add(entity.getId());
-				}
-			}
-
-			// Apply attributes
-			for (String attribute : currentClass.getAttributes()) {
-				attributes.add(attribute);
-			}
-
-			// Apply sub classes
-			for (BaseNode entity : currentClass.getSubClasses()) {
-				subClasses.add(entity.getId());
-			}
-
-			// Apply super classes
-			for (BaseNode entity : currentClass.getSuperClasses()) {
-				superClasses.add(entity.getId());
-			}
-
-			classAttribute.add(classAttrJson);
-		}
-
-	}
-
-	public void processGlobalNodes(Map<String, ? extends BaseClass> nodes) {
-
-		for (Map.Entry<String, ? extends BaseClass> baseClass : nodes.entrySet()) {
-			BaseClass currentClass = baseClass.getValue();
-
-			Map<String, Object> classJson = new LinkedHashMap<String, Object>();
-
-			List<Object> equivalent = new ArrayList<Object>();
-			List<Object> attributes = new ArrayList<Object>();
-			List<Object> union = new ArrayList<Object>();
-			List<Object> intersection = new ArrayList<Object>();
-			List<Object> complement = new ArrayList<Object>();
-			List<Object> subClasses = new ArrayList<Object>();
-			List<Object> superClasses = new ArrayList<Object>();
-
-			classJson.put("id", currentClass.getId());
-			classJson.put("type", currentClass.getType());
-
-			_class.add(classJson);
-
-			Map<String, Object> classAttrJson = new LinkedHashMap<String, Object>();
-
-			classAttrJson.put("id", currentClass.getId());
-			classAttrJson.put("label", currentClass.getLabels());
-			classAttrJson.put("uri", currentClass.getIri());
-			classAttrJson.put("comment", currentClass.getComments());
-			classAttrJson.put("instances", currentClass.getNumberOfIndividuals());
-			classAttrJson.put("equivalent", equivalent);
-			classAttrJson.put("attributes", attributes);
-			classAttrJson.put("union", union);
-			classAttrJson.put("intersection", intersection);
-			classAttrJson.put("complement", complement);
-			classAttrJson.put("subClasses", subClasses);
-			classAttrJson.put("superClasses", superClasses);
-
-			if (currentClass.getClass() == OwlEquivalentClass.class) {
-				OwlEquivalentClass equivalentClass = (OwlEquivalentClass) currentClass;
-
-				for (BaseNode entity : equivalentClass.getEquivalentClasses()) {
-					equivalent.add(entity.getId());
-				}
-			}
-
-			if (currentClass instanceof SpecialClass) {
-				SpecialClass equivalentClass = (SpecialClass) currentClass;
-
-				for (BaseNode entity : equivalentClass.getUnions()) {
-					union.add(entity.getId());
-				}
-
-				for (BaseNode entity : equivalentClass.getIntersections()) {
-					intersection.add(entity.getId());
-				}
-
-				for (BaseNode entity : equivalentClass.getComplements()) {
-					complement.add(entity.getId());
-				}
-			}
-
-			// Apply attributes
-			for (String attribute : currentClass.getAttributes()) {
-				attributes.add(attribute);
-			}
-
-			// Apply sub classes
-			for (BaseNode entity : currentClass.getSubClasses()) {
-				subClasses.add(entity.getId());
-			}
-
-			// Apply super classes
-			for (BaseNode entity : currentClass.getSuperClasses()) {
-				superClasses.add(entity.getId());
-			}
-
-			classAttribute.add(classAttrJson);
-		}
-	}
-
-	public void processDatatypes(Map<String, BaseDatatype> datatypes) {
-		for (Map.Entry<String, BaseDatatype> baseDatatype : datatypes.entrySet()) {
-			BaseDatatype currentDatatype = baseDatatype.getValue();
-
-			Map<String, Object> datatypesJson = new LinkedHashMap<String, Object>();
-
-			List<Object> attributes = new ArrayList<Object>();
-			List<Object> subClasses = new ArrayList<Object>();
-			List<Object> superClasses = new ArrayList<Object>();
-
-			datatypesJson.put("id", currentDatatype.getId());
-			datatypesJson.put("type", currentDatatype.getType());
-
-			datatype.add(datatypesJson);
-
-			Map<String, Object> datatypeAttrJson = new LinkedHashMap<String, Object>();
-
-			datatypeAttrJson.put("id", currentDatatype.getId());
-			datatypeAttrJson.put("uri", currentDatatype.getIri());
-			datatypeAttrJson.put("label", currentDatatype.getLabels());
-			datatypeAttrJson.put("comment", currentDatatype.getComments());
-			datatypeAttrJson.put("attributes", attributes);
-			datatypeAttrJson.put("subClasses", subClasses);
-			datatypeAttrJson.put("superClasses", superClasses);
-
-			// Apply attributes
-			for (String attribute : currentDatatype.getAttributes()) {
-				attributes.add(attribute);
-			}
-
-			// Apply sub classes
-			for (BaseNode entity : currentDatatype.getSubClasses()) {
-				subClasses.add(entity.getId());
-			}
-
-			// Apply super classes
-			for (BaseNode entity : currentDatatype.getSuperClasses()) {
-				superClasses.add(entity.getId());
-			}
-
-			datatypeAttribute.add(datatypeAttrJson);
-		}
-
-	}
-
-	public void processThings(Map<String, OwlThing> things) {
-		for (Map.Entry<String, OwlThing> baseClass : things.entrySet()) {
-			BaseClass currentClass = baseClass.getValue();
-
-			Map<String, Object> classJson = new LinkedHashMap<String, Object>();
-
-			classJson.put("id", currentClass.getId());
-			classJson.put("type", currentClass.getType());
-
-			_class.add(classJson);
-
-			Map<String, Object> classAttrJson = new LinkedHashMap<String, Object>();
-
-			classAttrJson.put("id", currentClass.getId());
-			classAttrJson.put("label", currentClass.getName());
-			classAttrJson.put("uri", currentClass.getIri());
-
-			classAttribute.add(classAttrJson);
 		}
 	}
 
@@ -384,124 +145,5 @@ public class JsonGenerator {
 		metrics.put("nodeCount", metric.getNodeCount());
 		metrics.put("axiomCount", metric.getAxiomCount());
 		metrics.put("individualCount", metric.getIndividualCount());
-	}
-
-	private void processUnions(Map<String, OwlUnionOf> unionMap) {
-		for (Map.Entry<String, OwlUnionOf> baseClass : unionMap.entrySet()) {
-			OwlUnionOf currentClass = baseClass.getValue();
-
-			Map<String, Object> classJson = new LinkedHashMap<String, Object>();
-
-			List<Object> attributes = new ArrayList<Object>();
-			List<Object> union = new ArrayList<Object>();
-
-			classJson.put("id", currentClass.getId());
-			classJson.put("type", currentClass.getType());
-			classJson.put("label", "Union");
-
-			_class.add(classJson);
-
-			Map<String, Object> classAttrJson = new LinkedHashMap<String, Object>();
-
-			classAttrJson.put("id", currentClass.getId());
-			classAttrJson.put("uri", currentClass.getIri());
-			classAttrJson.put("comment", currentClass.getComment());
-
-			classAttrJson.put("attributes", attributes);
-			classAttrJson.put("union", union);
-
-			// Apply attributes
-			for (String attribute : currentClass.getAttributes()) {
-				attributes.add(attribute);
-			}
-
-			for (BaseNode entity : currentClass.getUnions()) {
-				union.add(entity.getId());
-			}
-
-			classAttribute.add(classAttrJson);
-		}
-	}
-
-	public <V extends BaseProperty> void processProperties(Map<String, V> propertyMap) {
-		for (Map.Entry<String, V> baseProperty : propertyMap.entrySet()) {
-			BaseProperty currentProperty = baseProperty.getValue();
-
-			if (currentProperty.getDomain() == null || currentProperty.getRange() == null) {
-				continue;
-			}
-
-			Map<String, Object> propertyJson = new LinkedHashMap<String, Object>();
-
-			List<Object> equivalent = new ArrayList<Object>();
-			List<Object> attributes = new ArrayList<Object>();
-			List<Object> subProperty = new ArrayList<Object>();
-			List<Object> superProperty = new ArrayList<Object>();
-			List<Object> disjoints = new ArrayList<Object>();
-
-			propertyJson.put("id", currentProperty.getId());
-			propertyJson.put("type", currentProperty.getType());
-
-			objectProperty.add(propertyJson);
-
-			Map<String, Object> dataAttrJson = new LinkedHashMap<String, Object>();
-
-			dataAttrJson.put("id", currentProperty.getId());
-			dataAttrJson.put("uri", currentProperty.getIri());
-			dataAttrJson.put("label", currentProperty.getLabels());
-			dataAttrJson.put("comment", currentProperty.getComments());
-			dataAttrJson.put("domain", currentProperty.getDomain().getId());
-			dataAttrJson.put("range", currentProperty.getRange().getId());
-			dataAttrJson.put("inverse", currentProperty.getInverseID());
-			dataAttrJson.put("equivalent", equivalent);
-			dataAttrJson.put("attributes", attributes);
-			dataAttrJson.put("subproperty", subProperty);
-			dataAttrJson.put("superproperty", superProperty);
-			dataAttrJson.put("disjoint", disjoints);
-
-			// Cardinality
-			int exact = currentProperty.getExactCardinality();
-			int min = currentProperty.getMinCardinality();
-			int max = currentProperty.getMaxCardinality();
-
-			if (exact != -1) {
-				dataAttrJson.put("cardinality", currentProperty.getExactCardinality());
-			}
-
-			if (min != -1) {
-				dataAttrJson.put("minCardinality", currentProperty.getMinCardinality());
-			}
-
-			if (max != -1) {
-				dataAttrJson.put("maxCardinality", currentProperty.getMaxCardinality());
-			}
-
-			// Apply attributes
-			for (String attribute : currentProperty.getAttributes()) {
-				attributes.add(attribute);
-			}
-
-			// Apply sub classes
-			for (String entity : currentProperty.getSubProperties()) {
-				subProperty.add(entity);
-			}
-
-			for (String entity : currentProperty.getSuperProperties()) {
-				superProperty.add(entity);
-			}
-
-
-			// Apply equivalents
-			for (String entity : currentProperty.getEquivalents()) {
-				equivalent.add(entity);
-			}
-
-			// Apply disjoints
-			for (String entity : currentProperty.getDisjoints()) {
-				disjoints.add(entity);
-			}
-
-			objectPropertyAttribute.add(dataAttrJson);
-		}
 	}
 }
