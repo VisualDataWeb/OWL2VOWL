@@ -46,6 +46,7 @@ public class DatatypeParser extends GeneralNodeParser {
 			theDatatype.setIri(iri);
 			theDatatype.setDefinedBy(rdfsIsDefinedBy);
 			theDatatype.setOwlVersion(owlVersionInfo);
+			theDatatype.setAnnotations(annotations);
 
 			if (isDeprecated) {
 				theDatatype.getAttributes().add(Vowl_Prop_Attr.PROP_ATTR_DEPR);

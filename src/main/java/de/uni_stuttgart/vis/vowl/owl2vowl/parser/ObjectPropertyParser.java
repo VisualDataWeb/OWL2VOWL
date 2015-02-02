@@ -163,6 +163,7 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 			theProperty.setDefinedBy(rdfsIsDefinedBy);
 			theProperty.setOwlVersion(owlVersionInfo);
 			theProperty.setInverseIRI(rdfsInversOf);
+			theProperty.setAnnotations(annotations);
 
 			BaseNode domain = mergeTargets(domains);
 			BaseNode range = mergeTargets(ranges);

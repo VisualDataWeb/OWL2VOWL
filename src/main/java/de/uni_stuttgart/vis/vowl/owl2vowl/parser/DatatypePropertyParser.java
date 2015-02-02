@@ -77,6 +77,7 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 			property.setIri(iri);
 			property.setDefinedBy(rdfsIsDefinedBy);
 			property.setOwlVersion(owlVersionInfo);
+			property.setAnnotations(annotations);
 			domainNode.getOutGoingEdges().add(property);
 			rangeNode.getInGoingEdges().add(property);
 
