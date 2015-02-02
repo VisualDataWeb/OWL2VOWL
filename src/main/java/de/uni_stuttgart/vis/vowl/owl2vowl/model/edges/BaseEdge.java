@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.edges;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.BaseEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
@@ -30,5 +31,10 @@ public class BaseEdge extends BaseEntity {
 
 	public void setRange(BaseNode range) {
 		this.range = range;
+	}
+
+	@Override
+	public void accept(JsonGeneratorVisitor visitor) {
+		visitor.visit(this);
 	}
 }

@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.containerElements;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.BaseEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
@@ -72,5 +73,10 @@ public class DisjointUnion extends BaseEntity {
 		int result = baseNode != null ? baseNode.hashCode() : 0;
 		result = 31 * result + (disjointness != null ? disjointness.hashCode() : 0);
 		return result;
+	}
+
+	@Override
+	public void accept(JsonGeneratorVisitor visitor) {
+		visitor.visit(this);
 	}
 }

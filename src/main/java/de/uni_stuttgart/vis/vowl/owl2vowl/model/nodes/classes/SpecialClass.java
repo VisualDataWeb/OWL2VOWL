@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
 import java.util.ArrayList;
@@ -47,5 +48,10 @@ public class SpecialClass extends BaseClass {
 
 	public void setIntersections(List<BaseNode> intersections) {
 		this.intersections = intersections;
+	}
+
+	@Override
+	public void accept(JsonGeneratorVisitor visitor) {
+		visitor.visit(this);
 	}
 }

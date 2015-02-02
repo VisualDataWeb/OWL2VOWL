@@ -2,6 +2,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes;
 
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
 import java.util.Collection;
@@ -53,5 +54,10 @@ public class OwlIntersectionOf extends SpecialClass {
 		}
 
 		return equalIris == iriList.size();
+	}
+
+	@Override
+	public void accept(JsonGeneratorVisitor visitor) {
+		visitor.visit(this);
 	}
 }

@@ -2,6 +2,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 
 public class RdfsDatatype extends BaseDatatype {
 	public RdfsDatatype() {
@@ -19,5 +20,10 @@ public class RdfsDatatype extends BaseDatatype {
 	public void setName(String name) {
 		getLabels().put(Vowl_Lang.LANG_DEFAULT, name);
 		super.setName(name);
+	}
+
+	@Override
+	public void accept(JsonGeneratorVisitor visitor) {
+		visitor.visit(this);
 	}
 }

@@ -2,6 +2,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
 
 public class OwlThing extends BaseClass {
@@ -43,5 +44,10 @@ public class OwlThing extends BaseClass {
 		}
 
 		return true;
+	}
+
+	@Override
+	public void accept(JsonGeneratorVisitor visitor) {
+		visitor.visit(this);
 	}
 }

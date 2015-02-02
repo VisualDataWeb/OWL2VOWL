@@ -1,6 +1,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,5 +29,10 @@ public class OwlEquivalentClass extends BaseClass {
 		}
 
 		this.equivalentClasses = bufList;
+	}
+
+	@Override
+	public void accept(JsonGeneratorVisitor visitor) {
+		visitor.visit(this);
 	}
 }

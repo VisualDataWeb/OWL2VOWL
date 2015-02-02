@@ -1,6 +1,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.BaseEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
 
@@ -77,5 +78,10 @@ public abstract class BaseNode extends BaseEntity {
 		}
 
 		return false;
+	}
+
+	@Override
+	public void accept(JsonGeneratorVisitor visitor) {
+		visitor.visit(this);
 	}
 }

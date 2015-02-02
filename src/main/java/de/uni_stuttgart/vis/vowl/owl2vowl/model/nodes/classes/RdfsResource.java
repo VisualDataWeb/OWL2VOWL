@@ -2,6 +2,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes;
 
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 
 public class RdfsResource extends BaseClass {
 
@@ -10,4 +11,8 @@ public class RdfsResource extends BaseClass {
 		setType(Node_Types.TYPE_RDFSRESOURCE);
 	}
 
+	@Override
+	public void accept(JsonGeneratorVisitor visitor) {
+		visitor.visit(this);
+	}
 }

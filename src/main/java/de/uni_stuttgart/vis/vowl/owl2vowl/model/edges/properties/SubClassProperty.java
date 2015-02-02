@@ -6,6 +6,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Property_Types;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
 /**
@@ -24,5 +25,10 @@ public class SubClassProperty extends OwlObjectProperty {
 		setDomain(domain);
 		setType(Property_Types.PROP_TYPE_SUBCLASS);
 		setName("Subclass Of");
+	}
+
+	@Override
+	public void accept(JsonGeneratorVisitor visitor) {
+		visitor.visit(this);
 	}
 }

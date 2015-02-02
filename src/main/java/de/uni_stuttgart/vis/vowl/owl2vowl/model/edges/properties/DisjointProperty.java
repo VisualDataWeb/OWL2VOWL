@@ -6,6 +6,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Property_Types;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 
 /**
@@ -55,5 +56,10 @@ public class DisjointProperty extends OwlObjectProperty {
 
 		return domainRange || rangeDomain;
 
+	}
+
+	@Override
+	public void accept(JsonGeneratorVisitor visitor) {
+		visitor.visit(this);
 	}
 }

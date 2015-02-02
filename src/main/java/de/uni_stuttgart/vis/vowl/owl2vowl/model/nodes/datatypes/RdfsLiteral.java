@@ -2,6 +2,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 
 public class RdfsLiteral extends BaseDatatype {
 
@@ -15,5 +16,10 @@ public class RdfsLiteral extends BaseDatatype {
 	protected void setID() {
 		id = "literal" + counterObjects;
 		counterObjects++;
+	}
+
+	@Override
+	public void accept(JsonGeneratorVisitor visitor) {
+		visitor.visit(this);
 	}
 }
