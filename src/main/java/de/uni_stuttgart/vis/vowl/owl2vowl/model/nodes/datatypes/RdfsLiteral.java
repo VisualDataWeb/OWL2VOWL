@@ -20,6 +20,7 @@ public class RdfsLiteral extends BaseDatatype {
 
 	@Override
 	public void accept(JsonGeneratorVisitor visitor) {
+		super.accept(visitor);
 		visitor.visit(this);
 	}
 }

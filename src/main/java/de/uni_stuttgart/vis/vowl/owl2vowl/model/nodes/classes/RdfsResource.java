@@ -13,6 +13,7 @@ public class RdfsResource extends BaseClass {
 
 	@Override
 	public void accept(JsonGeneratorVisitor visitor) {
+		super.accept(visitor);
 		visitor.visit(this);
 	}
 }

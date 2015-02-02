@@ -82,6 +82,7 @@ public abstract class BaseNode extends BaseEntity {
 
 	@Override
 	public void accept(JsonGeneratorVisitor visitor) {
+		super.accept(visitor);
 		visitor.visit(this);
 	}
 }

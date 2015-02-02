@@ -35,6 +35,7 @@ public class BaseEdge extends BaseEntity {
 
 	@Override
 	public void accept(JsonGeneratorVisitor visitor) {
+		super.accept(visitor);
 		visitor.visit(this);
 	}
 }

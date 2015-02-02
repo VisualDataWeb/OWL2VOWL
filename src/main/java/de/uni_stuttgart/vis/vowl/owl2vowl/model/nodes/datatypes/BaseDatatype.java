@@ -13,6 +13,7 @@ public abstract class BaseDatatype extends BaseNode {
 
 	@Override
 	public void accept(JsonGeneratorVisitor visitor) {
+		super.accept(visitor);
 		visitor.visit(this);
 	}
 }

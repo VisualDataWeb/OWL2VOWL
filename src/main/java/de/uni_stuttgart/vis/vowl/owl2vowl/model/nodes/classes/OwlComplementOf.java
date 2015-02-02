@@ -13,6 +13,7 @@ public class OwlComplementOf extends SpecialClass {
 
 	@Override
 	public void accept(JsonGeneratorVisitor visitor) {
+		super.accept(visitor);
 		visitor.visit(this);
 	}
 }

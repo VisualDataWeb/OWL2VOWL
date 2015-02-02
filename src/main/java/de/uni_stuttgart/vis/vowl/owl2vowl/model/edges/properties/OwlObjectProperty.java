@@ -19,6 +19,7 @@ public class OwlObjectProperty extends BaseProperty {
 
 	@Override
 	public void accept(JsonGeneratorVisitor visitor) {
+		super.accept(visitor);
 		visitor.visit(this);
 	}
 }

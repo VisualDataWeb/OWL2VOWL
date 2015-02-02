@@ -108,6 +108,7 @@ public class BaseProperty extends BaseEdge {
 
 	@Override
 	public void accept(JsonGeneratorVisitor visitor) {
+		super.accept(visitor);
 		visitor.visit(this);
 	}
 }
