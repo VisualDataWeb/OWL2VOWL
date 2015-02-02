@@ -31,12 +31,28 @@
         <Literal datatypeIRI="&rdf;PlainLiteral">Eduard Marbach</Literal>
     </Annotation>
     <Annotation>
+        <AnnotationProperty IRI="#contributor"/>
+        <IRI>http://test.link.me</IRI>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fallback Title</Literal>
+    </Annotation>
+    <Annotation>
         <AnnotationProperty abbreviatedIRI="dc:title"/>
         <Literal datatypeIRI="&rdf;PlainLiteral">Test Ontology</Literal>
     </Annotation>
     <Annotation>
         <AnnotationProperty abbreviatedIRI="dc:description"/>
         <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Test ontology to find all different examples for the OWL Converter.</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="#contributor"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">http://test.de</Literal>
+    </Annotation>
+    <Annotation>
+        <AnnotationProperty IRI="#contributor"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Test Contributor</Literal>
     </Annotation>
     <Annotation>
         <AnnotationProperty abbreviatedIRI="dcterms:issued"/>
@@ -152,6 +168,9 @@
         <NamedIndividual IRI="#Testklasse4"/>
     </Declaration>
     <Declaration>
+        <AnnotationProperty IRI="eduard#mytest"/>
+    </Declaration>
+    <Declaration>
         <AnnotationProperty abbreviatedIRI="dc:creator"/>
     </Declaration>
     <Declaration>
@@ -165,6 +184,9 @@
     </Declaration>
     <Declaration>
         <AnnotationProperty abbreviatedIRI="dcterms:licence"/>
+    </Declaration>
+    <Declaration>
+        <AnnotationProperty IRI="#contributor"/>
     </Declaration>
     <Declaration>
         <AnnotationProperty abbreviatedIRI="foaf:depiction"/>
@@ -688,6 +710,11 @@
         <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">tag of</Literal>
     </AnnotationAssertion>
     <AnnotationAssertion>
+        <AnnotationProperty IRI="eduard#mytest"/>
+        <IRI>#taggedResource</IRI>
+        <Literal datatypeIRI="&rdf;PlainLiteral">WTF</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
         <AnnotationProperty abbreviatedIRI="rdfs:comment"/>
         <IRI>#taggedResource</IRI>
         <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">Every tagging is linked to exactly one resource. This can be any kind of resource (i.e. all subclasses of rdfs:Resource), including tags and taggings.</Literal>
@@ -746,6 +773,16 @@
         <AnnotationProperty abbreviatedIRI="rdfs:label"/>
         <IRI>#taggingModified</IRI>
         <Literal xml:lang="en" datatypeIRI="&rdf;PlainLiteral">tagging modified</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <AnonymousIndividual nodeID="_:http://purl.org/muto/core#genid1818884576203567"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">Fallback?</Literal>
+    </AnnotationAssertion>
+    <AnnotationAssertion>
+        <AnnotationProperty abbreviatedIRI="rdfs:label"/>
+        <AnonymousIndividual nodeID="_:http://purl.org/muto/core#genid1818910758131297"/>
+        <Literal datatypeIRI="&rdf;PlainLiteral">What?</Literal>
     </AnnotationAssertion>
 </Ontology>
 
