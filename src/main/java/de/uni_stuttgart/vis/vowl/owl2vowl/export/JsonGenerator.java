@@ -9,19 +9,14 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.BaseEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.BaseEdge;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.util.ProjectInformations;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Eduard Marbach
@@ -86,10 +81,78 @@ public class JsonGenerator {
 
 	public void export(Exporter exporter) throws Exception {
 		ObjectMapper mapper = new ObjectMapper();
-		//mapper.enable(SerializationConfig.Feature.INDENT_OUTPUT);
 		mapper.configure(SerializationConfig.Feature.WRITE_NULL_MAP_VALUES, false);
 		mapper.enable(SerializationConfig.Feature.INDENT_OUTPUT);
+		invoke(root);
 		exporter.write(mapper.writeValueAsString(root));
+	}
+
+	/**
+	 * Used to remove empty collections out of the json.
+	 *
+	 * @param jsonObj Object to be invoked.
+	 */
+	private void invoke(Map<String, Object> jsonObj) {
+		Iterator<String> it = jsonObj.keySet().iterator();
+
+		while (it.hasNext()) {
+			String key = it.next();
+
+			Object o = jsonObj.get(key);
+
+			if (o instanceof Map) {
+				Map<String, Object> casted = (Map<String, Object>) o;
+
+				if (casted.size() == 0) {
+					it.remove();
+				} else {
+					invoke(casted);
+				}
+			}
+
+			if (o instanceof List) {
+				List<Object> casted = (List<Object>) o;
+
+				if (casted.size() == 0) {
+					it.remove();
+				} else {
+					invoke(casted);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Used to remove empty collections out of the json.
+	 *
+	 * @param jsonObj Object to be invoked.
+	 */
+	private void invoke(List<Object> jsonObj) {
+		Iterator<Object> it = jsonObj.iterator();
+
+		while (it.hasNext()) {
+			Object o = it.next();
+
+			if (o instanceof Map) {
+				Map<String, Object> casted = (Map<String, Object>) o;
+
+				if (casted.size() == 0) {
+					it.remove();
+				} else {
+					invoke(casted);
+				}
+			}
+
+			if (o instanceof List) {
+				Map<String, Object> casted = (Map<String, Object>) o;
+
+				if (casted.size() == 0) {
+					it.remove();
+				} else {
+					invoke(casted);
+				}
+			}
+		}
 	}
 
 	// TODO
