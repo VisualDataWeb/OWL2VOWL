@@ -118,7 +118,7 @@ public class JsonGenerator {
 		for (Map.Entry<String, V> entry : entityMap.entrySet()) {
 			V baseEntity = entry.getValue();
 			JsonGeneratorVisitor visitor = new JsonGeneratorVisitorImpl();
-			visitor.visit(baseEntity);
+			baseEntity.accept(visitor);
 
 			if (baseEntity instanceof BaseNode) {
 				_class.add(visitor.getEntityJson());
