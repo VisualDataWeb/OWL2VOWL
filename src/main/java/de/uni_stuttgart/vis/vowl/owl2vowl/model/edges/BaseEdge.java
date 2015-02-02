@@ -13,9 +13,12 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
  * @author Vincent Link, Eduard Marbach
  */
 public class BaseEdge extends BaseEntity {
-	private BaseNode domain = null;
-	private BaseNode range = null;
+	private BaseNode domain;
+	private BaseNode range;
 
+	public BaseEdge() {
+		super();
+	}
 
 	public BaseNode getDomain() {
 		return domain;
