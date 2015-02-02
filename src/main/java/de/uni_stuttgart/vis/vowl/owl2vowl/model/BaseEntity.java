@@ -6,6 +6,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.Annotation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,7 @@ public class BaseEntity {
 	protected List<BaseNode> superClasses;
 	protected Map<String, String> comments;
 	protected Map<String, String> labels;
+	protected Map<String, List<Annotation>> annotations;
 
 	/**
 	 * Creates a new class object in owl form.
@@ -39,6 +41,16 @@ public class BaseEntity {
 		superClasses = new ArrayList<BaseNode>();
 		comments = new HashMap<String, String>();
 		labels = new HashMap<String, String>();
+		annotations = new HashMap<String, List<Annotation>>();
+
+	}
+
+	public Map<String, List<Annotation>> getAnnotations() {
+		return annotations;
+	}
+
+	public void setAnnotations(Map<String, List<Annotation>> annotations) {
+		this.annotations = annotations;
 	}
 
 	public Map<String, String> getComments() {
