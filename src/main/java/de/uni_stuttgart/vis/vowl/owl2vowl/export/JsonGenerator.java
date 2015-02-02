@@ -15,6 +15,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.util.ProjectInformations;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
+import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -86,7 +87,8 @@ public class JsonGenerator {
 		ObjectMapper mapper = new ObjectMapper();
 		//mapper.enable(SerializationConfig.Feature.INDENT_OUTPUT);
 		mapper.configure(SerializationConfig.Feature.WRITE_NULL_MAP_VALUES, false);
-		exporter.write(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(root));
+		mapper.enable(SerializationConfig.Feature.INDENT_OUTPUT);
+		exporter.write(mapper.writeValueAsString(root));
 	}
 
 	// TODO
