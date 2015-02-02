@@ -10,8 +10,10 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.Annotation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.AnnotationParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +27,6 @@ import java.util.*;
  */
 public class GeneralParser {
 	private static final Logger logger = LogManager.getLogger(GeneralParser.class);
-	private static final boolean LOG_ANNOTATIONS = false;
 	protected OntologyInformation ontologyInformation;
 	protected OWLOntology ontology;
 	protected OWLDataFactory factory;
@@ -39,6 +40,7 @@ public class GeneralParser {
 	protected Map<String, String> languageToLabel;
 	protected String iri;
 	protected OWLOntologyManager ontologyManager;
+	protected Map<String, List<Annotation>> annotations;
 
 	public GeneralParser(OntologyInformation ontologyInformation, MapData mapData) {
 		this.ontologyInformation = ontologyInformation;
@@ -47,6 +49,7 @@ public class GeneralParser {
 		factory = ontologyInformation.getFactory();
 		ontologyManager = ontologyInformation.getManager();
 		languageToLabel = new HashMap<String, String>();
+		annotations = new HashMap<String, List<Annotation>>();
 	}
 
 	public String getIri() {
@@ -82,10 +85,26 @@ public class GeneralParser {
 					rdfsIsDefinedBy = annotationValue.toString();
 				} else if (annotationProperty.toString().equals(Annotations.OWL_VERSIONINFO)) {
 					owlVersionInfo = annotationValue.toString();
-				} else if (LOG_ANNOTATIONS) {
-					System.out.println("Not used annotation: " + owlPropAno);
+				} else {
+					Annotation theAnno = AnnotationParser.getAnnotation(owlPropAno, mapData);
+					addAnnotatin(theAnno.getIdentifier(), theAnno);
 				}
 			}
+		}
+	}
+
+	protected void addAnnotatin(String key, Annotation annotation) {
+		if (key == null || annotation == null) {
+			logger.error("An ontology info annotation with key: " + key + " is null!");
+			return;
+		}
+
+		if (annotations.containsKey(key)) {
+			annotations.get(key).add(annotation);
+		} else {
+			List<Annotation> list = new ArrayList<Annotation>();
+			list.add(annotation);
+			annotations.put(key, list);
 		}
 	}
 
@@ -96,6 +115,7 @@ public class GeneralParser {
 		rdfsIsDefinedBy = "";
 		owlVersionInfo = "";
 		languageToLabel = null;
+		annotations = new HashMap<String, List<Annotation>>();
 	}
 
 	/**
