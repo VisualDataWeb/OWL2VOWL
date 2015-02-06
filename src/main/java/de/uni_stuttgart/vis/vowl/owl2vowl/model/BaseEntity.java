@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.model;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.Annotation;
@@ -43,7 +44,6 @@ public class BaseEntity {
 		comments = new HashMap<String, String>();
 		labels = new HashMap<String, String>();
 		annotations = new HashMap<String, List<Annotation>>();
-
 	}
 
 	public Map<String, List<Annotation>> getAnnotations() {
@@ -70,12 +70,8 @@ public class BaseEntity {
 		this.labels = labels;
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public void setName(String name) {
-		this.name = name;
+		labels.put(Vowl_Lang.LANG_DEFAULT, name);
 	}
 
 	public String getComment() {
