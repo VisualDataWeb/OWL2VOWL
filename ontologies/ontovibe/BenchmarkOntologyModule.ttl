@@ -3,15 +3,20 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 
-@prefix this: <http://ontovibe.visualdataweb.org/1.0/imported#> .
+@prefix this: <http://ontovibe.visualdataweb.org/imported#> .
 
-<http://ontovibe.visualdataweb.org/1.0/imported#> a owl:Ontology ;
-	owl:versionIRI <http://ontovibe.visualdataweb.org/1.0/imported#> .
+<http://ontovibe.visualdataweb.org/imported> a owl:Ontology ;
+	owl:versionInfo "2.0" ;
+	owl:versionIRI <http://ontovibe.visualdataweb.org/2.0/imported> ;
+	owl:priorVersion <http://ontovibe.visualdataweb.org/1.0/imported> ;
+	owl:backwardCompatibleWith <http://ontovibe.visualdataweb.org/1.0/imported> .
 
 this:ImportedClass a owl:Class .
 
 this:DeprecatedImportedClass a owl:Class ;
 	owl:deprecated true .
+
+this:EquivalentImportedClassInLargeGroup a owl:Class .
 
 this:DivisibleByThreeEnumeration a rdfs:Datatype ;
 	owl:equivalentClass [
