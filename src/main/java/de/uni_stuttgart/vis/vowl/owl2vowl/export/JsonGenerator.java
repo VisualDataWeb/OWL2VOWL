@@ -119,6 +119,14 @@ public class JsonGenerator {
 					invoke(casted);
 				}
 			}
+
+			if (o instanceof String) {
+				String casted = (String) o;
+
+				if (casted.isEmpty()) {
+					it.remove();
+				}
+			}
 		}
 	}
 
@@ -150,6 +158,14 @@ public class JsonGenerator {
 					it.remove();
 				} else {
 					invoke(casted);
+				}
+			}
+
+			if (o instanceof String) {
+				String casted = (String) o;
+
+				if (casted.isEmpty()) {
+					it.remove();
 				}
 			}
 		}
