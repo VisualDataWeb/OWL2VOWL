@@ -92,28 +92,28 @@ public class JsonGenerator {
 	 *
 	 * @param jsonObj Object to be invoked.
 	 */
-	private void invoke(Map<String, Object> jsonObj) {
-		Iterator<String> it = jsonObj.keySet().iterator();
+	private void invoke(Map<?, Object> jsonObj) {
+		Iterator<?> it = jsonObj.keySet().iterator();
 
 		while (it.hasNext()) {
-			String key = it.next();
+			Object key = it.next();
 
 			Object o = jsonObj.get(key);
 
 			if (o instanceof Map) {
-				Map<String, Object> casted = (Map<String, Object>) o;
+				Map<?, Object> casted = (Map<?, Object>) o;
 
-				if (casted.size() == 0) {
+				if (casted.isEmpty()) {
 					it.remove();
 				} else {
 					invoke(casted);
 				}
 			}
 
-			if (o instanceof List) {
-				List<Object> casted = (List<Object>) o;
+			if (o instanceof Collection) {
+				Collection<Object> casted = (Collection<Object>) o;
 
-				if (casted.size() == 0) {
+				if (casted.isEmpty()) {
 					it.remove();
 				} else {
 					invoke(casted);
@@ -135,14 +135,14 @@ public class JsonGenerator {
 	 *
 	 * @param jsonObj Object to be invoked.
 	 */
-	private void invoke(List<Object> jsonObj) {
+	private void invoke(Collection<Object> jsonObj) {
 		Iterator<Object> it = jsonObj.iterator();
 
 		while (it.hasNext()) {
 			Object o = it.next();
 
 			if (o instanceof Map) {
-				Map<String, Object> casted = (Map<String, Object>) o;
+				Map<?, Object> casted = (Map<?, Object>) o;
 
 				if (casted.size() == 0) {
 					it.remove();
@@ -151,8 +151,8 @@ public class JsonGenerator {
 				}
 			}
 
-			if (o instanceof List) {
-				Map<String, Object> casted = (Map<String, Object>) o;
+			if (o instanceof Collection) {
+				Collection<Object> casted = (Collection<Object>) o;
 
 				if (casted.size() == 0) {
 					it.remove();
