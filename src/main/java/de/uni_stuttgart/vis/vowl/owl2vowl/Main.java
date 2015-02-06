@@ -149,6 +149,10 @@ public class Main {
 	}
 
 	private static String searchExportFilename(IRI ontologyIri) {
+		if (ontologyIri == null) {
+			return "null";
+		}
+
 		String iri = ontologyIri.toString();
 
 		if (iri.equals(ExportNames.EXPORT_DOAP)) {
