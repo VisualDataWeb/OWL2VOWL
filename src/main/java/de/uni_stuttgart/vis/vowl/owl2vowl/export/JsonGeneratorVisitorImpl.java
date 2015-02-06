@@ -163,6 +163,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	@Override
 	public void visit(BaseClass entity) {
 		entityAttributes.put("instances", entity.getNumberOfIndividuals());
+		entityAttributes.put("individuals", entity.getIndividuals());
 	}
 
 	@Override
