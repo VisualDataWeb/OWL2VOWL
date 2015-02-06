@@ -8,12 +8,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLEntity;
-import org.semanticweb.owlapi.model.OWLOntology;
-
-import java.util.Set;
 
 /**
  *
@@ -75,5 +70,9 @@ public class ComparisonHelper {
 
 	private static String removeTrailingHash(String text) {
 		return text.replaceAll("#$", "");
+	}
+
+	public static String getIndividualName(String iri) {
+		return iri.substring(iri.lastIndexOf("#") + 1);
 	}
 }
