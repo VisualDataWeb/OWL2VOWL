@@ -6,6 +6,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.Annotation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors.OntologyInfoVisitorImpl;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.semanticweb.owlapi.model.*;
 
@@ -93,6 +94,12 @@ public class OntoInfoParser extends GeneralParser {
 		if (versionIri != null) {
 			info.setVersion(versionIri.toString());
 		}
+
+		/* The way to get the ontology axioms for SIOC
+		for (OWLAxiom owlAxiom : ontology.getABoxAxioms(false)) {
+			owlAxiom.accept(new OntologyInfoVisitorImpl(info));
+		}
+		*/
 
 		/* Save available annotations */
 		for (OWLAnnotation annotation : ontology.getAnnotations()) {

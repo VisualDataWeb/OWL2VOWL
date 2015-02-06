@@ -8,9 +8,9 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.Annotation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
-import org.semanticweb.owlapi.model.IRI;
-import org.semanticweb.owlapi.model.OWLAnnotation;
-import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.*;
+
+import java.util.Map;
 
 /**
  *
@@ -48,5 +48,16 @@ public class AnnotationParser {
 		}
 
 		return anno;
+	}
+
+	// TODO
+	public static Annotation getAnnotation(OWLDataPropertyAssertionAxiom axiom, MapData mapData) {
+		System.out.println(axiom.getObject());
+		System.out.println(axiom.getSubject());
+		System.out.println(axiom.getProperty());
+
+		System.out.println();
+
+		return null;
 	}
 }
