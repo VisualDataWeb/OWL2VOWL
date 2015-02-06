@@ -73,6 +73,7 @@ public class ProcessUnit {
 		}
 
 		currentClass.setNumberOfIndividuals(visitor.getSetSize());
+		currentClass.setIndividuals(visitor.getIndividuals());
 
 		for (OWLClass aClass : visitor.getInstances()) {
 			BaseProperty newProp = new BaseProperty();
