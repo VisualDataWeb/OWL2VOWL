@@ -5,7 +5,10 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.NamedIndividual;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.AnnotationParser;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
@@ -23,12 +26,18 @@ public class IndividualVisitorImpl implements OWLIndividualVisitor {
 	private MapData mapData;
 	private OWLOntology ontology;
 	private Set<OWLClass> instances;
+	private Set<NamedIndividual> individuals;
 
 	public IndividualVisitorImpl(int size, MapData mapData, OWLOntology ontology) {
 		setSize = size;
 		this.mapData = mapData;
 		this.ontology = ontology;
 		instances = new HashSet<OWLClass>();
+		individuals = new HashSet<NamedIndividual>();
+	}
+
+	public Set<NamedIndividual> getIndividuals() {
+		return individuals;
 	}
 
 	public Set<OWLClass> getInstances() {
@@ -41,7 +50,17 @@ public class IndividualVisitorImpl implements OWLIndividualVisitor {
 
 		if (owlClass != null) {
 			addInstance(owlClass);
+		} else {
+			addIndividual(owlNamedIndividual);
 		}
+	}
+
+	private void addIndividual(OWLNamedIndividual owlNamedIndividual) {
+		NamedIndividual individual = new NamedIndividual();
+		individual.setIri(owlNamedIndividual.getIRI().toString());
+		individual.setName(ComparisonHelper.getIndividualName(owlNamedIndividual.getIRI().toString()));
+		individual.setAnnotations(AnnotationParser.processAndGet(owlNamedIndividual.getAnnotations(ontology), mapData));
+		individuals.add(individual);
 	}
 
 	private void addInstance(OWLClass instance) {
