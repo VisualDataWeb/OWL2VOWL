@@ -69,7 +69,7 @@ public class Annotation {
 			firstCut = hash;
 		}
 
-		return identifier.substring(firstCut + 1, lastCut);
+		return identifier.substring(firstCut + 1, lastCut + 1);
 	}
 
 	public String getLanguage() {
