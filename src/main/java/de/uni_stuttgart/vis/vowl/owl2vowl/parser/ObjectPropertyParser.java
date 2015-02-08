@@ -6,6 +6,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
@@ -158,7 +159,7 @@ public class ObjectPropertyParser extends GeneralPropertyParser {
 
 			theProperty.setLabels(languageToLabel);
 			theProperty.setComments(comments);
-			theProperty.setName(languageToLabel.get("default"));
+			theProperty.setName(languageToLabel.get(Vowl_Lang.LANG_DEFAULT));
 			theProperty.setIri(iri);
 			theProperty.setDefinedBy(rdfsIsDefinedBy);
 			theProperty.setOwlVersion(owlVersionInfo);

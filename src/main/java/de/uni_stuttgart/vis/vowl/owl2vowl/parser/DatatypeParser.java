@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
@@ -42,7 +43,7 @@ public class DatatypeParser extends GeneralNodeParser {
 
 			theDatatype.setLabels(languageToLabel);
 			theDatatype.setComments(comments);
-			theDatatype.setName(languageToLabel.get("default"));
+			theDatatype.setName(languageToLabel.get(Vowl_Lang.LANG_DEFAULT));
 			theDatatype.setIri(iri);
 			theDatatype.setDefinedBy(rdfsIsDefinedBy);
 			theDatatype.setOwlVersion(owlVersionInfo);
