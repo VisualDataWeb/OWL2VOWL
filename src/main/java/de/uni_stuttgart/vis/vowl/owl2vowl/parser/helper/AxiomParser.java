@@ -187,7 +187,7 @@ public class AxiomParser extends GeneralParser {
 	}
 
 	public void processAxioms(OWLOntology ontology) {
-		OWLAxiomVisitor objectVisitor = new CardinalityVisitorImpl(mapData);
+		OWLAxiomVisitor objectVisitor = new CardinalityVisitorImpl(mapData, ontologyInformation);
 
 		if (ontology != null) {
 			Set<OWLAxiom> axiomSet = ontology.getAxioms();
