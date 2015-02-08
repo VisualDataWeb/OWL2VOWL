@@ -14,11 +14,13 @@ public class Ontology_Path {
 	public static final String PERSONAS = PATH_VARIABLE + "personasonto.owl";
 	public static final String BENCHMARK1 = PATH_VARIABLE + "ontovibe/BenchmarkOntology.ttl";
 	public static final String BENCHMARK2 = PATH_VARIABLE + "ontovibe/BenchmarkOntologyModule.ttl";
+	public static final String ONTO_CARD = PATH_VARIABLE + "ontovibe/ontovibe_cardinalities.ttl";
 	public static final String LOCAL_TESTING = PATH_VARIABLE + "testing.owl";
 	public static final String EXT_GEONAMES = "http://www.geonames.org/ontology/ontology_v3.1.rdf";
 	public static final String EXT_PROV = "http://www.w3.org/ns/prov-o";
 	public static final String EXT_PIZZA = "http://130.88.198.11/co-ode-files/ontologies/pizza.owl";
 	public static final String EXT_ONTOVIBE = "http://ontovibe.visualdataweb.org/2.0";
+	public static final String EXT_ONTO_CARD = "http://ontovibe.visualdataweb.org/cardinalities/";
 	public static final String EXT_NICETAG = "http://ns.inria.fr/nicetag/2010/09/09/voc";
 	public static final String EXT_SIOC = "http://rdfs.org/sioc/ns#";
 	public static final String EXT_FOAF = "http://xmlns.com/foaf/0.1/";
