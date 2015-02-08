@@ -95,11 +95,13 @@ public class OntoInfoParser extends GeneralParser {
 			info.setVersion(versionIri.toString());
 		}
 
-		/* The way to get the ontology axioms for SIOC
+		// The way to get the ontology axioms for SIOC
+		/*
 		for (OWLAxiom owlAxiom : ontology.getABoxAxioms(false)) {
 			owlAxiom.accept(new OntologyInfoVisitorImpl(info));
 		}
 		*/
+
 
 		/* Save available annotations */
 		for (OWLAnnotation annotation : ontology.getAnnotations()) {
@@ -148,18 +150,14 @@ public class OntoInfoParser extends GeneralParser {
 	 * @param owlAnnotation The desired annotation which should contain a language.
 	 */
 	private void addLanguage(Map<String, String> mapToAdd, OWLAnnotation owlAnnotation) {
-		if (owlAnnotation.getValue() instanceof OWLLiteral) {
-			OWLLiteral val = (OWLLiteral) owlAnnotation.getValue();
+		Annotation annotation = getAnnotation(owlAnnotation);
 
-			if (val.isRDFPlainLiteral()) {
-				if (val.getLang().isEmpty()) {
-					mapToAdd.put(Vowl_Lang.LANG_UNSET, val.getLiteral());
-					mapData.getAvailableLanguages().add(Vowl_Lang.LANG_UNSET);
-				} else {
-					mapToAdd.put(val.getLang(), val.getLiteral());
-					mapData.getAvailableLanguages().add(val.getLang());
-				}
-			}
+		if (annotation.getLanguage() == null || annotation.getLanguage().isEmpty()) {
+			mapData.getAvailableLanguages().add(Vowl_Lang.LANG_UNSET);
+			mapToAdd.put(Vowl_Lang.LANG_UNSET, annotation.getValue());
+		} else {
+			mapData.getAvailableLanguages().add(annotation.getLanguage());
+			mapToAdd.put(annotation.getLanguage(), annotation.getValue());
 		}
 	}
 
