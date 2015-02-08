@@ -34,4 +34,7 @@ public class Ontology_Path {
 	// NOT WORKING FOR ONTOLOGY PARSERS
 	public static final String EXT_HP_NOT_WORKING = "http://purl.org/voc/hp/";
 	public static final String EXT_HP = "https://raw.githubusercontent.com/AKSW/vocab.hp/master/schema.ttl";
+	// Label Datatype construct. Time out?
+	public static final String EXT_ENVO = "http://envo.googlecode.com/svn/trunk/src/envo/envo.owl";
+	public static final String EXT_MLHIM = "http://www.mlhim.org/xmlns/mlhim2/mlhim246.owl";
 }
