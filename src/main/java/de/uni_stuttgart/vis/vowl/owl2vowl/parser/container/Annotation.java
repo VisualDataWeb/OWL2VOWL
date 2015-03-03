@@ -5,6 +5,8 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.container;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
+
 /**
  *
  */
@@ -12,7 +14,7 @@ public class Annotation {
 	public static final String TYPE_IRI = "iri";
 	public static final String TYPE_LABEL = "label";
 	private String identifier;
-	private String language;
+	private String language = Vowl_Lang.LANG_UNSET;
 	private String value;
 	private String type;
 
