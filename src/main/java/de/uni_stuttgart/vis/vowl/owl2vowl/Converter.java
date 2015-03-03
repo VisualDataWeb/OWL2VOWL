@@ -90,16 +90,14 @@ public class Converter {
 		for WebVOWL.
 		*/
 		parser.handleOntologyInfo();
+
 		parser.handleClass(classes);
+		processor.processClasses();
+
 		//parseDatatypes(datatypes);
 		parser.handleObjectProperty(objectProperties);
 		parser.handleDatatypeProperty(dataProperties);
 		parseMetrics();
-
-		/*
-		Further processing of the gained data. Eq. IRIs will be transformed to IDs where necessary
-		*/
-		processor.processClasses();
 		//processor.processDatatypes();
 		processor.processProperties();
 		processor.processAxioms();
