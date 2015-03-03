@@ -20,7 +20,7 @@ public class OwlIntersectionOf extends SpecialClass {
 			return;
 		}
 
-		intersections.add(node);
+		intersectionOf.add(node);
 	}
 
 	public void addIntersections(Collection<? extends BaseNode> nodes) {
@@ -28,12 +28,12 @@ public class OwlIntersectionOf extends SpecialClass {
 			return;
 		}
 
-		intersections.addAll(nodes);
+		intersectionOf.addAll(nodes);
 	}
 
 	public boolean equalsIntersections(List<BaseNode> classes) {
 		for (BaseNode aClass : classes) {
-			if (!intersections.contains(aClass)) {
+			if (!intersectionOf.contains(aClass)) {
 				return false;
 			}
 		}
@@ -45,7 +45,7 @@ public class OwlIntersectionOf extends SpecialClass {
 		int equalIris = 0;
 
 		for (String aIri : iriList) {
-			for (BaseNode aUnion : intersections) {
+			for (BaseNode aUnion : intersectionOf) {
 				if (aUnion.getIri().equals(aIri)) {
 					equalIris++;
 					break;

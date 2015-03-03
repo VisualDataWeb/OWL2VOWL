@@ -228,15 +228,15 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		List<Object> intersection = new ArrayList<Object>();
 		List<Object> complement = new ArrayList<Object>();
 
-		for (BaseNode current : entity.getUnions()) {
+		for (BaseNode current : entity.getUnionOf()) {
 			union.add(current.getId());
 		}
 
-		for (BaseNode current : entity.getIntersections()) {
+		for (BaseNode current : entity.getIntersectionOf()) {
 			intersection.add(current.getId());
 		}
 
-		for (BaseNode current : entity.getComplements()) {
+		for (BaseNode current : entity.getComplementOf()) {
 			complement.add(current.getId());
 		}
 

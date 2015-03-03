@@ -136,7 +136,7 @@ public class ProcessUnit {
 
 				currentNode.setType(Node_Types.TYPE_UNION);
 
-				currentNode.setUnions(new ArrayList<BaseNode>(currentDisUn.getDisjointness()));
+				currentNode.setUnionOf(new ArrayList<BaseNode>(currentDisUn.getDisjointness()));
 
 				int i = 0;
 				List<BaseNode> baseNodeList = new ArrayList<BaseNode>(currentDisUn.getDisjointness());
@@ -177,7 +177,7 @@ public class ProcessUnit {
 				continue;
 			}
 
-			working.getUnions().add(aClass);
+			working.getUnionOf().add(aClass);
 			working.setType(Node_Types.TYPE_UNION);
 		}
 
@@ -195,7 +195,7 @@ public class ProcessUnit {
 
 		for (OWLClass curComplement : retrieveMainUnit(complements, theClass)) {
 			BaseClass aClass = mapData.getClassMap().get(curComplement.getIRI().toString());
-			working.getComplements().add(aClass);
+			working.getComplementOf().add(aClass);
 			working.setType(Node_Types.TYPE_COMPLEMENT);
 		}
 	}

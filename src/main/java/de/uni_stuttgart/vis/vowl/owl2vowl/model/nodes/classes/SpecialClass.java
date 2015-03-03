@@ -15,39 +15,39 @@ import java.util.List;
  *
  */
 public class SpecialClass extends BaseClass {
-	protected List<BaseNode> unions;
-	protected List<BaseNode> intersections;
-	protected List<BaseNode> complements;
+	protected List<BaseNode> unionOf;
+	protected List<BaseNode> intersectionOf;
+	protected List<BaseNode> complementOf;
 
 	public SpecialClass() {
 		super();
-		unions = new ArrayList<BaseNode>();
-		intersections = new ArrayList<BaseNode>();
-		complements = new ArrayList<BaseNode>();
+		unionOf = new ArrayList<BaseNode>();
+		intersectionOf = new ArrayList<BaseNode>();
+		complementOf = new ArrayList<BaseNode>();
 	}
 
-	public List<BaseNode> getComplements() {
-		return complements;
+	public List<BaseNode> getComplementOf() {
+		return complementOf;
 	}
 
-	public void setComplements(List<BaseNode> complements) {
-		this.complements = complements;
+	public void setComplementOf(List<BaseNode> complementOf) {
+		this.complementOf = complementOf;
 	}
 
-	public List<BaseNode> getUnions() {
-		return unions;
+	public List<BaseNode> getUnionOf() {
+		return unionOf;
 	}
 
-	public void setUnions(List<BaseNode> unions) {
-		this.unions = unions;
+	public void setUnionOf(List<BaseNode> unionOf) {
+		this.unionOf = unionOf;
 	}
 
-	public List<BaseNode> getIntersections() {
-		return intersections;
+	public List<BaseNode> getIntersectionOf() {
+		return intersectionOf;
 	}
 
-	public void setIntersections(List<BaseNode> intersections) {
-		this.intersections = intersections;
+	public void setIntersectionOf(List<BaseNode> intersectionOf) {
+		this.intersectionOf = intersectionOf;
 	}
 
 	@Override

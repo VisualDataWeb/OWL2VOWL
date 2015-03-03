@@ -18,12 +18,12 @@ public class OwlUnionOf extends SpecialClass {
 			return;
 		}
 
-		unions.add(node);
+		unionOf.add(node);
 	}
 
 	public boolean equalsUnion(List<BaseNode> classes) {
 		for (BaseNode aClass : classes) {
-			if (!unions.contains(aClass)) {
+			if (!unionOf.contains(aClass)) {
 				return false;
 			}
 		}
@@ -35,7 +35,7 @@ public class OwlUnionOf extends SpecialClass {
 		int equalIris = 0;
 
 		for (String aIri : iriList) {
-			for (BaseNode aUnion : unions) {
+			for (BaseNode aUnion : unionOf) {
 				if (aUnion.getIri().equals(aIri)) {
 					equalIris++;
 					break;
