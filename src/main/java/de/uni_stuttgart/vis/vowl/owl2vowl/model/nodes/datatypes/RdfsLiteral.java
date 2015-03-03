@@ -1,6 +1,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 
@@ -10,6 +11,7 @@ public class RdfsLiteral extends BaseDatatype {
 		setType(Node_Types.TYPE_LITERAL);
 		setID();
 		getLabels().put(Vowl_Lang.LANG_DEFAULT, "Literal");
+		setIri(Standard_Iris.GENERIC_LITERAL_URI);
 	}
 
 	@Override
