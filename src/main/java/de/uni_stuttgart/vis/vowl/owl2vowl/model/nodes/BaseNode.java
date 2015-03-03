@@ -6,13 +6,16 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.BaseEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.BaseProperty;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 
 public abstract class BaseNode extends BaseEntity {
 	private List<BaseNode> disjoints = new ArrayList<BaseNode>();
 	private List<BaseProperty> outGoingEdges = new ArrayList<BaseProperty>();
 	private List<BaseProperty> inGoingEdges = new ArrayList<BaseProperty>();
+	private Set<BaseNode> existingComplements = new HashSet<BaseNode>();
 
 	public BaseNode() {
 	}
@@ -84,5 +87,9 @@ public abstract class BaseNode extends BaseEntity {
 	public void accept(JsonGeneratorVisitor visitor) {
 		super.accept(visitor);
 		visitor.visit(this);
+	}
+
+	public Set<BaseNode> getExistingComplements() {
+		return existingComplements;
 	}
 }
