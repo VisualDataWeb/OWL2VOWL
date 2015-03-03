@@ -21,6 +21,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.AxiomParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors.AxiomVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors.IndividualVisitorImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -167,7 +168,7 @@ public class ProcessUnit {
 
 		List<Set<OWLClass>> unions = axiomParser.searchInEquivalents(theClass, Axiom_Annotations.AXIOM_OBJ_UNION);
 		List<Set<OWLClass>> intersections = axiomParser.searchInEquivalents(theClass, Axiom_Annotations.AXIOM_OBJ_INTERSECTION);
-		List<Set<OWLClass>> complements = axiomParser.searchInEquivalents(theClass, Axiom_Annotations.AXIOM_OBJ_COMPLEMENT);
+		//List<Set<OWLClass>> complements = axiomParser.searchInEquivalents(theClass, Axiom_Annotations.AXIOM_OBJ_COMPLEMENT);
 
 		for (OWLClass currentUnion : retrieveMainUnit(unions, theClass)) {
 			BaseClass aClass = mapData.getClassMap().get(currentUnion.getIRI().toString());
@@ -189,15 +190,21 @@ public class ProcessUnit {
 				continue;
 			}
 
-			working.getIntersections().add(aClass);
+			working.getIntersectionOf().add(aClass);
 			working.setType(Node_Types.TYPE_INTERSECTION);
 		}
 
+		for (OWLAxiom owlAxiom : theClass.getReferencingAxioms(ontology)) {
+			owlAxiom.accept(new AxiomVisitor(mapData, theClass, working));
+		}
+
+		/*
 		for (OWLClass curComplement : retrieveMainUnit(complements, theClass)) {
 			BaseClass aClass = mapData.getClassMap().get(curComplement.getIRI().toString());
 			working.getComplementOf().add(aClass);
 			working.setType(Node_Types.TYPE_COMPLEMENT);
 		}
+		*/
 	}
 
 	private Set<OWLClass> retrieveMainUnit(List<Set<OWLClass>> elementList, OWLEntity entity) {

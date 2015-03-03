@@ -17,6 +17,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.IntersectionParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.UnionParser;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors.PropertyClassExpressionVisitor;
 import org.semanticweb.owlapi.model.*;
 
 import java.util.*;
@@ -53,12 +54,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 			if (!range.isAnonymous()) {
 				ranges.add(range.asOWLClass().getIRI().toString());
 			} else {
-				// TODO
-				String classExpressionType = range.getClassExpressionType().toString();
-				Set<OWLClass> classesInSignature = range.getClassesInSignature();
-
-				for (OWLClass classInSig : classesInSignature) {
-				}
+				range.accept(new PropertyClassExpressionVisitor(mapData, ranges));
 			}
 		}
 
