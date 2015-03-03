@@ -50,8 +50,8 @@ public class Annotation {
 		int doubleDot = identifier.lastIndexOf(":");
 		int hash = identifier.lastIndexOf("#");
 
-		int lastCut = identifier.length() - 1;
-		int firstCut = 0;
+		int lastCut = -1;
+		int firstCut = -1;
 
 		if (arrow != -1) {
 			lastCut = arrow;
@@ -69,7 +69,19 @@ public class Annotation {
 			firstCut = hash;
 		}
 
-		return identifier.substring(firstCut + 1, lastCut + 1);
+		String result;
+
+		if (firstCut != -1 && lastCut != -1) {
+			result = identifier.substring(firstCut + 1, lastCut);
+		} else if (firstCut != -1) {
+			result = identifier.substring(firstCut + 1);
+		} else if (lastCut != -1){
+			result = identifier.substring(0, lastCut);
+		} else {
+			result = identifier;
+		}
+
+		return result;
 	}
 
 	public String getLanguage() {
