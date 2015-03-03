@@ -143,19 +143,9 @@ public class GeneralParser {
 
 		for (OWLOntology owlOntology : ontologyManager.getOntologies()) {
 			for (OWLAnnotation owlAnnotation : entity.getAnnotations(owlOntology, property)) {
-				if (owlAnnotation.getValue() instanceof OWLLiteral) {
-					OWLLiteral val = (OWLLiteral) owlAnnotation.getValue();
-
-					if (val.isRDFPlainLiteral()) {
-						if (val.getLang().isEmpty()) {
-							workingMap.put(Vowl_Lang.LANG_UNSET, val.getLiteral());
-							mapData.getAvailableLanguages().add(Vowl_Lang.LANG_UNSET);
-						} else {
-							workingMap.put(val.getLang(), val.getLiteral());
-							mapData.getAvailableLanguages().add(val.getLang());
-						}
-					}
-				}
+				Annotation theAnno = AnnotationParser.getAnnotation(owlAnnotation, mapData);
+				workingMap.put(theAnno.getLanguage(), theAnno.getValue());
+				mapData.getAvailableLanguages().add(theAnno.getLanguage());
 			}
 		}
 
