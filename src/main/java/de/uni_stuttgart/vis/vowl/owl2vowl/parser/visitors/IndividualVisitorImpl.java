@@ -72,10 +72,13 @@ public class IndividualVisitorImpl implements OWLIndividualVisitor {
 		instances.add(instance);
 	}
 
+	// TODO not implement a defined behaviour
 	@Override
 	public void visit(OWLAnonymousIndividual owlAnonymousIndividual) {
+		System.out.println(owlAnonymousIndividual);
 		logger.info("Anonym Individual: " + owlAnonymousIndividual);
-		// TODO implement what to do if exists.
+		// Remove counter from indivduals
+		setSize--;
 	}
 
 	public int getSetSize() {
