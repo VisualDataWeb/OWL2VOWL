@@ -34,16 +34,13 @@ public class OwlUnionOf extends SpecialClass {
 	public boolean equalUnionIris(List<String> iriList) {
 		int equalIris = 0;
 
-		for (String aIri : iriList) {
-			for (BaseNode aUnion : unionOf) {
-				if (aUnion.getIri().equals(aIri)) {
-					equalIris++;
-					break;
-				}
+		for (BaseNode baseNode : unionOf) {
+			if (iriList.contains(baseNode.getIri())) {
+				equalIris++;
 			}
 		}
 
-		return equalIris == iriList.size();
+		return equalIris == unionOf.size() && iriList.size() == unionOf.size();
 	}
 
 	@Override
