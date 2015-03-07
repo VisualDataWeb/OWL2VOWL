@@ -1,6 +1,8 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.constants;
 
 public class Ontology_Path {
+
+	// Local
 	public static final String PATH_VARIABLE =
 			System.getProperty("user.dir") + "/OWL2VOWL/ontologies/";
 	public static final String IMARINE = PATH_VARIABLE + "marinetloimarine.owl";
@@ -16,6 +18,9 @@ public class Ontology_Path {
 	public static final String BENCHMARK2 = PATH_VARIABLE + "ontovibe/BenchmarkOntologyModule.ttl";
 	public static final String ONTO_CARD = PATH_VARIABLE + "ontovibe/ontovibe_cardinalities.ttl";
 	public static final String LOCAL_TESTING = PATH_VARIABLE + "testing.owl";
+	public static final String STACK = PATH_VARIABLE + "StackExchange.ttl";
+
+	// External
 	public static final String EXT_GEONAMES = "http://www.geonames.org/ontology/ontology_v3.1.rdf";
 	public static final String EXT_PROV = "http://www.w3.org/ns/prov-o";
 	public static final String EXT_PIZZA = "http://130.88.198.11/co-ode-files/ontologies/pizza.owl";
