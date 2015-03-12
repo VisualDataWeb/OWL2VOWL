@@ -81,10 +81,11 @@ public class Main {
 		try {
 			Converter converter = new Converter(ontologyIri, dependencies);
 			converter.convert();
-
 			converter.export(createExporterFromOption(line, ontologyIri));
 		} catch (Exception e) {
 			logger.error("FAILED TO LOAD " + Arrays.toString(args));
+			System.err.println(e.getClass().getName());
+			System.err.println(e.getMessage());
 			System.exit(1);
 		}
 	}
