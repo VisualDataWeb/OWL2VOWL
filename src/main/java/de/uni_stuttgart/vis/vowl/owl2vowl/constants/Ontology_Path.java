@@ -19,6 +19,7 @@ public class Ontology_Path {
 	public static final String ONTO_CARD = PATH_VARIABLE + "ontovibe/ontovibe_cardinalities.ttl";
 	public static final String LOCAL_TESTING = PATH_VARIABLE + "testing.owl";
 	public static final String STACK = PATH_VARIABLE + "StackExchange.ttl";
+	public static final String TAGONT = PATH_VARIABLE + "tagont.owl";
 
 	// External
 	public static final String EXT_GEONAMES = "http://www.geonames.org/ontology/ontology_v3.1.rdf";
