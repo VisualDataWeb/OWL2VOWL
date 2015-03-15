@@ -124,6 +124,7 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 				rangeNode = new RdfsLiteral();
 			} else {
 				rangeNode = new RdfsDatatype();
+				rangeNode.setIri(rdfsRange);
 			}
 
 			rangeNode.setName(resourceName);

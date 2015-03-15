@@ -71,7 +71,9 @@ public class TypeFinder {
 		if (isPlainLiteral(theDatatype)) {
 			return new RdfsLiteral();
 		} else {
-			return new RdfsDatatype();
+			RdfsDatatype datatype = new RdfsDatatype();
+			datatype.setIri(theDatatype.getIRI().toString());
+			return datatype;
 		}
 	}
 
