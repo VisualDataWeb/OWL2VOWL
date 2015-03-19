@@ -5,7 +5,6 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
@@ -75,11 +74,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 		List<String> ranges = new ArrayList<String>();
 
 		for (OWLDataRange range : currentProperty.getRanges(ontology)) {
-			if (range.isDatatype()) {
-				ranges.add(range.asOWLDatatype().getIRI().toString());
-			} else if (range.getDataRangeType().toString().equals(Node_Types.KEY_TYPE_DATA_ONE_OF)) {
-				ranges.add(range.toString());
-			}
+			ranges.add(range.asOWLDatatype().getIRI().toString());
 		}
 
 		BaseClass union = unionParser.searchUnion(currentProperty, false);

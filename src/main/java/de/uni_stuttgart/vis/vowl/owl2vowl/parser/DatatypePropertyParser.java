@@ -10,14 +10,14 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.OwlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.DataOneOf;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
-import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.*;
 
 import java.util.*;
 
@@ -108,31 +108,26 @@ public class DatatypePropertyParser extends GeneralPropertyParser {
 
 		for (String rdfsRange : rdfsRanges) {
 			BaseDatatype rangeNode;
+			String resourceName = extractNameFromIRI(rdfsRange);
+			boolean isGeneric = false;
 
-			if (rdfsRange.startsWith("DataOneOf")) {
-				rangeNode = new DataOneOf();
-			} else {
-				String resourceName = extractNameFromIRI(rdfsRange);
-				boolean isGeneric = false;
-
-				if (resourceName.isEmpty()) {
-					resourceName = "Literal";
-					isGeneric = true;
-				}
-
-				if (rdfsRange.equals(Standard_Iris.GENERIC_LITERAL_URI)) {
-					isGeneric = true;
-				}
-
-				if (isGeneric) {
-					rangeNode = new RdfsLiteral();
-				} else {
-					rangeNode = new RdfsDatatype();
-					rangeNode.setIri(rdfsRange);
-				}
-				rangeNode.setName(resourceName);
+			if (resourceName.isEmpty()) {
+				resourceName = "Literal";
+				isGeneric = true;
 			}
 
+			if (rdfsRange.equals(Standard_Iris.GENERIC_LITERAL_URI)) {
+				isGeneric = true;
+			}
+
+			if (isGeneric) {
+				rangeNode = new RdfsLiteral();
+			} else {
+				rangeNode = new RdfsDatatype();
+				rangeNode.setIri(rdfsRange);
+			}
+
+			rangeNode.setName(resourceName);
 			mapData.getDatatypeMap().put(rangeNode.getId(), rangeNode);
 			datatypes.add(rangeNode);
 		}
