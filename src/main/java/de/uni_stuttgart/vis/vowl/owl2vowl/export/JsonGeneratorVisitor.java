@@ -32,6 +32,8 @@ public interface JsonGeneratorVisitor {
 
 	public void visit(BaseProperty entity);
 
+	public void visit(TypeOfProperty entity);
+
 	public void visit(DisjointProperty entity);
 
 	public void visit(OwlDatatypeProperty entity);

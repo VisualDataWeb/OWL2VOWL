@@ -136,6 +136,11 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	}
 
 	@Override
+	public void visit(TypeOfProperty entity) {
+
+	}
+
+	@Override
 	public void visit(DisjointProperty entity) {
 
 	}
