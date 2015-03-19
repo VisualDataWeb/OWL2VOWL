@@ -77,10 +77,9 @@ public class ProcessUnit {
 		currentClass.setIndividuals(visitor.getIndividuals());
 
 		for (OWLClass aClass : visitor.getInstances()) {
-			BaseProperty newProp = new BaseProperty();
+			TypeOfProperty newProp = new TypeOfProperty();
 			newProp.setDomain(currentClass);
 			newProp.setRange(mapData.getClassMap().get(aClass.getIRI().toString()));
-			newProp.getLabels().put(Vowl_Lang.LANG_DEFAULT, "is a");
 			mapData.getRdfProperties().put(newProp.getId(), newProp);
 		}
 	}
