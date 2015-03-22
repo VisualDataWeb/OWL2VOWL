@@ -4,15 +4,14 @@
 
 	<groupId>de.uni-stuttgart.vis.vowl.owl2vowl</groupId>
 	<artifactId>OWL2VOWL</artifactId>
-	<version>0.1.7</version>
+	<version>0.1.8</version>
 	<packaging>jar</packaging>
 	<name>OWL2VOWL</name>
 
 	<scm>
-		<connection>scm:svn:http://127.0.0.1/dummy</connection>
-		<developerConnection>scm:svn:https://127.0.0.1/dummy</developerConnection>
+		<connection>scm:git:C:\Users\Eduard\Documents\Hiwi\VOWL\OWL2VOWL</connection>
 		<tag>HEAD</tag>
-		<url>http://127.0.0.1/dummy</url>
+		<url>C:\Users\Eduard\Documents\Hiwi\VOWL\OWL2VOWL</url>
 	</scm>
 
 	<build>
@@ -51,6 +50,37 @@
 						<descriptor>src/assembly/jar-with-dependencies.xml</descriptor>
 						<descriptor>src/assembly/release_version.xml</descriptor>
 					</descriptors>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>default-cli</id>
+						<configuration>
+							<tasks>
+								<copy file="${project.build.directory}\owl2vowl.zip"
+								      toFile="${project.basedir}\release\owl2vowl.zip"
+								      overwrite="true"/>
+								<copy file="${project.basedir}\src\main\php\converter.php"
+								      toFile="${project.basedir}\release\converter.php"
+								      overwrite="true"/>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-plugin</artifactId>
+				<version>1.9.2</version>
+				<configuration>
+					<connectionType>connection</connectionType>
+					<message>Update to ${project.version}</message>
 				</configuration>
 			</plugin>
 		</plugins>
