@@ -93,7 +93,6 @@ public class ProcessUnit {
 
 		for (BaseClass baseClass : equivNode.getEquivalentClasses()) {
 			if (!baseClass.getAttributes().contains(Vowl_Prop_Attr.PROP_ATTR_IMPORT)) {
-//				System.out.println(equivNode.getIri() + " , " + equivNode.getEquivalentClasses());
 				equivNode.getEquivalentClasses().clear();
 				return;
 			}
