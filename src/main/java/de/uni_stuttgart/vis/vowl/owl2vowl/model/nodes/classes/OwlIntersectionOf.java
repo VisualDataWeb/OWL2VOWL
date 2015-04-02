@@ -13,6 +13,7 @@ public class OwlIntersectionOf extends SpecialClass {
 	public OwlIntersectionOf() {
 		super();
 		setType(Node_Types.TYPE_INTERSECTION);
+		setName("anonymous");
 	}
 
 	public void addIntersection(BaseNode node) {
