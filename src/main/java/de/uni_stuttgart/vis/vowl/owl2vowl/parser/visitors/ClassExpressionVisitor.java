@@ -54,7 +54,8 @@ public class ClassExpressionVisitor implements OWLClassExpressionVisitor {
 				target.getComplementOf().add(baseNode);
 				target.setType(Node_Types.TYPE_COMPLEMENT);
 			} else {
-				// TODO
+				// Visited object and target are the same so do not set complement from the object itself.
+				// e.q. Visited object Class1 and the target is Class1. Class1 is not the complement of itself!
 			}
 		} else {
 			//TODO
