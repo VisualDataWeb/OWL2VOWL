@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.SpecialClass;
@@ -51,6 +52,9 @@ public class ClassExpressionVisitor implements OWLClassExpressionVisitor {
 				BaseNode baseNode = information.getMergedMap().get(iri);
 				baseNode.getExistingComplements().add(target);
 				target.getComplementOf().add(baseNode);
+				target.setType(Node_Types.TYPE_COMPLEMENT);
+			} else {
+				// TODO
 			}
 		} else {
 			//TODO
