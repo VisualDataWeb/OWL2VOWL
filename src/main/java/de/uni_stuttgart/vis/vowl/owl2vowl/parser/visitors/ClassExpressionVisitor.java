@@ -58,7 +58,7 @@ public class ClassExpressionVisitor implements OWLClassExpressionVisitor {
 				// e.q. Visited object Class1 and the target is Class1. Class1 is not the complement of itself!
 			}
 		} else {
-			//TODO
+			// TODO What to do if complement operand is anonymous?
 		}
 
 	}

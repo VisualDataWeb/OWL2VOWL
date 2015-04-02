@@ -11,12 +11,18 @@ import java.util.List;
 import java.util.Set;
 
 
+/**
+ * Abstract base class for all nodes like OwlClass, OwlDatatype etc.
+ */
 public abstract class BaseNode extends BaseEntity {
 	private List<BaseNode> disjoints = new ArrayList<BaseNode>();
 	private List<BaseProperty> outGoingEdges = new ArrayList<BaseProperty>();
 	private List<BaseProperty> inGoingEdges = new ArrayList<BaseProperty>();
 	private Set<BaseNode> existingComplements = new HashSet<BaseNode>();
 
+	/**
+	 * Default constructor.
+	 */
 	public BaseNode() {
 	}
 
@@ -28,10 +34,18 @@ public abstract class BaseNode extends BaseEntity {
 		this.disjoints = disjoints;
 	}
 
+	/**
+	 *
+	 * @return A list of properties which has this node as domain.
+	 */
 	public List<BaseProperty> getOutGoingEdges() {
 		return outGoingEdges;
 	}
 
+	/**
+	 *
+	 * @return A list of properties which has this node as range.
+	 */
 	public List<BaseProperty> getInGoingEdges() {
 		return inGoingEdges;
 	}
@@ -61,6 +75,12 @@ public abstract class BaseNode extends BaseEntity {
 		return null;
 	}
 
+	/**
+	 * Check if the node contains an already connected thing.
+	 *
+	 * @param node The node to check for connected things.
+	 * @return True if there exists at least one connected thing otherwise false.
+	 */
 	public boolean containsConnectedThing(BaseNode node) {
 		for (BaseProperty out : getOutGoingEdges()) {
 			BaseNode range = out.getRange();
@@ -83,13 +103,16 @@ public abstract class BaseNode extends BaseEntity {
 		return false;
 	}
 
+	/**
+	 * @return All nodes which are complements of this node.
+	 */
+	public Set<BaseNode> getExistingComplements() {
+		return existingComplements;
+	}
+
 	@Override
 	public void accept(JsonGeneratorVisitor visitor) {
 		super.accept(visitor);
 		visitor.visit(this);
-	}
-
-	public Set<BaseNode> getExistingComplements() {
-		return existingComplements;
 	}
 }

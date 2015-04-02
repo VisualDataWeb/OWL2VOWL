@@ -195,14 +195,6 @@ public class ProcessUnit {
 		for (OWLAxiom owlAxiom : theClass.getReferencingAxioms(ontology)) {
 			owlAxiom.accept(new AxiomVisitor(mapData, theClass, working));
 		}
-
-		/*
-		for (OWLClass curComplement : retrieveMainUnit(complements, theClass)) {
-			BaseClass aClass = mapData.getClassMap().get(curComplement.getIRI().toString());
-			working.getComplementOf().add(aClass);
-			working.setType(Node_Types.TYPE_COMPLEMENT);
-		}
-		*/
 	}
 
 	private Set<OWLClass> retrieveMainUnit(List<Set<OWLClass>> elementList, OWLEntity entity) {

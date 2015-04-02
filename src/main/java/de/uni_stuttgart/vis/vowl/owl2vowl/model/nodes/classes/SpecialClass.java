@@ -26,6 +26,9 @@ public class SpecialClass extends BaseClass {
 		complementOf = new ArrayList<BaseNode>();
 	}
 
+	/**
+	 * @return A list of nodes which are the main nodes of which this is the complement.
+	 */
 	public List<BaseNode> getComplementOf() {
 		return complementOf;
 	}
