@@ -79,7 +79,7 @@ public class BaseEntity {
 	}
 
 	public void setComment(String comment) {
-		this.comment = comment;
+		comments.put(Vowl_Lang.LANG_DEFAULT, comment);
 	}
 
 	public String getType() {
