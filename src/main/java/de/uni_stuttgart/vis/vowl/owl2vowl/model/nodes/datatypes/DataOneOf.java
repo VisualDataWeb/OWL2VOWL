@@ -22,6 +22,7 @@ public class DataOneOf extends BaseDatatype {
 		oneOf = new ArrayList<BaseNode>();
 		setName("Data One Of");
 		setID();
+		setComment("Dummy implementation. Not the real extracted element because not supported currently.");
 	}
 
 	public List<BaseNode> getOneOf() {

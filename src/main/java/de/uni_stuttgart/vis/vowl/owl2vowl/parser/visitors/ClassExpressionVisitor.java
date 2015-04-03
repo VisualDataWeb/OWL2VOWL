@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.SpecialClass;
@@ -51,9 +52,13 @@ public class ClassExpressionVisitor implements OWLClassExpressionVisitor {
 				BaseNode baseNode = information.getMergedMap().get(iri);
 				baseNode.getExistingComplements().add(target);
 				target.getComplementOf().add(baseNode);
+				target.setType(Node_Types.TYPE_COMPLEMENT);
+			} else {
+				// Visited object and target are the same so do not set complement from the object itself.
+				// e.q. Visited object Class1 and the target is Class1. Class1 is not the complement of itself!
 			}
 		} else {
-			//TODO
+			// TODO What to do if complement operand is anonymous?
 		}
 
 	}

@@ -21,7 +21,7 @@ public class DisjointUnion extends BaseEntity {
 
 	public DisjointUnion() {
 		disjointness = new HashSet<BaseNode>();
-
+		setName("anonymous");
 	}
 
 	public DisjointUnion(BaseNode baseNode, Set<BaseNode> disjointness) {

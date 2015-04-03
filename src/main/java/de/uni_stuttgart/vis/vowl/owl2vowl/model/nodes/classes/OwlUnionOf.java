@@ -11,6 +11,7 @@ public class OwlUnionOf extends SpecialClass {
 	public OwlUnionOf() {
 		super();
 		setType(Node_Types.TYPE_UNION);
+		setName("anonymous");
 	}
 
 	public void addUnion(BaseNode node) {
