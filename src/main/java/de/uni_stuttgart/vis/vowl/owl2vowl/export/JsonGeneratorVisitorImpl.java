@@ -63,7 +63,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 
 		entityAttributes.put("id", entity.getId());
 		entityAttributes.put("label", entity.getLabels());
-		entityAttributes.put("uri", entity.getIri());
+		entityAttributes.put("iri", entity.getIri());
 		entityAttributes.put("comment", entity.getComments());
 		entityAttributes.put("isDefinedBy", entity.getDefinedBy());
 		entityAttributes.put("owlVersion", entity.getOwlVersion());
