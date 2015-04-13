@@ -194,7 +194,6 @@ public class Main {
 		externalOntologies.add(ExportNames.EXPORT_PERSONAS);
 		externalOntologies.add(ExportNames.EXPORT_GOOD_RELATIONS);
 		externalOntologies.add(ExportNames.EXPORT_SIOC);
-		externalOntologies.add(ExportNames.EXPORT_DOAP);
 		externalOntologies.add(ExportNames.EXPORT_ONTOVIBE);
 
 		for (String externalOntology : externalOntologies) {
