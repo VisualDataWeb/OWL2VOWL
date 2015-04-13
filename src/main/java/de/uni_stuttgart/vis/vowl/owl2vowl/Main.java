@@ -10,7 +10,6 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.ConsoleExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.Exporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.FileExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ExportNames;
-import de.uni_stuttgart.vis.vowl.owl2vowl.util.ProjectInformations;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
@@ -194,7 +193,6 @@ public class Main {
 		externalOntologies.add(ExportNames.EXPORT_PERSONAS);
 		externalOntologies.add(ExportNames.EXPORT_GOOD_RELATIONS);
 		externalOntologies.add(ExportNames.EXPORT_SIOC);
-		externalOntologies.add(ExportNames.EXPORT_DOAP);
 		externalOntologies.add(ExportNames.EXPORT_ONTOVIBE);
 
 		for (String externalOntology : externalOntologies) {

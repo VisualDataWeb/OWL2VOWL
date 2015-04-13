@@ -44,7 +44,6 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		return failure;
 	}
 
-	@Override
 	public void visit(BaseEntity entity) {
 		entityJson.put("id", entity.getId());
 		entityJson.put("type", entity.getType());
@@ -73,7 +72,6 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		entityAttributes.put("annotations", entity.getAnnotations());
 	}
 
-	@Override
 	public void visit(BaseEdge entity) {
 		if (entity.getDomain() == null || entity.getRange() == null) {
 			failure = true;
@@ -84,7 +82,6 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		entityAttributes.put("range", entity.getRange().getId());
 	}
 
-	@Override
 	public void visit(BaseProperty entity) {
 		List<Object> equivalent = new ArrayList<Object>();
 		List<Object> subProperty = new ArrayList<Object>();
@@ -135,63 +132,51 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		}
 	}
 
-	@Override
 	public void visit(TypeOfProperty entity) {
 
 	}
 
-	@Override
 	public void visit(DisjointProperty entity) {
 
 	}
 
-	@Override
 	public void visit(OwlDatatypeProperty entity) {
 
 	}
 
-	@Override
 	public void visit(OwlObjectProperty entity) {
 
 	}
 
-	@Override
 	public void visit(SubClassProperty entity) {
 
 	}
 
-	@Override
 	public void visit(BaseNode entity) {
 
 	}
 
-	@Override
 	public void visit(BaseClass entity) {
 		entityAttributes.put("instances", entity.getNumberOfIndividuals());
 		entityAttributes.put("individuals", entity.getIndividuals());
 	}
 
-	@Override
 	public void visit(ExternalClass entity) {
 
 	}
 
-	@Override
 	public void visit(OwlClass entity) {
 
 	}
 
-	@Override
 	public void visit(OwlComplementOf entity) {
 
 	}
 
-	@Override
 	public void visit(OwlDeprecatedClass entity) {
 
 	}
 
-	@Override
 	public void visit(OwlEquivalentClass entity) {
 		List<Object> equivalent = new ArrayList<Object>();
 
@@ -202,32 +187,26 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		entityAttributes.put("equivalent", equivalent);
 	}
 
-	@Override
 	public void visit(OwlIntersectionOf entity) {
 
 	}
 
-	@Override
 	public void visit(OwlThing entity) {
 
 	}
 
-	@Override
 	public void visit(OwlUnionOf entity) {
 
 	}
 
-	@Override
 	public void visit(RdfsClass entity) {
 
 	}
 
-	@Override
 	public void visit(RdfsResource entity) {
 
 	}
 
-	@Override
 	public void visit(SpecialClass entity) {
 		List<Object> union = new ArrayList<Object>();
 		List<Object> intersection = new ArrayList<Object>();
@@ -250,17 +229,14 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		entityAttributes.put("complement", complement);
 	}
 
-	@Override
 	public void visit(BaseDatatype entity) {
 
 	}
 
-	@Override
 	public void visit(RdfsDatatype entity) {
 
 	}
 
-	@Override
 	public void visit(RdfsLiteral entity) {
 
 	}

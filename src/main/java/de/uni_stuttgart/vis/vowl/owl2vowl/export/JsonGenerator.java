@@ -182,7 +182,7 @@ public class JsonGenerator {
 		// Apply header
 		header.put("languages", mapData.getAvailableLanguages());
 		header.put("title", info.getLanguageToTitle());
-		header.put("uri", info.getIri());
+		header.put("iri", info.getIri());
 		header.put("version", info.getVersion());
 		header.put("author", info.getAuthor());
 		header.put("description", info.getLanguageToDescription());
