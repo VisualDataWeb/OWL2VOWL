@@ -63,9 +63,6 @@
 								<copy file="${project.build.directory}\owl2vowl.zip"
 								      toFile="${project.basedir}\release\owl2vowl.zip"
 								      overwrite="true"/>
-								<copy file="${project.basedir}\src\main\php\converter.php"
-								      toFile="${project.basedir}\release\converter.php"
-								      overwrite="true"/>
 							</tasks>
 						</configuration>
 						<goals>
