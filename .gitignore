@@ -1,0 +1,13 @@
+# Maven build directory
+/target
+
+# IntelliJ files
+*.iml
+.idea/
+
+# Eclipse files
+.project
+.classpath
+
+# Release directory
+/release
