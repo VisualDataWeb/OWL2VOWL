@@ -37,5 +37,15 @@ Use any of the input parameters together with the `-echo` flag: `java -jar owl2v
 Development
 -----------
 
+### First steps
 The development of the OWL2VOWL converter is quite simple. The only important is to have `maven` installed. It will load all dependencies automatically. If there might occur some problems with the dependencies refreshing the dependencies might solve this problem.
-To build the jar simple execute `mvn package`. This will build a `jar` file and also a `zip` file containing the jar, README and the license files.
+
+### Build the jar
+To build the jar simple execute `mvn package`. This will build two `jar` files in the `target`-directory. The file `owl2vowl.jar` contains all necessary dependencies to be executable. The other `jar` only contains the compiled source code. There will also be a `zip` file created containing the `owl2vowl.jar`, README and the license files.
+
+### Running in IDE
+It would be a pain always building the jar only to test some new implemented stuff. We included a possiblity to running the conversion directly with the IDE. For this you need to change the `Main.java` class.
+
+Change the field `CONVERT_ONE = false` to `CONVERT_ONE = true`. Now you can work with the `convertOneOntology`-method to convert those ontologies you would like to test with. Some ontologies for testing you can also find in the `Ontology_Path.java`.
+
+BUT if you want to create the `jar` you have to change the field back to `CONVERT_ONE = false` otherwise it will still only execute the `convertOneOntology`-method.
