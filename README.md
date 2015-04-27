@@ -33,3 +33,9 @@ Run owl2vowl with the additional `-dependencies` parameter: `java -jar owl2vowl.
 Use any of the input parameters together with the `-echo` flag: `java -jar owl2vowl.jar -echo -iri "[Ontology IRI]"`
 
 **Example**: `java -jar owl2vowl.jar -iri "http://ontovibe.visualdataweb.org" -echo`
+
+Development
+-----------
+
+The development of the OWL2VOWL converter is quite simple. The only important is to have `maven` installed. It will load all dependencies automatically. If there might occur some problems with the dependencies refreshing the dependencies might solve this problem.
+To build the jar simple execute `mvn package`. This will build a `jar` file and also a `zip` file containing the jar, README and the license files.
