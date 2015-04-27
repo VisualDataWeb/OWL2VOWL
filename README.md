@@ -39,6 +39,7 @@ Development
 
 ### First steps
 The development of the OWL2VOWL converter is quite simple. The only important is to have `maven` installed. It will load all dependencies automatically. If there might occur some problems with the dependencies refreshing the dependencies might solve this problem.
+OWL2VOWL is compiled with Java 6 so you have to use the `JDK 6` for compiling.
 
 ### Build the jar
 To build the jar simple execute `mvn package`. This will build two `jar` files in the `target`-directory. The file `owl2vowl.jar` contains all necessary dependencies to be executable. The other `jar` only contains the compiled source code. There will also be a `zip` file created containing the `owl2vowl.jar`, README and the license files.
