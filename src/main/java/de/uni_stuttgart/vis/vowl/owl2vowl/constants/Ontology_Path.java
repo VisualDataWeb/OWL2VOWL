@@ -4,7 +4,7 @@ public class Ontology_Path {
 
 	// Local
 	public static final String PATH_VARIABLE =
-			System.getProperty("user.dir") + "/OWL2VOWL/ontologies/";
+			System.getProperty("user.dir") + "/ontologies/";
 	public static final String IMARINE = PATH_VARIABLE + "marinetloimarine.owl";
 	public static final String MARINE = PATH_VARIABLE + "marinetlo.owl";
 	public static final String MUSIC = PATH_VARIABLE + "musicontology.rdfs";
@@ -21,6 +21,7 @@ public class Ontology_Path {
 	public static final String STACK = PATH_VARIABLE + "StackExchange.ttl";
 	public static final String TAGONT = PATH_VARIABLE + "tagont.owl";
 	public static final String DRAMMAR = PATH_VARIABLE + "Drammar_NunnaryScene_Optimized_Rules.owl";
+	public static final String DISJOINT_NULL_POINTER = PATH_VARIABLE + "temp_simple.ttl";
 
 	// External
 	public static final String EXT_GEONAMES = "http://www.geonames.org/ontology/ontology_v3.1.rdf";
