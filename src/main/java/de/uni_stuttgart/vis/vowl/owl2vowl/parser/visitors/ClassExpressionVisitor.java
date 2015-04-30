@@ -6,8 +6,10 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Node_Types;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.SpecialClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
@@ -48,6 +50,14 @@ public class ClassExpressionVisitor implements OWLClassExpressionVisitor {
 		if (!ce.getOperand().isAnonymous()) {
 			OWLClass owlClass = ce.getOperand().asOWLClass();
 			String iri = owlClass.getIRI().toString();
+
+			// Create new thing if owlThing is the operand.
+			if (iri.equals(Standard_Iris.OWL_THING_CLASS_URI)) {
+				OwlThing owlThing = new OwlThing();
+				iri = owlThing.getIri();
+				information.getThingMap().put(iri, owlThing);
+			}
+
 			if (!target.getIri().equals(iri)) {
 				BaseNode baseNode = information.getMergedMap().get(iri);
 				baseNode.getExistingComplements().add(target);

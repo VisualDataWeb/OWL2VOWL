@@ -15,6 +15,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlEquivalentClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.OwlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.SpecialClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
@@ -111,7 +112,24 @@ public class ProcessUnit {
 		List<BaseNode> disjoints = currentClass.getDisjoints();
 
 		for (OWLClassExpression o : axiomParser.getDisjoints(entity)) {
-			disjoints.add(mapData.getClassMap().get(o.getClassesInSignature().iterator().next().getIRI().toString()));
+			String iri = o.getClassesInSignature().iterator().next().getIRI().toString();
+			BaseClass disjointClass;
+
+			// Create new thing if disjoint is a thing.
+			if (iri.equals(Standard_Iris.OWL_THING_CLASS_URI)) {
+				OwlThing thing = new OwlThing();
+				mapData.getThingMap().put(iri, thing);
+				disjointClass = thing;
+			} else {
+				disjointClass = mapData.getClassMap().get(iri);
+			}
+
+			if (disjointClass == null) {
+				logger.error("Retrieved disjoint class is null for iri: " + iri);
+				continue;
+			}
+
+			disjoints.add(disjointClass);
 		}
 
 		for (BaseNode i : disjoints) {
