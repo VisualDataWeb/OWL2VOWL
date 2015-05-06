@@ -10,9 +10,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.export.types;
  */
 public class ConsoleExporter implements Exporter {
 	@Override
-	public Object write(String text) {
+	public void write(String text) {
 		System.out.println(text);
-
-		return true;
 	}
 }

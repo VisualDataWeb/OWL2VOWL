@@ -11,9 +11,9 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.export.types;
 public interface Exporter {
 
 	/**
-	 * Writes the passed string into a specific target or returns a specific object.
+	 * Writes the passed string into a specific target.
 	 *
 	 * @param text The generated text.
 	 */
-	Object write(String text) throws Exception;
+	void write(String text) throws Exception;
 }

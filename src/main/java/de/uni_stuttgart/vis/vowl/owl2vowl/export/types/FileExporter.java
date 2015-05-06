@@ -23,7 +23,7 @@ public class FileExporter implements Exporter {
 	}
 
 	@Override
-	public Object write(String text) throws IOException {
+	public void write(String text) throws IOException {
 		int i = 0;
 
 		while (destinationFile.exists()) {
@@ -36,8 +36,6 @@ public class FileExporter implements Exporter {
 		FileWriter writer = new FileWriter(destinationFile);
 		writer.write(text);
 		writer.close();
-
-		return true;
 	}
 
 }
