@@ -3,7 +3,7 @@
  *
  */
 
-package de.uni_stuttgart.vis.vowl.owl2vowl.export;
+package de.uni_stuttgart.vis.vowl.owl2vowl.export.types;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -23,7 +23,7 @@ public class FileExporter implements Exporter {
 	}
 
 	@Override
-	public void write(String text) throws IOException {
+	public Object write(String text) throws IOException {
 		int i = 0;
 
 		while (destinationFile.exists()) {
@@ -36,6 +36,8 @@ public class FileExporter implements Exporter {
 		FileWriter writer = new FileWriter(destinationFile);
 		writer.write(text);
 		writer.close();
+
+		return true;
 	}
 
 }
