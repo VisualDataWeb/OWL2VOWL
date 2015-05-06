@@ -6,9 +6,9 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Ontology_Path;
-import de.uni_stuttgart.vis.vowl.owl2vowl.export.ConsoleExporter;
-import de.uni_stuttgart.vis.vowl.owl2vowl.export.Exporter;
-import de.uni_stuttgart.vis.vowl.owl2vowl.export.FileExporter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.ConsoleExporter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.FileExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ExportNames;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FilenameUtils;

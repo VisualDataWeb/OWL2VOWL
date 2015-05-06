@@ -3,7 +3,7 @@
  *
  */
 
-package de.uni_stuttgart.vis.vowl.owl2vowl.export;
+package de.uni_stuttgart.vis.vowl.owl2vowl.export.types;
 
 import org.apache.commons.io.FilenameUtils;
 

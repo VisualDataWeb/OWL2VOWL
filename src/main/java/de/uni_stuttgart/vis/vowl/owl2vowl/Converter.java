@@ -5,7 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.export.Exporter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGenerator;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.GeneralParser;
@@ -18,6 +18,7 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.metrics.*;
 import org.semanticweb.owlapi.model.*;
 
+import java.net.URI;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -66,6 +67,30 @@ public class Converter {
 		logger.info("Ontologies loaded! Main Ontology: " + logOntoName);
 	}
 
+	public Converter(OWLOntology ontology, String ontologyIRI) {
+		this.ontology = ontology;
+
+		if (ontologyIRI == null) {
+			ontologyInformation = new OntologyInformation(ontology, IRI.create(URI.create("")));
+		} else {
+			ontologyInformation = new OntologyInformation(ontology, IRI.create(URI.create(ontologyIRI)));
+		}
+	}
+
+	public Converter(OWLOntology ontology) {
+		String iri = "";
+
+		if (!ontology.isAnonymous()) {
+			iri = ontology.getOntologyID().getOntologyIRI().getFragment();
+		} else {
+			logger.info("Ontology IRI is anonymous. Use loaded URI/IRI instead.");
+		}
+
+		this.ontology = ontology;
+		ontologyInformation = new OntologyInformation(ontology, IRI.create(URI.create(iri)));
+
+	}
+
 	private void initializeAPI() {
 		logger.info("Initializing OWL API ...");
 		ontologyManager = OWLManager.createOWLOntologyManager();
@@ -73,7 +98,9 @@ public class Converter {
 		logger.info("OWL API initialized!");
 	}
 
-
+	/**
+	 * Executes the complete conversion to the webvowl compatible json format.
+	 */
 	public void convert() {
 		mapData = new MapData();
 
@@ -103,6 +130,11 @@ public class Converter {
 		processor.processAxioms();
 	}
 
+	/**
+	 * Exports the generated data according to the implemented {@link Exporter}.
+	 * @param exporter The exporter.
+	 * @throws Exception Any exception during json generation.
+	 */
 	public void export(Exporter exporter) throws Exception {
 		jsonGenerator.execute(mapData);
 		jsonGenerator.export(exporter);
