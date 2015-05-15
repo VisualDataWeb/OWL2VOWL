@@ -6,12 +6,39 @@
 	<artifactId>OWL2VOWL</artifactId>
 	<version>0.2.0</version>
 	<packaging>jar</packaging>
-	<name>OWL2VOWL</name>
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>Owl2Vowl is an ontology converter used to convert the given ontology to a json
+		format that is used in the WebVOWL visualization. See
+		https://github.com/VisualDataWeb/WebVOWL or http://vowl.visualdataweb.org/.
+	</description>
+	<url>https://github.com/VisualDataWeb/OWL2VOWL</url>
+
+	<developers>
+		<developer>
+			<name>Eduard Marbach</name>
+			<email>nerelexus@gmail.com</email>
+			<organization>University Stuttgart</organization>
+			<organizationUrl>https://github.com/BlackDark</organizationUrl>
+		</developer>
+		<developer>
+			<name>Vincent Link</name>
+			<email>mail@linkvt.de</email>
+			<organization>University Stuttgart</organization>
+			<organizationUrl>https://github.com/linkvt</organizationUrl>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://www.opensource.org/licenses/mit-license.php</url>
+		</license>
+	</licenses>
 
 	<scm>
-		<connection>scm:git:C:\Users\Eduard\Documents\Hiwi\VOWL\OWL2VOWL</connection>
-		<tag>HEAD</tag>
-		<url>C:\Users\Eduard\Documents\Hiwi\VOWL\OWL2VOWL</url>
+		<connection>scm:git:git@github.com:juven/git-demo.git</connection>
+		<developerConnection>scm:git:git@github.com:VisualDataWeb/OWL2VOWL.git</developerConnection>
+		<url>git@github.com:VisualDataWeb/OWL2VOWL.git</url>
 	</scm>
 
 	<build>
@@ -22,6 +49,32 @@
 			</resource>
 		</resources>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
