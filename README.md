@@ -1,4 +1,4 @@
-OWL2VOWL converter
+OWL2VOWL converter [![Build Status](https://travis-ci.org/VisualDataWeb/OWL2VOWL.svg)](https://travis-ci.org/VisualDataWeb/OWL2VOWL)
 ==================
 
 Requirements
