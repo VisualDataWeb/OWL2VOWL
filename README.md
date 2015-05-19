@@ -4,6 +4,7 @@ OWL2VOWL converter [![Build Status](https://travis-ci.org/VisualDataWeb/OWL2VOWL
 Requirements
 ------------
 *   at least Java 6
+*   Maven
 
 
 Instructions
@@ -42,7 +43,8 @@ The development of the OWL2VOWL converter is quite simple. The only important is
 OWL2VOWL is compiled with Java 6 so you have to use the `JDK 6` for compiling.
 
 ### Build the jar
-To build the jar simple execute `mvn package`. This will build two `jar` files in the `target`-directory. The file `owl2vowl.jar` contains all necessary dependencies to be executable. The other `jar` only contains the compiled source code. There will also be a `zip` file created containing the `owl2vowl.jar`, README and the license files.
+To build the jar simple execute `mvn package`. The build `jar` only contains the compiled source code. 
+To build the jar which can be executed standalone you have to use package with parameter: `mvn package -Denv=standalone`. This will build the file `owl2vowl.jar` containing all necessary dependencies to be executable. There will also be a `zip` file created containing the `owl2vowl.jar`, README and the license files.
 
 ### Running in IDE
 It would be a pain always building the jar only to test some new implemented stuff. We included a possiblity to running the conversion directly with the IDE. For this you need to change the `Main.java` class.
