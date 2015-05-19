@@ -63,21 +63,6 @@
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.4</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<executions>
 					<execution>
@@ -88,7 +73,6 @@
 					</execution>
 				</executions>
 			</plugin>
-			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -96,62 +80,6 @@
 				<configuration>
 					<source>1.6</source>
 					<target>1.6</target>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.5</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<archive>
-						<manifest>
-							<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.Main</mainClass>
-						</manifest>
-						<manifestEntries>
-							<Version>${project.version}</Version>
-							<Authors>Vincent Link, Steffen Lohmann, Eduard Marbach</Authors>
-						</manifestEntries>
-					</archive>
-					<finalName>owl2vowl</finalName>
-					<appendAssemblyId>false</appendAssemblyId>
-					<descriptors>
-						<!-- Create .zip -->
-						<descriptor>src/assembly/jar-with-dependencies.xml</descriptor>
-						<descriptor>src/assembly/release_version.xml</descriptor>
-					</descriptors>
-				</configuration>
-			</plugin>
-			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>1.8</version>
-				<executions>
-					<execution>
-						<id>default-cli</id>
-						<configuration>
-							<tasks>
-								<copy file="${project.build.directory}\owl2vowl.zip" toFile="${project.basedir}\release\owl2vowl.zip" overwrite="true" />
-							</tasks>
-						</configuration>
-						<goals>
-							<goal>run</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-plugin</artifactId>
-				<version>1.9.2</version>
-				<configuration>
-					<connectionType>connection</connectionType>
-					<message>Update to ${project.version}</message>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -222,6 +150,90 @@
 								</goals>
 							</execution>
 						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>standalone-release</id>
+			<activation>
+				<property>
+					<name>env</name>
+					<value>standalone</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.4</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<artifactId>maven-assembly-plugin</artifactId>
+						<version>2.5</version>
+						<executions>
+							<execution>
+								<phase>package</phase>
+								<goals>
+									<goal>single</goal>
+								</goals>
+							</execution>
+						</executions>
+						<configuration>
+							<archive>
+								<manifest>
+									<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.Main</mainClass>
+								</manifest>
+								<manifestEntries>
+									<Version>${project.version}</Version>
+									<Authors>Vincent Link, Steffen Lohmann, Eduard Marbach</Authors>
+								</manifestEntries>
+							</archive>
+							<finalName>owl2vowl</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+							<descriptors>
+								<descriptor>src/assembly/jar-with-dependencies.xml</descriptor>
+								<descriptor>src/assembly/release_version.xml</descriptor>
+							</descriptors>
+						</configuration>
+					</plugin>
+					<plugin>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<version>1.8</version>
+						<executions>
+							<execution>
+								<id>default-cli</id>
+								<configuration>
+									<tasks>
+										<copy file="${project.build.directory}\owl2vowl.zip"
+										      toFile="${project.basedir}\release\owl2vowl.zip"
+										      overwrite="true"/>
+									</tasks>
+								</configuration>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-scm-plugin</artifactId>
+						<version>1.9.2</version>
+						<configuration>
+							<connectionType>connection</connectionType>
+							<message>Update to ${project.version}</message>
+						</configuration>
 					</plugin>
 				</plugins>
 			</build>
