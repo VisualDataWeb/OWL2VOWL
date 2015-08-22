@@ -51,7 +51,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	protected List<String> retrieveRanges(OWLObjectProperty currentProperty) {
 		List<String> ranges = new ArrayList<String>();
 
-		for (OWLClassExpression range : currentProperty.getRanges(this.ontology)) {
+		for (OWLClassExpression range : currentProperty.getRanges(getSearchableOntologies())) {
 			if (!range.isAnonymous()) {
 				ranges.add(range.asOWLClass().getIRI().toString());
 			} else {
@@ -74,7 +74,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	protected List<String> retrieveRanges(OWLDataProperty currentProperty) {
 		List<String> ranges = new ArrayList<String>();
 
-		for (OWLDataRange range : currentProperty.getRanges(ontology)) {
+		for (OWLDataRange range : currentProperty.getRanges(getSearchableOntologies())) {
 			if (range.isDatatype()) {
 				ranges.add(range.asOWLDatatype().getIRI().toString());
 			} else if (range.getDataRangeType().toString().equals(Node_Types.KEY_TYPE_DATA_ONE_OF)) {
@@ -97,7 +97,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	protected List<String> retrieveDomains(OWLPropertyExpression currentProperty) {
 		List<String> domains = new ArrayList<String>();
 
-		for (Object domainObject : currentProperty.getDomains(ontology)) {
+		for (Object domainObject : currentProperty.getDomains(getSearchableOntologies())) {
 			OWLClassExpression domain = (OWLClassExpression) domainObject;
 
 			if (!domain.isAnonymous()) {
@@ -157,7 +157,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	}
 
 	protected List<String> retrieveSubProperties(OWLPropertyExpression property) {
-		Set subProperties = property.getSubProperties(ontology);
+		Set subProperties = property.getSubProperties(getSearchableOntologies());
 		List<String> iriList = new ArrayList<String>();
 
 		if (subProperties.isEmpty()) {
@@ -174,7 +174,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	}
 
 	protected List<String> retrieveSuperProperties(OWLPropertyExpression property) {
-		Set subProperties = property.getSuperProperties(ontology);
+		Set subProperties = property.getSuperProperties(getSearchableOntologies());
 		List<String> iriList = new ArrayList<String>();
 
 		if (subProperties.isEmpty()) {
@@ -191,7 +191,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	}
 
 	protected List<String> retrieveDisjoints(OWLPropertyExpression property) {
-		Set subProperties = property.getDisjointProperties(ontology);
+		Set subProperties = property.getDisjointProperties(getSearchableOntologies());
 		List<String> iriList = new ArrayList<String>();
 
 		if (subProperties.isEmpty()) {
@@ -207,7 +207,7 @@ public abstract class GeneralPropertyParser extends GeneralParser {
 	}
 
 	protected List<String> retrieveEquivalents(OWLPropertyExpression property) {
-		Set subProperties = property.getEquivalentProperties(ontology);
+		Set subProperties = property.getEquivalentProperties(getSearchableOntologies());
 		List<String> iriList = new ArrayList<String>();
 
 		// TODO Do not use external properties as base. But if there are equivalent external properties only?

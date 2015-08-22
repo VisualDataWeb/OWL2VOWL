@@ -31,6 +31,7 @@ public class GeneralParser {
 	protected OWLOntology ontology;
 	protected OWLDataFactory factory;
 	protected MapData mapData;
+	protected Set<OWLOntology> ontologyWithDirectImports;
 	protected String rdfsLabel = "";
 	protected String rdfsComment = "";
 	protected String rdfsIsDefinedBy = "";
@@ -46,10 +47,17 @@ public class GeneralParser {
 		this.ontologyInformation = ontologyInformation;
 		this.mapData = mapData;
 		ontology = ontologyInformation.getOntology();
+		ontologyWithDirectImports = new HashSet<OWLOntology>();
+		ontologyWithDirectImports.add(ontology);
+		ontologyWithDirectImports.addAll(ontology.getDirectImports());
 		factory = ontologyInformation.getFactory();
 		ontologyManager = ontologyInformation.getManager();
 		languageToLabel = new HashMap<String, String>();
 		annotations = new HashMap<String, List<Annotation>>();
+	}
+
+	protected Set<OWLOntology> getSearchableOntologies() {
+		return this.ontologyWithDirectImports;
 	}
 
 	public String getIri() {
