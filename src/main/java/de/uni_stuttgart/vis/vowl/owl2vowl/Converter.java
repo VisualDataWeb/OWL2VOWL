@@ -103,14 +103,13 @@ public class Converter {
 	 */
 	public void convert() {
 		mapData = new MapData();
+		ProcessUnit processor = new ProcessUnit(ontologyInformation, mapData);
+		GeneralParser parser = new GeneralParser(ontologyInformation, mapData);
 
 		Set<OWLClass> classes = ontology.getClassesInSignature();
 		Set<OWLDatatype> datatypes = ontology.getDatatypesInSignature();
 		Set<OWLObjectProperty> objectProperties = ontology.getObjectPropertiesInSignature();
 		Set<OWLDataProperty> dataProperties = ontology.getDataPropertiesInSignature();
-
-		ProcessUnit processor = new ProcessUnit(ontologyInformation, mapData);
-		GeneralParser parser = new GeneralParser(ontologyInformation, mapData);
 
 		/*
 		Parsing of the raw data gained from the OWL API. Will be transformed to useable data
@@ -118,16 +117,29 @@ public class Converter {
 		*/
 		parser.handleOntologyInfo();
 
-		parser.handleClass(classes);
-		processor.processClasses();
+		parser.handleClass(ontology.getClassesInSignature());
+		parser.handleObjectProperty(ontology.getObjectPropertiesInSignature());
+		parser.handleDatatypeProperty(ontology.getDataPropertiesInSignature());
 
 		//parseDatatypes(datatypes);
-		parser.handleObjectProperty(objectProperties);
-		parser.handleDatatypeProperty(dataProperties);
+
+		iterateImports(parser);
+
 		parseMetrics();
+		processor.processClasses();
 		//processor.processDatatypes();
 		processor.processProperties();
 		processor.processAxioms();
+	}
+
+	protected void iterateImports(GeneralParser parser) {
+		// Parsing for all directly imported ontologies.
+		// TODO what about not directly imported ontologies?
+		for (OWLOntology owlOntology : ontology.getDirectImports()) {
+			parser.handleClass(owlOntology.getClassesInSignature());
+			parser.handleObjectProperty(owlOntology.getObjectPropertiesInSignature());
+			parser.handleDatatypeProperty(owlOntology.getDataPropertiesInSignature());
+		}
 	}
 
 	/**
