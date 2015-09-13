@@ -9,7 +9,6 @@ public class RdfsLiteral extends BaseDatatype {
 
 	public RdfsLiteral() {
 		setType(Node_Types.TYPE_LITERAL);
-		setID();
 		getLabels().put(Vowl_Lang.LANG_DEFAULT, "Literal");
 		setIri(Standard_Iris.GENERIC_LITERAL_URI);
 	}

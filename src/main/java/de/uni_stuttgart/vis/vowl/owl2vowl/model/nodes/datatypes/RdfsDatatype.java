@@ -7,7 +7,6 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 public class RdfsDatatype extends BaseDatatype {
 	public RdfsDatatype() {
 		setType(Node_Types.TYPE_DATATYPE);
-		setID();
 	}
 
 	@Override
