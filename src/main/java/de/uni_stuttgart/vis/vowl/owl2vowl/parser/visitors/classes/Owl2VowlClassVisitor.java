@@ -10,19 +10,21 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.BaseEdge;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.*;
 
 /**
  *
  */
 public interface Owl2VowlClassVisitor {
+
+	// BASE
 	void visit(BaseEntity entity);
 
 	void visit(BaseEdge entity);
 
 	void visit(BaseProperty entity);
+
+	/* PROPERTIES */
 
 	void visit(TypeOfProperty entity);
 
@@ -34,6 +36,10 @@ public interface Owl2VowlClassVisitor {
 
 	void visit(SubClassProperty entity);
 
+
+	/* NODES */
+
+	// CLASSES
 	void visit(BaseNode entity);
 
 	void visit(BaseClass entity);
@@ -56,13 +62,26 @@ public interface Owl2VowlClassVisitor {
 
 	void visit(RdfsClass entity);
 
-	void visit(RdfsResource entity);
-
 	void visit(SpecialClass entity);
 
+	void visit(AllValuesFrom entity);
+
+	void visit(ObjectOneOf entity);
+
+	// DATATYPES
 	void visit(BaseDatatype entity);
+
+	void visit(RdfsResource entity);
 
 	void visit(RdfsDatatype entity);
 
 	void visit(RdfsLiteral entity);
+
+	void visit(DataComplementOf entity);
+
+	void visit(DataIntersectionOf entity);
+
+	void visit(DataOneOf entity);
+
+	void visit(DataUnionOf entity);
 }

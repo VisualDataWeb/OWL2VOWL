@@ -10,14 +10,13 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.BaseEdge;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.*;
 
 /**
  *
  */
 public class IriConverterVisitor implements Owl2VowlClassVisitor {
+
 	@Override
 	public void visit(BaseEntity entity) {
 
@@ -114,17 +113,27 @@ public class IriConverterVisitor implements Owl2VowlClassVisitor {
 	}
 
 	@Override
-	public void visit(RdfsResource entity) {
-
-	}
-
-	@Override
 	public void visit(SpecialClass entity) {
 
 	}
 
 	@Override
+	public void visit(AllValuesFrom entity) {
+
+	}
+
+	@Override
+	public void visit(ObjectOneOf entity) {
+
+	}
+
+	@Override
 	public void visit(BaseDatatype entity) {
+
+	}
+
+	@Override
+	public void visit(RdfsResource entity) {
 
 	}
 
@@ -135,6 +144,26 @@ public class IriConverterVisitor implements Owl2VowlClassVisitor {
 
 	@Override
 	public void visit(RdfsLiteral entity) {
+
+	}
+
+	@Override
+	public void visit(DataComplementOf entity) {
+
+	}
+
+	@Override
+	public void visit(DataIntersectionOf entity) {
+
+	}
+
+	@Override
+	public void visit(DataOneOf entity) {
+
+	}
+
+	@Override
+	public void visit(DataUnionOf entity) {
 
 	}
 }

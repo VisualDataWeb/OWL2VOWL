@@ -21,9 +21,9 @@ import java.util.Map;
  *
  */
 public interface JsonGeneratorVisitor extends Owl2VowlClassVisitor {
-	public Map<String, Object> getEntityJson();
+	Map<String, Object> getEntityJson();
 
-	public Map<String, Object> getEntityAttributes();
+	Map<String, Object> getEntityAttributes();
 
-	public boolean isFailure();
+	boolean isFailure();
 }
