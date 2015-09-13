@@ -15,6 +15,13 @@ import java.util.Set;
  * Abstract base class for all nodes like OwlClass, OwlDatatype etc.
  */
 public abstract class BaseNode extends BaseEntity {
+	// First parsing step
+	protected Set<String> stringComplementOf = new HashSet<String>();
+	protected Set<String> stringComplements = new HashSet<String>();
+	protected Set<String> stringUnionOf = new HashSet<String>();
+	protected Set<String> stringUnions = new HashSet<String>();
+	protected Set<String> stringIntersectionOf = new HashSet<String>();
+	protected Set<String> stringIntersections = new HashSet<String>();
 	private List<BaseNode> disjoints = new ArrayList<BaseNode>();
 	private List<BaseProperty> outGoingEdges = new ArrayList<BaseProperty>();
 	private List<BaseProperty> inGoingEdges = new ArrayList<BaseProperty>();
@@ -26,6 +33,30 @@ public abstract class BaseNode extends BaseEntity {
 	public BaseNode() {
 	}
 
+	public Set<String> getStringIntersections() {
+		return stringIntersections;
+	}
+
+	public Set<String> getStringIntersectionOf() {
+		return stringIntersectionOf;
+	}
+
+	public Set<String> getStringUnions() {
+		return stringUnions;
+	}
+
+	public Set<String> getStringUnionOf() {
+		return stringUnionOf;
+	}
+
+	public Set<String> getStringComplements() {
+		return stringComplements;
+	}
+
+	public Set<String> getStringComplementOf() {
+		return stringComplementOf;
+	}
+
 	public List<BaseNode> getDisjoints() {
 		return disjoints;
 	}
@@ -35,7 +66,6 @@ public abstract class BaseNode extends BaseEntity {
 	}
 
 	/**
-	 *
 	 * @return A list of properties which has this node as domain.
 	 */
 	public List<BaseProperty> getOutGoingEdges() {
@@ -43,7 +73,6 @@ public abstract class BaseNode extends BaseEntity {
 	}
 
 	/**
-	 *
 	 * @return A list of properties which has this node as range.
 	 */
 	public List<BaseProperty> getInGoingEdges() {

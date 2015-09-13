@@ -24,7 +24,7 @@ import java.util.List;
 /**
  */
 public class Main {
-	private static final boolean CONVERT_ONE = false;
+	private static final boolean CONVERT_ONE = true;
 	private static final boolean CONVERT_REQUIRED_ONTOLOGIES = false;
 	private static final String IRI_OPTION_NAME = "iri";
 	private static final String FILE_OPTION_NAME = "file";
@@ -215,6 +215,7 @@ public class Main {
 	private static void convertOneOntology() {
 		IRI fileIri = IRI.create(new File(Ontology_Path.BENCHMARK1));
 		IRI requiredIri = IRI.create(new File(Ontology_Path.BENCHMARK2));
+		IRI ontovibe = IRI.create(Ontology_Path.EXT_ONTOVIBE);
 
 		try {
 			Converter converter = new Converter(fileIri, Arrays.asList(requiredIri));

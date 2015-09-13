@@ -6,6 +6,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.container;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.BaseEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyInfo;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.containerElements.DisjointUnion;
@@ -37,6 +38,14 @@ public class MapData {
 	private Map<String, OwlUnionOf> unionMap = new MergeNodeMap<String, OwlUnionOf>(mergedMap);
 	private Map<String, OwlIntersectionOf> intersectionMap = new MergeNodeMap<String, OwlIntersectionOf>(mergedMap);
 	private Map<String, OwlComplementOf> complementMap = new MergeNodeMap<String, OwlComplementOf>(mergedMap);
+
+	public Map<String, ObjectOneOf> getObjectOneOfMap() {
+		return objectOneOfMap;
+	}
+
+	private Map<String, ObjectOneOf> objectOneOfMap = new MergeNodeMap<String, ObjectOneOf>(mergedMap);
+
+
 	private Map<String, BaseProperty> mergedProperties = new HashMap<String, BaseProperty>();
 	private Map<String, OwlObjectProperty> objectPropertyMap = new MergePropertyMap<String, OwlObjectProperty>(mergedProperties);
 	private Map<String, OwlDatatypeProperty> datatypePropertyMap = new MergePropertyMap<String, OwlDatatypeProperty>(mergedProperties);
@@ -55,6 +64,8 @@ public class MapData {
 	private OntologyMetric ontologyMetric = new OntologyMetric();
 	private Map<String, Map<String, List<OWLAxiom>>> entityToAxiom = new HashMap<String, Map<String, List<OWLAxiom>>>();
 	private Set<String> availableLanguages = new HashSet<String>();
+
+	private Map<String, Set<BaseEntity>> iriToEntity = new HashMap<String, Set<BaseEntity>>();
 
 	public MapData() {
 		// Default langauge always exists.
@@ -222,6 +233,10 @@ public class MapData {
 
 	public Map<String, BaseProperty> getRdfProperties() {
 		return rdfProperties;
+	}
+
+	public Map<String, Set<BaseEntity>> getIriToEntity() {
+		return iriToEntity;
 	}
 }
 

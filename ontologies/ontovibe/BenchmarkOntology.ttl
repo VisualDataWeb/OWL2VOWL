@@ -11,11 +11,11 @@
 
 # -- OWL Annotations
 
-	owl:versionInfo "2.0" ;
-	owl:versionIRI <http://ontovibe.visualdataweb.org/2.0> ;
+	owl:versionInfo "2.2" ;
+	owl:versionIRI <http://ontovibe.visualdataweb.org/2.2> ;
 	owl:imports <http://ontovibe.visualdataweb.org/2.0/imported> ;
-	owl:priorVersion <http://ontovibe.visualdataweb.org/1.0> ;
-	owl:backwardCompatibleWith <http://ontovibe.visualdataweb.org/1.0> ;
+	owl:priorVersion <http://ontovibe.visualdataweb.org/2.1> ;
+	owl:backwardCompatibleWith <http://ontovibe.visualdataweb.org/2.1> ;
 	owl:incompatibleWith <http://ontovibe.visualdataweb.org/minimal> ;
 
 # -- RDFS Annotations
@@ -30,7 +30,7 @@
 	dc:creator "Florian Haag" ;
 	dc:creator "Steffen Lohmann" ;
 	dc:contributor "Stefan Negru" ;	
-	dc:date "2015-01-16" ;
+	dc:date "2015-08-27" ;
 	dc:rights <http://creativecommons.org/licenses/by/4.0/> .
 	
 # -- Classes
@@ -40,27 +40,38 @@ this:PlainClass a owl:Class .
 this:DeprecatedClass a owl:Class ;
 	owl:deprecated true .
 
-this:Class1 a owl:Class ;
-	rdfs:subClassOf [
-		owl:onProperty this:classToClassProperty ;
-		owl:cardinality 3
-	].
+this:Class1 a owl:Class.
 
 this:ComplementClass a owl:Class ;
-	owl:complementOf this:Class1 .
+	owl:equivalentClass [
+		a owl:Class ;
+		owl:complementOf this:Class1
+	] .
 
 this:UnionClass a owl:Class ;
 	rdfs:comment "This is an English comment on a class expression."@en ;
-	owl:unionOf ( this:Class1 this:DeprecatedClass ).
+	owl:equivalentClass [
+		a owl:Class ;
+		owl:unionOf ( this:Class1 this:DeprecatedClass )
+	] .
 
 this:LargeUnionClass a owl:Class ;
-	owl:unionOf ( this:UnionClass other:ImportedClass this:PropertyOwner ).
+	owl:equivalentClass [
+		a owl:Class ;
+		owl:unionOf ( this:UnionClass other:ImportedClass this:PropertyOwner )
+	] .
 
 this:IntersectionClass a owl:Class ;
-	owl:intersectionOf ( this:Class1 this:DeprecatedClass ).
+	owl:equivalentClass [
+		a owl:Class ;
+		owl:intersectionOf ( this:Class1 this:DeprecatedClass )
+	] .
 
 this:LargeIntersectionClass a owl:Class ;
-	owl:intersectionOf ( this:UnionClass other:ImportedClass this:PropertyOwner ).
+	owl:equivalentClass [
+		a owl:Class ;
+		owl:intersectionOf ( this:UnionClass other:ImportedClass this:PropertyOwner )
+	] .
 
 this:DisjointUnionClass a owl:Class ;
 	owl:disjointUnionOf ( this:Class1 this:UnionClass ).
@@ -69,10 +80,16 @@ this:LargeDisjointUnionClass a owl:Class ;
 	owl:disjointUnionOf ( this:ComplementClass this:IntersectionClass other:DeprecatedImportedClass ).
 
 this:EnumerationClass a owl:Class ;
-	owl:oneOf ( this:MultiSubclassIndividual2 this:MultiSubclassIndividual3 ).
+	owl:equivalentClass [
+		a owl:Class ;
+		owl:oneOf ( this:MultiSubclassIndividual2 this:MultiSubclassIndividual3 )
+	] .
 
 this:LargeEnumerationClass a owl:Class ;
-	owl:oneOf ( this:MultiSubclassIndividual2 this:MultiSubclassIndividual3 this:AnotherIndividual ).
+	owl:equivalentClass [
+		a owl:Class ;
+		owl:oneOf ( this:MultiSubclassIndividual2 this:MultiSubclassIndividual3 this:AnotherIndividual )
+	] .
 
 this:AnonymousClassAnchor a owl:Class .
 
@@ -80,7 +97,7 @@ this:anonymousComplementClassProperty a owl:ObjectProperty ;
 	rdfs:domain this:AnonymousClassAnchor ;
 	rdfs:range [
 		a owl:Class ;
-		owl:complementOf this:Class1
+		owl:complementOf this:DeprecatedClass
 	].
 
 this:anonymousUnionClassProperty a owl:ObjectProperty ;
@@ -116,6 +133,10 @@ this:PropertyOwner a owl:Class ;
 		owl:onProperty this:dummyProperty ;
 		owl:minQualifiedCardinality 3 ;
 		owl:onClass this:Subclass
+	] ;
+	rdfs:subClassOf [
+		owl:onProperty this:classToClassProperty ;
+		owl:cardinality 3
 	].
 
 this:MultiPropertyOwner a owl:Class ;
@@ -128,11 +149,11 @@ this:DisjointClass a owl:Class ;
 	rdfs:label "disjoint class"@en ;
 	rdfs:label "disjunkte Klasse"@de ;
 	rdfs:subClassOf [
-		owl:onProperty this:dummyProperty ;
+		owl:onProperty this:oppositeDummyProperty ;
 		owl:minCardinality 5
 	] ;
 	rdfs:subClassOf [
-		owl:onProperty this:dummyProperty ;
+		owl:onProperty this:oppositeDummyProperty ;
 		owl:maxCardinality 15
 	].
 
@@ -238,13 +259,22 @@ this:DivisibleByFiveEnumeration a rdfs:Datatype ;
 	].
 
 this:UnionDatatype a rdfs:Datatype ;
-	owl:unionOf ( this:DivisibleByTwoEnumeration this:DivisibleByFiveEnumeration ).
+	owl:equivalentClass [
+		a rdfs:Datatype ;
+		owl:unionOf ( this:DivisibleByTwoEnumeration this:DivisibleByFiveEnumeration )
+	] .
 
 this:IntersectionDatatype a rdfs:Datatype ;
-	owl:intersectionOf ( this:DivisibleByTwoEnumeration this:DivisibleByFiveEnumeration ).
+	owl:equivalentClass [
+		a rdfs:Datatype ;
+		owl:intersectionOf ( this:DivisibleByTwoEnumeration this:DivisibleByFiveEnumeration )
+	] .
 
 this:ComplementDatatype a rdfs:Datatype ;
-	owl:complementOf this:DivisibleByTwoEnumeration .
+	owl:equivalentClass [
+		a rdfs:Datatype ;
+		owl:datatypeComplementOf this:DivisibleByTwoEnumeration
+	] .
 
 # -- Properties
 

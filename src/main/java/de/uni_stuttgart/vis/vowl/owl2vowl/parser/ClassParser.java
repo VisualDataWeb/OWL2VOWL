@@ -11,6 +11,8 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.Vowl_Prop_Attr;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.BaseClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ElementFinder;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors.TestObject;
 import de.uni_stuttgart.vis.vowl.owl2vowl.pipes.FormatText;
 import org.semanticweb.owlapi.model.*;
 

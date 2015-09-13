@@ -5,13 +5,15 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGenerator;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.GeneralParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.ProcessUnit;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.MapData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ElementFinder;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.visitors.classes.ClassAxiomVisitor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -21,7 +23,6 @@ import org.semanticweb.owlapi.model.*;
 import java.net.URI;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The {@link de.uni_stuttgart.vis.vowl.owl2vowl.Converter} loads the passed ontologies and has
@@ -106,10 +107,31 @@ public class Converter {
 		ProcessUnit processor = new ProcessUnit(ontologyInformation, mapData);
 		GeneralParser parser = new GeneralParser(ontologyInformation, mapData);
 
-		Set<OWLClass> classes = ontology.getClassesInSignature();
-		Set<OWLDatatype> datatypes = ontology.getDatatypesInSignature();
-		Set<OWLObjectProperty> objectProperties = ontology.getObjectPropertiesInSignature();
-		Set<OWLDataProperty> dataProperties = ontology.getDataPropertiesInSignature();
+		/*
+		for (OWLDatatype owlDatatype : ontology.getDatatypesInSignature()) {
+			BaseDatatype datatype = owlDatatype.accept(new DataVisitor(owlDatatype, ontologyInformation, new ElementFinder(mapData)));
+			testSet.add(datatype);
+		}
+		*/
+
+		for (OWLClass owlClass : ontology.getClassesInSignature()) {
+			System.out.println(owlClass);
+			for (OWLAxiom owlAxiom : owlClass.getReferencingAxioms(ontology)) {
+				System.out.println(owlAxiom);
+				owlAxiom.accept(new ClassAxiomVisitor(owlClass, owlAxiom, ontologyInformation, new ElementFinder(mapData)));
+			}
+			System.out.println();
+		}
+
+		System.out.println(ontology.getClassesInSignature().size());
+		if (true) {
+			System.exit(0);
+		}
+		/*
+		for (String s : mapData.getMergedMap().keySet()) {
+			System.out.println(s);
+		}
+		*/
 
 		/*
 		Parsing of the raw data gained from the OWL API. Will be transformed to useable data
