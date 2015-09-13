@@ -18,51 +18,51 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsLiteral;
  *
  */
 public interface Owl2VowlClassVisitor {
-	public void visit(BaseEntity entity);
+	void visit(BaseEntity entity);
 
-	public void visit(BaseEdge entity);
+	void visit(BaseEdge entity);
 
-	public void visit(BaseProperty entity);
+	void visit(BaseProperty entity);
 
-	public void visit(TypeOfProperty entity);
+	void visit(TypeOfProperty entity);
 
-	public void visit(DisjointProperty entity);
+	void visit(DisjointProperty entity);
 
-	public void visit(OwlDatatypeProperty entity);
+	void visit(OwlDatatypeProperty entity);
 
-	public void visit(OwlObjectProperty entity);
+	void visit(OwlObjectProperty entity);
 
-	public void visit(SubClassProperty entity);
+	void visit(SubClassProperty entity);
 
-	public void visit(BaseNode entity);
+	void visit(BaseNode entity);
 
-	public void visit(BaseClass entity);
+	void visit(BaseClass entity);
 
-	public void visit(ExternalClass entity);
+	void visit(ExternalClass entity);
 
-	public void visit(OwlClass entity);
+	void visit(OwlClass entity);
 
-	public void visit(OwlComplementOf entity);
+	void visit(OwlComplementOf entity);
 
-	public void visit(OwlDeprecatedClass entity);
+	void visit(OwlDeprecatedClass entity);
 
-	public void visit(OwlEquivalentClass entity);
+	void visit(OwlEquivalentClass entity);
 
-	public void visit(OwlIntersectionOf entity);
+	void visit(OwlIntersectionOf entity);
 
-	public void visit(OwlThing entity);
+	void visit(OwlThing entity);
 
-	public void visit(OwlUnionOf entity);
+	void visit(OwlUnionOf entity);
 
-	public void visit(RdfsClass entity);
+	void visit(RdfsClass entity);
 
-	public void visit(RdfsResource entity);
+	void visit(RdfsResource entity);
 
-	public void visit(SpecialClass entity);
+	void visit(SpecialClass entity);
 
-	public void visit(BaseDatatype entity);
+	void visit(BaseDatatype entity);
 
-	public void visit(RdfsDatatype entity);
+	void visit(RdfsDatatype entity);
 
-	public void visit(RdfsLiteral entity);
+	void visit(RdfsLiteral entity);
 }
