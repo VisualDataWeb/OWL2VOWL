@@ -29,7 +29,7 @@ public class Owl2Vowl {
 	 * @param ontologyIri The iri of the ontology. Should not be null!
 	 */
 	public Owl2Vowl(OWLOntology ontology, String ontologyIri) {
-		converter = new Converter(ontology, ontologyIri);
+		converter = null;
 	}
 
 	/**
