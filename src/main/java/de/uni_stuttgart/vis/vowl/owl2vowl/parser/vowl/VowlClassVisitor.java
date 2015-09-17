@@ -33,7 +33,7 @@ public class VowlClassVisitor extends OWLClassExpressionVisitorAdapter {
 	public void visit(OWLObjectIntersectionOf ce) {
 		Set<OWLClassExpression> operands = ce.getOperands();
 
-		AbstractNode node = vowlData.getNodeForIri(referencedClass.getIRI());
+		AbstractNode node = vowlData.getClassForIri(referencedClass.getIRI());
 
 		for (OWLClassExpression operand : operands) {
 			if (!operand.isAnonymous()) {

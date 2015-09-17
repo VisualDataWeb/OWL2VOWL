@@ -12,7 +12,7 @@ import org.semanticweb.owlapi.model.IRI;
  *
  */
 public class VowlObjectProperty extends AbstractProperty {
-	protected VowlObjectProperty(IRI iri) {
+	public VowlObjectProperty(IRI iri) {
 		// TODO
 		super(iri, "TODO");
 	}
