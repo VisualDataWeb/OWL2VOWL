@@ -108,22 +108,38 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 
 	@Override
 	public void visit(VowlLiteral vowlLiteral) {
-		// TODO
+		Map<String, Object> object = new HashMap<>();
+		object.put("id", vowlData.getIdForEntity(vowlLiteral));
+		object.put("type", vowlLiteral.getType());
+
+		datatype.add(object);
 	}
 
 	@Override
 	public void visit(VowlDatatype vowlDatatype) {
-		// TODO
+		Map<String, Object> object = new HashMap<>();
+		object.put("id", vowlData.getIdForEntity(vowlDatatype));
+		object.put("type", vowlDatatype.getType());
+
+		datatype.add(object);
 	}
 
 	@Override
 	public void visit(VowlObjectProperty vowlObjectProperty) {
-		// TODO
+		Map<String, Object> object = new HashMap<>();
+		object.put("id", vowlData.getIdForEntity(vowlObjectProperty));
+		object.put("type", vowlObjectProperty.getType());
+
+		objectProperty.add(object);
 	}
 
 	@Override
 	public void visit(VowlDatatypeProperty vowlDatatypeProperty) {
-		// TODO
+		Map<String, Object> object = new HashMap<>();
+		object.put("id", vowlData.getIdForEntity(vowlDatatypeProperty));
+		object.put("type", vowlDatatypeProperty.getType());
+
+		objectProperty.add(object);
 	}
 
 	protected List<String> getListWithIds(Collection<IRI> iriList) {

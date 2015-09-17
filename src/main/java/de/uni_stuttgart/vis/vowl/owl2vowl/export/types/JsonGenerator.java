@@ -41,7 +41,7 @@ public class JsonGenerator {
 		processHeader();
 		processMetrics();
 
-		convertEntities(vowlData.getClassMap());
+		convertEntities(vowlData.getEntityMap());
 	}
 
 	public void export(Exporter exporter) throws Exception {
