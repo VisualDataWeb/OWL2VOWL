@@ -14,9 +14,7 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.semanticweb.owlapi.model.IRI;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
@@ -50,7 +48,7 @@ public class JsonGenerator {
 		ObjectMapper mapper = new ObjectMapper();
 		mapper.configure(SerializationConfig.Feature.WRITE_NULL_MAP_VALUES, false);
 		mapper.enable(SerializationConfig.Feature.INDENT_OUTPUT);
-		//invoke(root);
+		invoke(root);
 		exporter.write(mapper.writeValueAsString(root));
 	}
 
@@ -67,5 +65,90 @@ public class JsonGenerator {
 
 	public void processMetrics() {
 		// TODO implement
+	}
+
+
+	/**
+	 * Used to remove empty collections out of the json.
+	 *
+	 * @param jsonObj Object to be invoked.
+	 */
+	private void invoke(Map<?, Object> jsonObj) {
+		Iterator<?> it = jsonObj.keySet().iterator();
+
+		while (it.hasNext()) {
+			Object key = it.next();
+
+			Object o = jsonObj.get(key);
+
+			if (o instanceof Map) {
+				Map<?, Object> casted = (Map<?, Object>) o;
+
+				if (casted.isEmpty()) {
+					it.remove();
+				} else {
+					invoke(casted);
+				}
+			}
+
+			if (o instanceof Collection) {
+				Collection<Object> casted = (Collection<Object>) o;
+
+				if (casted.isEmpty()) {
+					it.remove();
+				} else {
+					invoke(casted);
+				}
+			}
+
+			if (o instanceof String) {
+				String casted = (String) o;
+
+				if (casted.isEmpty()) {
+					it.remove();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Used to remove empty collections out of the json.
+	 *
+	 * @param jsonObj Object to be invoked.
+	 */
+	private void invoke(Collection<Object> jsonObj) {
+		Iterator<Object> it = jsonObj.iterator();
+
+		while (it.hasNext()) {
+			Object o = it.next();
+
+			if (o instanceof Map) {
+				Map<?, Object> casted = (Map<?, Object>) o;
+
+				if (casted.size() == 0) {
+					it.remove();
+				} else {
+					invoke(casted);
+				}
+			}
+
+			if (o instanceof Collection) {
+				Collection<Object> casted = (Collection<Object>) o;
+
+				if (casted.size() == 0) {
+					it.remove();
+				} else {
+					invoke(casted);
+				}
+			}
+
+			if (o instanceof String) {
+				String casted = (String) o;
+
+				if (casted.isEmpty()) {
+					it.remove();
+				}
+			}
+		}
 	}
 }
