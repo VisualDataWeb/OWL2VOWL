@@ -48,4 +48,9 @@ public abstract class AbstractEntity implements HasEquivalents {
 	public void addEquivalentIri(IRI iri) {
 		equivalents.add(iri);
 	}
+
+	@Override
+	public String toString() {
+		return iri.toString();
+	}
 }
