@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.export;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlClass;
@@ -66,7 +67,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		// TODO
 		thingAttributeObject.put("id", vowlData.getIdForEntity(vowlThing));
 		thingAttributeObject.put("label", 0);
-		thingAttributeObject.put("iri", vowlThing.getIri().toString());
+		thingAttributeObject.put("iri", Standard_Iris.OWL_THING_CLASS_URI);
 
 		classAttribute.add(thingAttributeObject);
 	}
