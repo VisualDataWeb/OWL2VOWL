@@ -1,20 +1,11 @@
-/*
- * Entity.java
- *
- */
-
 package de.uni_stuttgart.vis.vowl.owl2vowl.model;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- *
- */
 public abstract class AbstractEntity implements HasEquivalents {
 
 	private IRI iri;
@@ -34,28 +25,22 @@ public abstract class AbstractEntity implements HasEquivalents {
 		return iri;
 	}
 
-	public void accept(JsonGeneratorVisitor visitor) {
-		visitor.visit(this);
-	}
-
 	@Override
-	public Set<IRI> getEquivalentsIris() {
+	public Set<IRI> getEquivalentElements() {
 		return Collections.unmodifiableSet(equivalents);
 	}
 
-	public void addEquivalentIri(IRI iri) {
+	@Override
+	public void addEquivalentElement(IRI iri) {
 		equivalents.add(iri);
 	}
 
 	@Override
-	public String toString() {
-		return iri.toString();
-	}
-
-	@Override
 	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
 
 		AbstractEntity that = (AbstractEntity) o;
 
@@ -66,5 +51,10 @@ public abstract class AbstractEntity implements HasEquivalents {
 	@Override
 	public int hashCode() {
 		return iri != null ? iri.hashCode() : 0;
+	}
+
+	@Override
+	public String toString() {
+		return iri.toString();
 	}
 }

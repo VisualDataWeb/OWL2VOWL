@@ -11,12 +11,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
+ * Contains all data WebVOWL needs.
  */
 public class VowlData {
+
 	private Set<AbstractClass> classes = new HashSet<>();
 
 	public void addClass(AbstractClass vowlClass) {
 		classes.add(vowlClass);
 	}
+
 }
