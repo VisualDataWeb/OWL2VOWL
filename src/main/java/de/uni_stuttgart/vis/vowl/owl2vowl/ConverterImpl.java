@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Ontology_Path;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.ConsoleExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.JsonGenerator;
@@ -16,6 +17,8 @@ import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
 
+import java.io.File;
+
 /**
  *
  */
@@ -26,7 +29,8 @@ public class ConverterImpl implements Converter {
 
 	public static void main(String[] args) throws OWLOntologyCreationException {
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		OWLOntology ontology = manager.loadOntology(IRI.create("http://ontovibe.visualdataweb.org/2.0"));
+		manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.BENCHMARK2));
+		OWLOntology ontology = manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.BENCHMARK1));
 
 		VowlData vowlData = new VowlData();
 
