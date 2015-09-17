@@ -1,12 +1,13 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlElementVisitor;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class AbstractEntity implements HasEquivalents {
+public abstract class AbstractEntity implements HasEquivalents, VowlVisitable {
 
 	private IRI iri;
 	private String type;
