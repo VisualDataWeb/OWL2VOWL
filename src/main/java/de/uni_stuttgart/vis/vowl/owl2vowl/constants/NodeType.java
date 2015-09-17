@@ -1,6 +1,6 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.constants;
 
-public class Node_Types {
+public class NodeType {
 	public static final String TYPE_CLASS = "owl:Class";
 	public static final String TYPE_RDFSCLASS = "rdfs:Class";
 	public static final String TYPE_EQUIVALENT = "owl:equivalentClass";
