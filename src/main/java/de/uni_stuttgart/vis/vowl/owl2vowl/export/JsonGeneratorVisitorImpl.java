@@ -13,8 +13,10 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.VowlDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.VowlLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
+import org.semanticweb.owlapi.model.IRI;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -96,6 +98,10 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		classAttributeObject.put("subClasses", 0);
 		classAttributeObject.put("superClasses", 0);
 		classAttributeObject.put("annotations", 0);
+		classAttributeObject.put("union", getListWithIds(vowlClass.getElementsOfUnion()));
+		classAttributeObject.put("intersection", getListWithIds(vowlClass.getElementOfIntersection()));
+		// TODO can a complement not be a list?
+		//lassAttributeObject.put("complement", 0);
 
 		classAttribute.add(classAttributeObject);
 	}
@@ -118,5 +124,11 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	@Override
 	public void visit(VowlDatatypeProperty vowlDatatypeProperty) {
 		// TODO
+	}
+
+	protected List<String> getListWithIds(Collection<IRI> iriList) {
+		List<String> idList = iriList.stream().map(iri -> String.valueOf(vowlData.getIdForIri(iri))).collect(Collectors.toList());
+
+		return idList;
 	}
 }
