@@ -6,10 +6,13 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.export;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.VowlDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.VowlLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlDatatypeProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
 
 import java.util.*;
 
@@ -95,5 +98,25 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		classAttributeObject.put("annotations", 0);
 
 		classAttribute.add(classAttributeObject);
+	}
+
+	@Override
+	public void visit(VowlLiteral vowlLiteral) {
+		// TODO
+	}
+
+	@Override
+	public void visit(VowlDatatype vowlDatatype) {
+		// TODO
+	}
+
+	@Override
+	public void visit(VowlObjectProperty vowlObjectProperty) {
+		// TODO
+	}
+
+	@Override
+	public void visit(VowlDatatypeProperty vowlDatatypeProperty) {
+		// TODO
 	}
 }

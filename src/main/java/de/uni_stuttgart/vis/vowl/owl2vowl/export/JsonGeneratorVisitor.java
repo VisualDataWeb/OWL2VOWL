@@ -10,5 +10,5 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlElementVisitor;
 /**
  *
  */
-public interface JsonGeneratorVisitor extends VowlElementVisitor{
+public interface JsonGeneratorVisitor extends VowlElementVisitor {
 }
