@@ -56,7 +56,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	@Override
 	public void visit(VowlThing vowlThing) {
 		Map<String, Object> thingObject = new HashMap<>();
-		thingObject.put("id", 0);
+		thingObject.put("id", vowlData.getIdForEntity(vowlThing));
 		thingObject.put("type", vowlThing.getType());
 
 		_class.add(thingObject);
@@ -64,7 +64,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		Map<String, Object> thingAttributeObject = new HashMap<>();
 
 		// TODO
-		thingAttributeObject.put("id", 0);
+		thingAttributeObject.put("id", vowlData.getIdForEntity(vowlThing));
 		thingAttributeObject.put("label", 0);
 		thingAttributeObject.put("iri", vowlThing.getIri().toString());
 
@@ -74,7 +74,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	@Override
 	public void visit(VowlClass vowlClass) {
 		Map<String, Object> classObject = new HashMap<>();
-		classObject.put("id", 0);
+		classObject.put("id", vowlData.getIdForEntity(vowlClass));
 		classObject.put("type", vowlClass.getType());
 
 		_class.add(classObject);
@@ -82,7 +82,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		Map<String, Object> classAttributeObject = new HashMap<>();
 
 		// TODO
-		classAttributeObject.put("id", 0);
+		classAttributeObject.put("id", vowlData.getIdForEntity(vowlClass));
 		classAttributeObject.put("label", 0);
 		classAttributeObject.put("iri", vowlClass.getIri().toString());
 		classAttributeObject.put("comment", 0);
