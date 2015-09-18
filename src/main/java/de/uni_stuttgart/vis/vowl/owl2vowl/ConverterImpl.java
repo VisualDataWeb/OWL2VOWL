@@ -9,19 +9,19 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Ontology_Path;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.ConsoleExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.JsonGenerator;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.OwlClassVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.OwlEquivalentsVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
 
 import java.io.File;
+import java.util.Collection;
 
-/**
- *
- */
 public class ConverterImpl implements Converter {
 
 	public ConverterImpl() {
@@ -38,6 +38,8 @@ public class ConverterImpl implements Converter {
 		walker.walkStructure(new OwlClassVisitor(vowlData));
 
 		processClasses(ontology, vowlData);
+
+		postParsing(vowlData);
 
 		testExport(vowlData);
 	}
@@ -58,6 +60,16 @@ public class ConverterImpl implements Converter {
 			for (OWLClassAxiom owlClassAxiom : ontology.getAxioms(owlClass, Imports.INCLUDED)) {
 				owlClassAxiom.accept(new OwlEquivalentsVisitor(vowlData, owlClass));
 			}
+		}
+	}
+
+	public static void postParsing(VowlData vowlData) {
+		 setCorrectType(vowlData.getEntityMap().values());
+	}
+
+	public static void setCorrectType(Collection<AbstractEntity> entities) {
+		for (AbstractEntity entity : entities) {
+			entity.accept(new TypeSetter());
 		}
 	}
 
