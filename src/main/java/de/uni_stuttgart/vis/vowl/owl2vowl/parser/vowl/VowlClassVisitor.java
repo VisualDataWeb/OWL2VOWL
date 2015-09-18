@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.AbstractNode;
 import org.apache.logging.log4j.LogManager;
@@ -38,6 +39,7 @@ public class VowlClassVisitor extends OWLClassExpressionVisitorAdapter {
 		for (OWLClassExpression operand : operands) {
 			if (!operand.isAnonymous()) {
 				node.addElementToIntersection(operand.asOWLClass().getIRI());
+				node.addAttribute(VowlAttribute.INTERSECTION);
 			} else {
 				// TODO Anonymous undefined behaviour
 				logger.info("Anonymous exists in intersections.");
