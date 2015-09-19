@@ -3,9 +3,9 @@
  *
  */
 
-package de.uni_stuttgart.vis.vowl.owl2vowl.model;
+package de.uni_stuttgart.vis.vowl.owl2vowl.model.data;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.AbstractNode;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.AbstractClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.AbstractDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlDatatypeProperty;
@@ -18,14 +18,29 @@ import java.util.*;
  * Contains all data WebVOWL needs.
  */
 public class VowlData {
-
-	private Map<AbstractEntity, Integer> entityToId = new HashMap<>();
+	private Map<AbstractEntity, String> entityToId = new HashMap<>();
 	private Map<IRI, AbstractEntity> entityMap = new HashMap<>();
 	private Map<IRI, AbstractClass> classMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, AbstractDatatype> datatypeMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, VowlObjectProperty> objectPropertyMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, VowlDatatypeProperty> datatypePropertyMap = new AllEntityMap<>(entityMap);
 	private Set<String> languages = new HashSet<>();
+	private VowlSearcher searcher;
+	private VowlIriGenerator iriGenerator = new VowlIriGenerator();
+	private VowlGenerator generator;
+
+	public VowlData() {
+		searcher = new VowlSearcher(this);
+		generator = new VowlGenerator(this);
+	}
+
+	public VowlGenerator getGenerator() {
+		return generator;
+	}
+
+	public VowlSearcher getSearcher() {
+		return searcher;
+	}
 
 	public Map<IRI, AbstractEntity> getEntityMap() {
 		return Collections.unmodifiableMap(entityMap);
@@ -47,7 +62,7 @@ public class VowlData {
 		return Collections.unmodifiableMap(classMap);
 	}
 
-	public AbstractNode getClassForIri(IRI iri) {
+	public AbstractClass getClassForIri(IRI iri) {
 		if (classMap.containsKey(iri)) {
 			return classMap.get(iri);
 		} else {
@@ -87,13 +102,13 @@ public class VowlData {
 		}
 	}
 
-	public int getIdForIri(IRI iri) {
+	public String getIdForIri(IRI iri) {
 		return getIdForEntity(getEntityForIri(iri));
 	}
 
-	public int getIdForEntity(AbstractEntity entity) {
+	public String getIdForEntity(AbstractEntity entity) {
 		if (!entityToId.containsKey(entity)) {
-			entityToId.put(entity, entityToId.keySet().size());
+			entityToId.put(entity, "" + entityToId.keySet().size());
 		}
 
 		return entityToId.get(entity);
@@ -123,6 +138,18 @@ public class VowlData {
 		languages.add(language);
 	}
 
+	public IRI getNewIri() {
+		return iriGenerator.generate();
+	}
+
+	private class VowlIriGenerator {
+		private String iriPrefix = "http://owl2vowl.de#";
+		private int generations = 0;
+
+		public IRI generate() {
+			return IRI.create(iriPrefix + generations++);
+		}
+	}
 }
 
 class AllEntityMap<K, V extends AbstractEntity> extends HashMap<K, V> {
