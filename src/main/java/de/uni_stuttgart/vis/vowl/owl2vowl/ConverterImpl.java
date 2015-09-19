@@ -12,6 +12,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.JsonGenerator;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.OwlClassVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.OwlEquivalentsVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -31,17 +32,28 @@ public class ConverterImpl implements Converter {
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
 		manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.BENCHMARK2));
 		OWLOntology ontology = manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.BENCHMARK1));
-
 		VowlData vowlData = new VowlData();
 
-		OWLOntologyWalker walker = new OWLOntologyWalker(ontology.getImportsClosure());
-		walker.walkStructure(new OwlClassVisitor(vowlData));
-
-		processClasses(ontology, vowlData);
-
-		postParsing(vowlData);
+		// TODO Vielleicht mithilfe von Klassenannotationen Unterteilung schaffen und dann die on the fly die annotierten Klassen holen und ausführen
+		preParsing(ontology, vowlData);
+		parsing(ontology, vowlData);
+		postParsing(vowlData, manager);
 
 		testExport(vowlData);
+	}
+
+	private static void preParsing(OWLOntology ontology, VowlData vowlData) {
+		OWLOntologyWalker walker = new OWLOntologyWalker(ontology.getImportsClosure());
+		walker.walkStructure(new OwlClassVisitor(vowlData));
+	}
+
+	private static void parsing(OWLOntology ontology, VowlData vowlData) {
+		processClasses(ontology, vowlData);
+	}
+
+	private static void postParsing(VowlData vowlData, OWLOntologyManager manager) {
+		setCorrectType(vowlData.getEntityMap().values());
+		parseAnnotations(vowlData, manager);
 	}
 
 	private static void testExport(VowlData vowlData) {
@@ -55,7 +67,7 @@ public class ConverterImpl implements Converter {
 		}
 	}
 
-	public static void processClasses(OWLOntology ontology, VowlData vowlData) {
+	private static void processClasses(OWLOntology ontology, VowlData vowlData) {
 		for (OWLClass owlClass : ontology.getClassesInSignature()) {
 			for (OWLClassAxiom owlClassAxiom : ontology.getAxioms(owlClass, Imports.INCLUDED)) {
 				owlClassAxiom.accept(new OwlEquivalentsVisitor(vowlData, owlClass));
@@ -63,8 +75,9 @@ public class ConverterImpl implements Converter {
 		}
 	}
 
-	public static void postParsing(VowlData vowlData) {
-		 setCorrectType(vowlData.getEntityMap().values());
+	private static void parseAnnotations(VowlData vowlData, OWLOntologyManager manager) {
+		AnnotationParser annotationParser = new AnnotationParser(vowlData, manager);
+		annotationParser.parse();
 	}
 
 	public static void setCorrectType(Collection<AbstractEntity> entities) {

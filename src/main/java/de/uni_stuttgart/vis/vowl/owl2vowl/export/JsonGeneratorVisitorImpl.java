@@ -7,6 +7,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.export;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.VowlDatatype;
@@ -89,7 +90,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 
 		// TODO
 		classAttributeObject.put("id", vowlData.getIdForEntity(vowlClass));
-		classAttributeObject.put("label", 0);
+		classAttributeObject.put("label", getLabelsFromAnnotations(vowlClass.getAnnotations().getLabels()));
 		classAttributeObject.put("iri", vowlClass.getIri().toString());
 		classAttributeObject.put("comment", 0);
 		classAttributeObject.put("isDefinedBy", 0);
@@ -146,5 +147,15 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		List<String> idList = iriList.stream().map(iri -> String.valueOf(vowlData.getIdForIri(iri))).collect(Collectors.toList());
 
 		return idList;
+	}
+
+	protected Map<String, String> getLabelsFromAnnotations(Collection<Annotation> annotations) {
+		Map<String, String> languageToValue = new HashMap<>();
+
+		for (Annotation annotation : annotations) {
+			languageToValue.put(annotation.getLanguage(), annotation.getValue());
+		}
+
+		return languageToValue;
 	}
 }
