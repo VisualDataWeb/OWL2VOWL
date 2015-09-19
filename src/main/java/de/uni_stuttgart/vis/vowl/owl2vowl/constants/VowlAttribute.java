@@ -15,7 +15,10 @@ public enum VowlAttribute {
 	FUNCTIONAL("functional"),
 	INVERSE_FUNCTIONAL("inverse functional"),
 	SYMMETRIC("symmetric"),
-	EQUIVALENT("equivalent");
+	EQUIVALENT("equivalent"),
+	IRREFLEXIVE("irreflexive"),
+	ASYMMETRIC("asymmetric"),
+	REFLEXIVE("reflexive");
 
 	private final String value;
 
