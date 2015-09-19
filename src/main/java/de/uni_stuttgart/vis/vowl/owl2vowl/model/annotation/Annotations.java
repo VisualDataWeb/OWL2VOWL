@@ -7,10 +7,14 @@ import java.util.*;
  */
 public class Annotations {
 	private List<Annotation> labels = new ArrayList<>();
-
+	private List<Annotation> comments = new ArrayList<>();
 	private List<Annotation> description = new ArrayList<>();
 	private boolean deprecated = false;
 	private Map<String, List<Annotation>> identifierToAnnotation = new HashMap<>();
+
+	public List<Annotation> getComments() {
+		return Collections.unmodifiableList(comments);
+	}
 
 	public List<Annotation> getDescription() {
 		return Collections.unmodifiableList(description);
@@ -56,6 +60,11 @@ public class Annotations {
 
 			if (annotation.getIdentifier().equals(AnnotationIdentifierEnum.DESCRIPTION.getValue())) {
 				description.add(annotation);
+				continue;
+			}
+
+			if (annotation.getIdentifier().equals(AnnotationIdentifierEnum.COMMENT.getValue())) {
+				comments.add(annotation);
 				continue;
 			}
 

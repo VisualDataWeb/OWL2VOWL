@@ -92,13 +92,14 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		classAttributeObject.put("id", vowlData.getIdForEntity(vowlClass));
 		classAttributeObject.put("label", getLabelsFromAnnotations(vowlClass.getAnnotations().getLabels()));
 		classAttributeObject.put("iri", vowlClass.getIri().toString());
-		classAttributeObject.put("comment", 0);
+		classAttributeObject.put("description", getLabelsFromAnnotations(vowlClass.getAnnotations().getDescription()));
+		classAttributeObject.put("comment", getLabelsFromAnnotations(vowlClass.getAnnotations().getComments()));
 		classAttributeObject.put("isDefinedBy", 0);
 		classAttributeObject.put("owlVersion", 0);
 		classAttributeObject.put("attributes", 0);
 		classAttributeObject.put("subClasses", 0);
 		classAttributeObject.put("superClasses", 0);
-		classAttributeObject.put("annotations", 0);
+		classAttributeObject.put("annotations", vowlClass.getAnnotations().getIdentifierToAnnotation());
 		classAttributeObject.put("union", getListWithIds(vowlClass.getElementsOfUnion()));
 		classAttributeObject.put("intersection", getListWithIds(vowlClass.getElementOfIntersection()));
 		// TODO can a complement not be a list?
