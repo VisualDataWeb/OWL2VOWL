@@ -14,26 +14,26 @@ import java.util.*;
  *
  */
 public abstract class AbstractProperty extends AbstractEntity {
-	private Set<IRI> domains = new HashSet<>();
-	private Set<IRI> ranges = new HashSet<>();
+	private IRI domain = null;
+	private IRI range = null;
 
 	protected AbstractProperty(IRI iri, String type) {
 		super(iri, type);
 	}
 
-	public Set<IRI> getDomains() {
-		return Collections.unmodifiableSet(domains);
+	public IRI getDomain() {
+		return domain;
 	}
 
-	public Set<IRI> getRanges() {
-		return Collections.unmodifiableSet(ranges);
+	public IRI getRange() {
+		return range;
 	}
 
-	public void addDomain(IRI iri) {
-		domains.add(iri);
+	public void setDomain(IRI iri) {
+		domain = iri;
 	}
 
-	public void addRange(IRI iri) {
-		ranges.add(iri);
+	public void setRange(IRI iri) {
+		range = iri;
 	}
 }

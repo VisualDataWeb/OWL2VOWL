@@ -136,8 +136,8 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		objectProperty.add(object);
 
 		Map<String, Object> propertyAttributes = new HashMap<>();
-		propertyAttributes.put("domain", getListWithIds(vowlObjectProperty.getDomains()));
-		propertyAttributes.put("range", getListWithIds(vowlObjectProperty.getRanges()));
+		propertyAttributes.put("domain", vowlData.getIdForIri(vowlObjectProperty.getDomain()));
+		propertyAttributes.put("range", vowlData.getIdForIri(vowlObjectProperty.getRange()));
 		propertyAttributes.put("id", vowlData.getIdForEntity(vowlObjectProperty));
 		propertyAttributes.put("label", getLabelsFromAnnotations(vowlObjectProperty.getAnnotations().getLabels()));
 		propertyAttributes.put("iri", vowlObjectProperty.getIri().toString());

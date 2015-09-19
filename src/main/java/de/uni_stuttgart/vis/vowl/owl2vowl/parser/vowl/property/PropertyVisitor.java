@@ -1,9 +1,12 @@
-package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
+package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.AbstractClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.NullClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.DomainRangeVisitor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;
 
@@ -11,6 +14,7 @@ import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;
  * @author Eduard
  */
 public class PropertyVisitor extends OWLObjectVisitorAdapter {
+	private Logger logger = LogManager.getLogger(PropertyVisitor.class);
 	private final VowlData vowlData;
 	private final OWLObjectProperty owlObjectProperty;
 
@@ -22,7 +26,7 @@ public class PropertyVisitor extends OWLObjectVisitorAdapter {
 	@Override
 	protected void handleDefault(OWLObject axiom) {
 		super.handleDefault(axiom);
-		System.out.println("Missing axiom: " + axiom);
+		logger.info("Missing axiom: " + axiom);
 	}
 
 	@Override
@@ -45,21 +49,33 @@ public class PropertyVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLObjectPropertyDomainAxiom axiom) {
+		VowlObjectProperty prop = vowlData.getObjectPropertyForIri(owlObjectProperty.getIRI());
+
 		if (axiom.getDomain().isAnonymous()){
-			axiom.getDomain().accept(new DomainRangeVisitor(owlObjectProperty, vowlData));
+			AbstractClass anonymClass = axiom.getDomain().accept(new DomainRangeVisitor(owlObjectProperty, vowlData));
+			if (!(anonymClass instanceof NullClass)) {
+				prop.setDomain(anonymClass.getIri());
+			} else {
+				logger.info("Skipped anonymous object domain: " + axiom.getDomain());
+			}
 		} else {
-			VowlObjectProperty prop = vowlData.getObjectPropertyForIri(owlObjectProperty.getIRI());
-			prop.addDomain(axiom.getDomain().asOWLClass().getIRI());
+			prop.setDomain(axiom.getDomain().asOWLClass().getIRI());
 		}
 	}
 
 	@Override
 	public void visit(OWLObjectPropertyRangeAxiom axiom) {
+		VowlObjectProperty prop = vowlData.getObjectPropertyForIri(owlObjectProperty.getIRI());
+
 		if (axiom.getRange().isAnonymous()){
-			axiom.getRange().accept(new DomainRangeVisitor(owlObjectProperty, vowlData));
+			AbstractClass anonymClass = axiom.getRange().accept(new DomainRangeVisitor(owlObjectProperty, vowlData));
+			if (!(anonymClass instanceof NullClass)) {
+				prop.setRange(anonymClass.getIri());
+			} else {
+				logger.info("Skipped anonymous object range: " + axiom.getRange());
+			}
 		} else {
-			VowlObjectProperty prop = vowlData.getObjectPropertyForIri(owlObjectProperty.getIRI());
-			prop.addRange(axiom.getRange().asOWLClass().getIRI());
+			prop.setRange(axiom.getRange().asOWLClass().getIRI());
 		}
 	}
 

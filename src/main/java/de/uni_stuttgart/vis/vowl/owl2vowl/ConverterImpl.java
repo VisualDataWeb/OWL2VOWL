@@ -8,12 +8,14 @@ package de.uni_stuttgart.vis.vowl.owl2vowl;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Ontology_Path;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.ConsoleExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.FileExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.JsonGenerator;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.OwlClassVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.OwlEquivalentsVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.PropertyVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
@@ -49,6 +51,19 @@ public class ConverterImpl implements Converter {
 
 	private static void parsing(OWLOntology ontology, VowlData vowlData) {
 		processClasses(ontology, vowlData);
+		processObjectProperties(ontology, vowlData);
+	}
+
+	private static void processObjectProperties(OWLOntology ontology, VowlData vowlData) {
+		for (OWLObjectProperty owlObjectProperty : ontology.getObjectPropertiesInSignature()) {
+			System.out.println(owlObjectProperty);
+			for (OWLObjectPropertyAxiom owlObjectPropertyAxiom : ontology.getAxioms(owlObjectProperty, Imports.INCLUDED)) {
+				owlObjectPropertyAxiom.accept(new PropertyVisitor(vowlData, owlObjectProperty));
+				System.out.println("\t" + owlObjectPropertyAxiom);
+			}
+			System.out.println();
+		}
+
 	}
 
 	private static void postParsing(VowlData vowlData, OWLOntologyManager manager) {
@@ -57,7 +72,7 @@ public class ConverterImpl implements Converter {
 	}
 
 	private static void testExport(VowlData vowlData) {
-		Exporter exporter = new ConsoleExporter();
+		Exporter exporter = new FileExporter(new File("muto.json"));
 		JsonGenerator generator = new JsonGenerator();
 		try {
 			generator.execute(vowlData);
