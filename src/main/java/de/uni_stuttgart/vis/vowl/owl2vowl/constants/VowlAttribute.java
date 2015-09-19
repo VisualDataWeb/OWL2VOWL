@@ -1,5 +1,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.constants;
 
+import org.codehaus.jackson.annotate.JsonValue;
+
 public enum VowlAttribute {
 	INTERSECTION("intersection"),
 	OBJECT("object"),
@@ -15,14 +17,15 @@ public enum VowlAttribute {
 	SYMMETRIC("symmetric"),
 	EQUIVALENT("equivalent");
 
-	private final String intersection;
+	private final String value;
 
-	VowlAttribute(String intersection) {
+	VowlAttribute(String value) {
 
-		this.intersection = intersection;
+		this.value = value;
 	}
 
-	public String getIntersection() {
-		return intersection;
+	@JsonValue
+	public String getValue() {
+		return value;
 	}
 }
