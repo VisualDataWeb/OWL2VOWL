@@ -12,9 +12,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
 import org.semanticweb.owlapi.model.IRI;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Contains all data WebVOWL needs.
@@ -27,6 +25,7 @@ public class VowlData {
 	private Map<IRI, AbstractDatatype> datatypeMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, VowlObjectProperty> objectPropertyMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, VowlDatatypeProperty> datatypePropertyMap = new AllEntityMap<>(entityMap);
+	private Set<String> languages = new HashSet<>();
 
 	public Map<IRI, AbstractEntity> getEntityMap() {
 		return Collections.unmodifiableMap(entityMap);
@@ -115,6 +114,15 @@ public class VowlData {
 	public void addDatatypeProperty(VowlDatatypeProperty prop) {
 		datatypePropertyMap.put(prop.getIri(), prop);
 	}
+
+	public Set<String> getLanguages() {
+		return Collections.unmodifiableSet(languages);
+	}
+
+	public void addLanguage(String language) {
+		languages.add(language);
+	}
+
 }
 
 class AllEntityMap<K, V extends AbstractEntity> extends HashMap<K, V> {

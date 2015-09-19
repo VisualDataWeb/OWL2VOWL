@@ -1,6 +1,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotations;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.Collections;
@@ -13,6 +14,8 @@ public abstract class AbstractEntity implements HasEquivalents, VowlVisitable {
 	private String type;
 	private Set<VowlAttribute> attributes = new HashSet<>();
 	private Set<IRI> equivalents = new HashSet<>();
+	private Annotations annotations = new Annotations();
+
 	protected AbstractEntity(IRI iri, String type) {
 		this.iri = iri;
 		this.type = type;
@@ -69,5 +72,9 @@ public abstract class AbstractEntity implements HasEquivalents, VowlVisitable {
 	@Override
 	public String toString() {
 		return iri.toString();
+	}
+
+	public Annotations getAnnotations() {
+		return annotations;
 	}
 }

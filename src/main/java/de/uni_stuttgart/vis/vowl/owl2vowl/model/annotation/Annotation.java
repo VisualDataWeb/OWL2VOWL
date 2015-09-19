@@ -100,7 +100,8 @@ public class Annotation {
 	@Override
 	public String toString() {
 		return "Annotation{" +
-				"identifier='" + identifier + '\'' +
+				"type='" + type + "\'" +
+				", identifier='" + identifier + '\'' +
 				", language='" + language + '\'' +
 				", value='" + value + '\'' +
 				'}';
