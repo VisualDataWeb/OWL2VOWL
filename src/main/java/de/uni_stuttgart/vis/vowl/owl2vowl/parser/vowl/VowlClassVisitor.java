@@ -6,7 +6,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.AbstractNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,7 +1,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 /**

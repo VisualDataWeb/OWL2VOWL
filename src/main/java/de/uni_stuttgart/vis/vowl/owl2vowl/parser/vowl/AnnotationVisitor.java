@@ -3,7 +3,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlThing;

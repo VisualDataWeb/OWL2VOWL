@@ -10,7 +10,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.ConsoleExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.JsonGenerator;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.OwlClassVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.OwlEquivalentsVisitor;
