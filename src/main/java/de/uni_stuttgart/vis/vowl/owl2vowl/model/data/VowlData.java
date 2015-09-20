@@ -6,8 +6,10 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.data;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.AbstractNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.AbstractClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.AbstractDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
 import org.semanticweb.owlapi.model.IRI;
@@ -28,10 +30,16 @@ public class VowlData {
 	private VowlSearcher searcher;
 	private VowlIriGenerator iriGenerator = new VowlIriGenerator();
 	private VowlGenerator generator;
+	private VowlThingProvider thingProvider;
 
 	public VowlData() {
 		searcher = new VowlSearcher(this);
 		generator = new VowlGenerator(this);
+		thingProvider = new VowlThingProvider(this, searcher, generator);
+	}
+
+	public VowlThingProvider getThingProvider() {
+		return thingProvider;
 	}
 
 	public VowlGenerator getGenerator() {
@@ -66,7 +74,7 @@ public class VowlData {
 		if (classMap.containsKey(iri)) {
 			return classMap.get(iri);
 		} else {
-			throw new IllegalStateException("Can't find node for passed iri: " + iri);
+			throw new IllegalStateException("Can't find class for passed iri: " + iri);
 		}
 	}
 
@@ -74,7 +82,7 @@ public class VowlData {
 		if (datatypeMap.containsKey(iri)) {
 			return datatypeMap.get(iri);
 		} else {
-			throw new IllegalStateException("Can't find node for passed iri: " + iri);
+			throw new IllegalStateException("Can't find datatype for passed iri: " + iri);
 		}
 	}
 
@@ -82,7 +90,7 @@ public class VowlData {
 		if (objectPropertyMap.containsKey(iri)) {
 			return objectPropertyMap.get(iri);
 		} else {
-			throw new IllegalStateException("Can't find node for passed iri: " + iri);
+			throw new IllegalStateException("Can't find object property for passed iri: " + iri);
 		}
 	}
 
@@ -90,16 +98,36 @@ public class VowlData {
 		if (datatypePropertyMap.containsKey(iri)) {
 			return datatypePropertyMap.get(iri);
 		} else {
-			throw new IllegalStateException("Can't find node for passed iri: " + iri);
+			throw new IllegalStateException("Can't find datatype property for passed iri: " + iri);
 		}
 	}
 
 	protected AbstractEntity getEntityForIri(IRI iri) {
 		if (entityMap.containsKey(iri)) {
-			return classMap.get(iri);
+			return entityMap.get(iri);
 		} else {
-			throw new IllegalStateException("Can't find node for passed iri: " + iri);
+			throw new IllegalStateException("Can't find entity for passed iri: " + iri);
 		}
+	}
+
+	public AbstractProperty getPropertyForIri(IRI iri) {
+		AbstractEntity entity = getEntityForIri(iri);
+
+		if (entity instanceof AbstractProperty) {
+			return (AbstractProperty) entity;
+		}
+
+		throw new IllegalStateException("Can't find property for passed iri: " + iri);
+	}
+
+	public AbstractNode getNodeForIri(IRI iri) {
+		AbstractEntity entity = getEntityForIri(iri);
+
+		if (entity instanceof AbstractNode) {
+			return (AbstractNode) entity;
+		}
+
+		throw new IllegalStateException("Can't find node for passed iri: " + iri);
 	}
 
 	public String getIdForIri(IRI iri) {

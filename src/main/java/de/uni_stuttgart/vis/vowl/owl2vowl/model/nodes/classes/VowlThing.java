@@ -15,12 +15,14 @@ import org.semanticweb.owlapi.model.IRI;
  *
  */
 public class VowlThing extends AbstractClass {
+	public static final String THING_IRI = Standard_Iris.OWL_THING_CLASS_URI;
+
 	protected VowlThing(IRI iri, String type) {
 		super(iri, type);
 	}
 
-	public VowlThing() {
-		super(IRI.create(Standard_Iris.OWL_THING_CLASS_URI), NodeType.TYPE_THING);
+	public VowlThing(IRI iri) {
+		super(iri, NodeType.TYPE_THING);
 	}
 
 	@Override

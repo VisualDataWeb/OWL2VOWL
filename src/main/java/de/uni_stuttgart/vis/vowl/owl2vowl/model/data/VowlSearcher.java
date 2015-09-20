@@ -11,6 +11,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlElementVisitor;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,15 +24,22 @@ public class VowlSearcher implements VowlElementVisitor {
 	private int dataSize = 0;
 	private Set<VowlClass> intersections = new HashSet<>();
 	private Set<VowlClass> unions = new HashSet<>();
+	private Set<VowlThing> things = new HashSet<>();
 
 	public VowlSearcher(VowlData data) {
 		this.data = data;
 		dataSize = data.getEntityMap().keySet().size();
 	}
 
+	public Set<VowlThing> getThings() {
+		checkConsistenty();
+		return Collections.unmodifiableSet(things);
+	}
+
 	protected void refresh() {
 		intersections.clear();
 		unions.clear();
+		things.clear();
 
 		for (AbstractEntity abstractEntity : data.getEntityMap().values()) {
 			abstractEntity.accept(this);
@@ -47,7 +55,7 @@ public class VowlSearcher implements VowlElementVisitor {
 
 	@Override
 	public void visit(VowlThing vowlThing) {
-
+		things.add(vowlThing);
 	}
 
 	@Override

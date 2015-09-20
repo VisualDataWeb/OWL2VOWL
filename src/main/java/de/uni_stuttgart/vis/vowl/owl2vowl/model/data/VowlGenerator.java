@@ -2,6 +2,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model.data;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlThing;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.Collection;
@@ -42,5 +43,12 @@ public class VowlGenerator {
 		element.addAttribute(VowlAttribute.COMPLEMENT);
 		vowlData.addClass(element);
 		return element;
+	}
+
+	public VowlThing generateThing() {
+		VowlThing thing = new VowlThing(vowlData.getNewIri());
+		thing.setGenerated(VowlGenerationEnum.MANUALLY);
+		vowlData.addClass(thing);
+		return thing;
 	}
 }
