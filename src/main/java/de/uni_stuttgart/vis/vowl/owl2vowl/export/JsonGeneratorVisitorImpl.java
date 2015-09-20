@@ -14,6 +14,8 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.VowlDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.VowlLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.*;
@@ -27,12 +29,14 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	private final Map<String, Object> root;
 	private Map<String, Object> header;
 	private Map<String, Object> metrics;
+	private List<Object> namespace;
 	private List<Object> _class;
 	private List<Object> classAttribute;
 	private List<Object> datatype;
 	private List<Object> datatypeAttribute;
 	private List<Object> objectProperty;
 	private List<Object> objectPropertyAttribute;
+	private Logger logger = LogManager.getLogger(JsonGeneratorVisitorImpl.class);
 
 	public JsonGeneratorVisitorImpl(VowlData vowlData, Map<String, Object> root) {
 		this.vowlData = vowlData;
@@ -43,6 +47,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	protected void populateJsonRoot() {
 		header = new LinkedHashMap<>();
 		metrics = new LinkedHashMap<>();
+		namespace = new ArrayList<>();
 		_class = new ArrayList<>();
 		classAttribute = new ArrayList<>();
 		datatype = new ArrayList<>();
@@ -51,6 +56,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		objectPropertyAttribute = new ArrayList<>();
 
 		root.put("header", header);
+		root.put("namespace", namespace);
 		root.put("metrics", metrics);
 		root.put("class", _class);
 		root.put("classAttribute", classAttribute);
@@ -58,6 +64,8 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		root.put("datatypeAttribute", datatypeAttribute);
 		root.put("property", objectProperty);
 		root.put("propertyAttribute", objectPropertyAttribute);
+
+		namespace.add(new HashMap<>());
 	}
 
 	@Override
@@ -112,8 +120,8 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	@Override
 	public void visit(VowlLiteral vowlLiteral) {
 		Map<String, Object> object = new HashMap<>();
-		object.put("id", vowlData.getIdForEntity(vowlLiteral));
-		object.put("type", vowlLiteral.getType());
+		//object.put("id", vowlData.getIdForEntity(vowlLiteral));
+		//object.put("type", vowlLiteral.getType());
 
 		datatype.add(object);
 	}
@@ -121,14 +129,19 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	@Override
 	public void visit(VowlDatatype vowlDatatype) {
 		Map<String, Object> object = new HashMap<>();
-		object.put("id", vowlData.getIdForEntity(vowlDatatype));
-		object.put("type", vowlDatatype.getType());
+		//object.put("id", vowlData.getIdForEntity(vowlDatatype));
+		//object.put("type", vowlDatatype.getType());
 
 		datatype.add(object);
 	}
 
 	@Override
 	public void visit(VowlObjectProperty vowlObjectProperty) {
+		if (vowlObjectProperty.getDomain() == null || vowlObjectProperty.getRange() == null) {
+			logger.info("Domain or range is null in object property: " + vowlObjectProperty);
+			return;
+		}
+
 		Map<String, Object> object = new HashMap<>();
 		object.put("id", vowlData.getIdForEntity(vowlObjectProperty));
 		object.put("type", vowlObjectProperty.getType());
@@ -152,8 +165,8 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	@Override
 	public void visit(VowlDatatypeProperty vowlDatatypeProperty) {
 		Map<String, Object> object = new HashMap<>();
-		object.put("id", vowlData.getIdForEntity(vowlDatatypeProperty));
-		object.put("type", vowlDatatypeProperty.getType());
+		//object.put("id", vowlData.getIdForEntity(vowlDatatypeProperty));
+		//object.put("type", vowlDatatypeProperty.getType());
 
 		objectProperty.add(object);
 	}
