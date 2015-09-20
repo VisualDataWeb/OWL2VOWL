@@ -22,7 +22,8 @@ public class OwlClassVisitor extends OWLObjectVisitorAdapter {
 		AbstractClass clazz = null;
 
 		if (ce.isOWLThing()) {
-			clazz = new VowlThing();
+			// General class do not create here
+			return;
 		} else if (!ce.isAnonymous()) {
 			clazz = new VowlClass(ce.getIRI());
 		} else {
