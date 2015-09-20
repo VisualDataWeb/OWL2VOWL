@@ -50,49 +50,70 @@ public class PropertyVisitor extends OWLObjectVisitorAdapter {
 	@Override
 	public void visit(OWLObjectPropertyDomainAxiom axiom) {
 		VowlObjectProperty prop = vowlData.getObjectPropertyForIri(owlObjectProperty.getIRI());
+		IRI domainIri;
 
 		if (axiom.getDomain().isAnonymous()){
 			AbstractClass anonymClass = axiom.getDomain().accept(new DomainRangeVisitor(owlObjectProperty, vowlData));
 			if (!(anonymClass instanceof NullClass)) {
-				prop.setDomain(anonymClass.getIri());
+				domainIri = anonymClass.getIri();
 			} else {
 				logger.info("Skipped anonymous object domain: " + axiom.getDomain());
+				return;
 			}
 		} else {
-			prop.setDomain(axiom.getDomain().asOWLClass().getIRI());
+			if (axiom.getDomain().asOWLClass().isOWLThing()) {
+				return;
+			}
+
+			domainIri = axiom.getDomain().asOWLClass().getIRI();
 		}
+
+		prop.setDomain(domainIri);
+		vowlData.getClassForIri(domainIri).addOutGoingProperty(prop.getIri());
 	}
 
 	@Override
 	public void visit(OWLObjectPropertyRangeAxiom axiom) {
 		VowlObjectProperty prop = vowlData.getObjectPropertyForIri(owlObjectProperty.getIRI());
+		IRI rangeIri;
 
 		if (axiom.getRange().isAnonymous()){
 			AbstractClass anonymClass = axiom.getRange().accept(new DomainRangeVisitor(owlObjectProperty, vowlData));
 			if (!(anonymClass instanceof NullClass)) {
-				prop.setRange(anonymClass.getIri());
+				rangeIri = anonymClass.getIri();
 			} else {
 				logger.info("Skipped anonymous object range: " + axiom.getRange());
+				return;
 			}
 		} else {
-			prop.setRange(axiom.getRange().asOWLClass().getIRI());
+			if (axiom.getRange().asOWLClass().isOWLThing()) {
+				return;
+			}
+			rangeIri = axiom.getRange().asOWLClass().getIRI();
 		}
+
+		prop.setRange(rangeIri);
+		vowlData.getClassForIri(rangeIri).addInGoingProperty(prop.getIri());
 	}
 
 	@Override
 	public void visit(OWLDisjointObjectPropertiesAxiom axiom) {
+		System.out.println(axiom);
 	}
 
 	@Override
 	public void visit(OWLInverseObjectPropertiesAxiom axiom) {
+		System.out.println(axiom);
 	}
 
 	@Override
 	public void visit(OWLSubObjectPropertyOfAxiom axiom) {
+		System.out.println(axiom);
 	}
 
 	@Override
 	public void visit(OWLEquivalentObjectPropertiesAxiom axiom) {
+		System.out.println(axiom);
 	}
 
 	@Override
