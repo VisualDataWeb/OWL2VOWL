@@ -1,7 +1,6 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
-
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.Collections;
@@ -13,9 +12,19 @@ public abstract class AbstractNode extends AbstractEntity implements HasUnions, 
 	private IRI complement;
 	private Set<IRI> intersectionElements = new HashSet<>();
 	private Set<IRI> unionElements = new HashSet<>();
+	private Set<IRI> inGoingProperties = new HashSet<>();
+	private Set<IRI> outGoingProperties = new HashSet<>();
 
 	protected AbstractNode(IRI iri, String type) {
 		super(iri, type);
+	}
+
+	public Set<IRI> getInGoingProperties() {
+		return inGoingProperties;
+	}
+
+	public Set<IRI> getOutGoingProperties() {
+		return outGoingProperties;
 	}
 
 	@Override
@@ -46,5 +55,13 @@ public abstract class AbstractNode extends AbstractEntity implements HasUnions, 
 	@Override
 	public Set<IRI> getElementsOfUnion() {
 		return Collections.unmodifiableSet(unionElements);
+	}
+
+	public void addInGoingProperty(IRI property) {
+		inGoingProperties.add(property);
+	}
+
+	public void addOutGoingProperty(IRI property) {
+		outGoingProperties.add(property);
 	}
 }
