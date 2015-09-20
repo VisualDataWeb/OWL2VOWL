@@ -12,9 +12,12 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.FileExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.JsonGenerator;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlDatatypeProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.OwlClassVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.OwlEquivalentsVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.EmptyDomainRangeFiller;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.PropertyVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
 import org.semanticweb.owlapi.apibinding.OWLManager;
@@ -24,6 +27,7 @@ import org.semanticweb.owlapi.util.OWLOntologyWalker;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Map;
 
 public class ConverterImpl implements Converter {
 
@@ -55,13 +59,10 @@ public class ConverterImpl implements Converter {
 	}
 
 	private static void processObjectProperties(OWLOntology ontology, VowlData vowlData) {
-		for (OWLObjectProperty owlObjectProperty : ontology.getObjectPropertiesInSignature()) {
-			System.out.println(owlObjectProperty);
+		for (OWLObjectProperty owlObjectProperty : ontology.getObjectPropertiesInSignature(Imports.INCLUDED)) {
 			for (OWLObjectPropertyAxiom owlObjectPropertyAxiom : ontology.getAxioms(owlObjectProperty, Imports.INCLUDED)) {
 				owlObjectPropertyAxiom.accept(new PropertyVisitor(vowlData, owlObjectProperty));
-				System.out.println("\t" + owlObjectPropertyAxiom);
 			}
-			System.out.println();
 		}
 
 	}
@@ -69,6 +70,11 @@ public class ConverterImpl implements Converter {
 	private static void postParsing(VowlData vowlData, OWLOntologyManager manager) {
 		setCorrectType(vowlData.getEntityMap().values());
 		parseAnnotations(vowlData, manager);
+		fillDomainRanges(vowlData, vowlData.getObjectPropertyMap().values(), vowlData.getDatatypePropertyMap().values());
+	}
+
+	private static void fillDomainRanges(VowlData vowlData, Collection<VowlObjectProperty> values, Collection<VowlDatatypeProperty> vowlDatatypeProperties) {
+		new EmptyDomainRangeFiller(vowlData, values).execute();
 	}
 
 	private static void testExport(VowlData vowlData) {
@@ -83,7 +89,7 @@ public class ConverterImpl implements Converter {
 	}
 
 	private static void processClasses(OWLOntology ontology, VowlData vowlData) {
-		for (OWLClass owlClass : ontology.getClassesInSignature()) {
+		for (OWLClass owlClass : ontology.getClassesInSignature(Imports.INCLUDED)) {
 			for (OWLClassAxiom owlClassAxiom : ontology.getAxioms(owlClass, Imports.INCLUDED)) {
 				owlClassAxiom.accept(new OwlEquivalentsVisitor(vowlData, owlClass));
 			}
