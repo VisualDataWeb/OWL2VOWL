@@ -4,6 +4,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.AbstractClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.NullClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -103,7 +104,26 @@ public class PropertyVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLInverseObjectPropertiesAxiom axiom) {
-		System.out.println(axiom);
+		OWLObjectPropertyExpression firstProperty = axiom.getFirstProperty();
+		OWLObjectPropertyExpression secondProperty = axiom.getSecondProperty();
+
+		if (firstProperty.isAnonymous()) {
+			// TODO anonym behaviour
+			logger.info("Anonym first property:" + firstProperty);
+			return;
+		}
+
+		if (secondProperty.isAnonymous()) {
+			// TODO anonym behaviour
+			logger.info("Anonym second property:" + secondProperty);
+			return;
+		}
+
+		OWLObjectProperty inverseProperty = firstProperty.asOWLObjectProperty();
+		OWLObjectProperty baseProperty = secondProperty.asOWLObjectProperty();
+
+		AbstractProperty inverseVowlProp = vowlData.getPropertyForIri(inverseProperty.getIRI());
+		inverseVowlProp.addInverse(baseProperty.getIRI());
 	}
 
 	@Override

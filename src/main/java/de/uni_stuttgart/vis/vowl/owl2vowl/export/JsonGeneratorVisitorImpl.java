@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- *
+ * TODO Gemeinsamkeiten auslagern
  */
 public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	private final VowlData vowlData;
@@ -158,6 +158,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		propertyAttributes.put("comment", getLabelsFromAnnotations(vowlObjectProperty.getAnnotations().getComments()));
 		propertyAttributes.put("attributes", vowlObjectProperty.getAttributes());
 		propertyAttributes.put("annotations", vowlObjectProperty.getAnnotations().getIdentifierToAnnotation());
+		propertyAttributes.put("inverse", getIdForIri(vowlObjectProperty.getInverse()));
 
 		objectPropertyAttribute.add(propertyAttributes);
 	}
@@ -175,6 +176,14 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		List<String> idList = iriList.stream().map(iri -> String.valueOf(vowlData.getIdForIri(iri))).collect(Collectors.toList());
 
 		return idList;
+	}
+
+	protected String getIdForIri(IRI iri) {
+		if (iri == null) {
+			return null;
+		}
+
+		return vowlData.getIdForIri(iri);
 	}
 
 	protected Map<String, String> getLabelsFromAnnotations(Collection<Annotation> annotations) {

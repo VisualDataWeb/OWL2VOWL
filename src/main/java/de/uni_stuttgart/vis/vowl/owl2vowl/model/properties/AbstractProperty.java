@@ -13,9 +13,10 @@ import java.util.*;
 /**
  *
  */
-public abstract class AbstractProperty extends AbstractEntity {
+public abstract class AbstractProperty extends AbstractEntity implements HasInverse {
 	private IRI domain = null;
 	private IRI range = null;
+	private IRI inverse = null;
 
 	protected AbstractProperty(IRI iri, String type) {
 		super(iri, type);
@@ -35,5 +36,15 @@ public abstract class AbstractProperty extends AbstractEntity {
 
 	public void setRange(IRI iri) {
 		range = iri;
+	}
+
+	@Override
+	public IRI getInverse() {
+		return inverse;
+	}
+
+	@Override
+	public void addInverse(IRI iri) {
+		this.inverse = iri;
 	}
 }

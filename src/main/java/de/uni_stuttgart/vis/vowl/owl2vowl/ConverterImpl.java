@@ -45,7 +45,7 @@ public class ConverterImpl implements Converter {
 		parsing(ontology, vowlData);
 		postParsing(vowlData, manager);
 
-		testExport(vowlData);
+		exportToConsole(vowlData);
 	}
 
 	private static void preParsing(OWLOntology ontology, VowlData vowlData) {
@@ -77,8 +77,19 @@ public class ConverterImpl implements Converter {
 		new EmptyDomainRangeFiller(vowlData, values).execute();
 	}
 
-	private static void testExport(VowlData vowlData) {
-		Exporter exporter = new FileExporter(new File("muto.json"));
+	private static void exportToFile(VowlData vowlData) {
+		Exporter exporter = new FileExporter(new File("export.json"));
+		JsonGenerator generator = new JsonGenerator();
+		try {
+			generator.execute(vowlData);
+			generator.export(exporter);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private static void exportToConsole(VowlData vowlData) {
+		Exporter exporter = new ConsoleExporter();
 		JsonGenerator generator = new JsonGenerator();
 		try {
 			generator.execute(vowlData);
