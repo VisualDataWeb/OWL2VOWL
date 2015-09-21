@@ -161,6 +161,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		propertyAttributes.put("inverse", getIdForIri(vowlObjectProperty.getInverse()));
 		propertyAttributes.put("superproperty", getListWithIds(vowlObjectProperty.getSuperEntities()));
 		propertyAttributes.put("subproperty", getListWithIds(vowlObjectProperty.getSubEntities()));
+		propertyAttributes.put("equivalent", getListWithIds(vowlObjectProperty.getEquivalentElements()));
 
 		objectPropertyAttribute.add(propertyAttributes);
 	}

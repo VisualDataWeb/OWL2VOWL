@@ -151,7 +151,21 @@ public class PropertyVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLEquivalentObjectPropertiesAxiom axiom) {
-		System.out.println(axiom);
+		AbstractProperty base = vowlData.getPropertyForIri(owlObjectProperty.getIRI());
+
+		for (OWLObjectPropertyExpression expr : axiom.getProperties()) {
+			if (expr.isAnonymous()) {
+				// TODO anonymous behaviour
+				logger.info("Anonysmous equivalent prop: " + expr);
+				continue;
+			}
+
+			if (expr.asOWLObjectProperty().getIRI().equals(base.getIri())) {
+				continue;
+			}
+
+			base.addEquivalentElement(expr.asOWLObjectProperty().getIRI());
+		}
 	}
 
 	@Override
