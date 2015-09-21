@@ -185,4 +185,10 @@ public class PropertyVisitor extends OWLObjectVisitorAdapter {
 		VowlObjectProperty prop = vowlData.getObjectPropertyForIri(owlObjectProperty.getIRI());
 		prop.addAttribute(VowlAttribute.REFLEXIVE);
 	}
+
+	@Override
+	public void visit(OWLTransitiveObjectPropertyAxiom axiom) {
+		VowlObjectProperty prop = vowlData.getObjectPropertyForIri(owlObjectProperty.getIRI());
+		prop.addAttribute(VowlAttribute.TRANSITIVE);
+	}
 }
