@@ -99,7 +99,7 @@ public class PropertyVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLDisjointObjectPropertiesAxiom axiom) {
-		System.out.println(axiom);
+		logger.info("Disjoint object properties not supported yet.");
 	}
 
 	@Override
@@ -128,7 +128,25 @@ public class PropertyVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLSubObjectPropertyOfAxiom axiom) {
-		System.out.println(axiom);
+		OWLObjectPropertyExpression subProperty = axiom.getSubProperty();
+		OWLObjectPropertyExpression superProperty = axiom.getSuperProperty();
+
+		if (subProperty.isAnonymous()) {
+			// TODO anonym behaviour
+			logger.info("Anonym sub property:" + subProperty);
+			return;
+		}
+
+		if (superProperty.isAnonymous()) {
+			// TODO anonym behaviour
+			logger.info("Anonym super property:" + superProperty);
+			return;
+		}
+
+		AbstractProperty subVowl = vowlData.getPropertyForIri(subProperty.asOWLObjectProperty().getIRI());
+		AbstractProperty superVowl = vowlData.getPropertyForIri(superProperty.asOWLObjectProperty().getIRI());
+		subVowl.addSuperEntity(superVowl.getIri());
+		superVowl.addSubEntity(subVowl.getIri());
 	}
 
 	@Override

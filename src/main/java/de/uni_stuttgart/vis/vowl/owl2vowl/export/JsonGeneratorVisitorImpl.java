@@ -105,8 +105,8 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		classAttributeObject.put("isDefinedBy", 0);
 		classAttributeObject.put("owlVersion", 0);
 		classAttributeObject.put("attributes", 0);
-		classAttributeObject.put("subClasses", 0);
-		classAttributeObject.put("superClasses", 0);
+		classAttributeObject.put("superClasses", getListWithIds(vowlClass.getSuperEntities()));
+		classAttributeObject.put("subClasses", getListWithIds(vowlClass.getSubEntities()));
 		classAttributeObject.put("annotations", vowlClass.getAnnotations().getIdentifierToAnnotation());
 		classAttributeObject.put("union", getListWithIds(vowlClass.getElementsOfUnion()));
 		classAttributeObject.put("intersection", getListWithIds(vowlClass.getElementOfIntersection()));
@@ -159,6 +159,8 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		propertyAttributes.put("attributes", vowlObjectProperty.getAttributes());
 		propertyAttributes.put("annotations", vowlObjectProperty.getAnnotations().getIdentifierToAnnotation());
 		propertyAttributes.put("inverse", getIdForIri(vowlObjectProperty.getInverse()));
+		propertyAttributes.put("superproperty", getListWithIds(vowlObjectProperty.getSuperEntities()));
+		propertyAttributes.put("subproperty", getListWithIds(vowlObjectProperty.getSubEntities()));
 
 		objectPropertyAttribute.add(propertyAttributes);
 	}

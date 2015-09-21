@@ -9,12 +9,14 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class AbstractEntity implements HasEquivalents, VowlVisitable {
+public abstract class AbstractEntity implements HasEquivalents, HasSubEntities, VowlVisitable {
 	private IRI iri;
 	private String type;
 	private Set<VowlAttribute> attributes = new HashSet<>();
 	private Set<IRI> equivalents = new HashSet<>();
 	private Annotations annotations = new Annotations();
+	private Set<IRI> subEntities = new HashSet<>();
+	private Set<IRI> superEntities = new HashSet<>();
 
 	private VowlGenerationEnum generated = VowlGenerationEnum.AUTOMATIC;
 
@@ -86,5 +88,25 @@ public abstract class AbstractEntity implements HasEquivalents, VowlVisitable {
 
 	public Annotations getAnnotations() {
 		return annotations;
+	}
+
+	@Override
+	public Set<IRI> getSuperEntities() {
+		return Collections.unmodifiableSet(superEntities);
+	}
+
+	@Override
+	public void addSuperEntity(IRI iri) {
+		superEntities.add(iri);
+	}
+
+	@Override
+	public Set<IRI> getSubEntities() {
+		return Collections.unmodifiableSet(subEntities);
+	}
+
+	@Override
+	public void addSubEntity(IRI iri) {
+		subEntities.add(iri);
 	}
 }
