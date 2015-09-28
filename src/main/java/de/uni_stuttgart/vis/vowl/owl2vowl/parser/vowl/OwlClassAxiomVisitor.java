@@ -2,6 +2,9 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.AbstractClass;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;
 
@@ -11,6 +14,7 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 
 	private VowlData vowlData;
 	private OWLClass owlClass;
+	private Logger logger = LogManager.getLogger(OwlClassAxiomVisitor.class);
 
 	public OwlClassAxiomVisitor(VowlData vowlData, OWLClass owlClass) {
 		this.vowlData = vowlData;
@@ -44,6 +48,24 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLSubClassOfAxiom axiom) {
+		if (axiom.isGCI()) {
+			// TODO anonym subclass behaviour
+			logger.info("Anonym subclass: " + axiom);
+			return;
+		}
 
+		OWLClass subClass = axiom.getSubClass().asOWLClass();
+		AbstractClass vowlSubclass = vowlData.getClassForIri(subClass.getIRI());
+
+		if (axiom.getSuperClass().isAnonymous()) {
+			// TODO anonym superclass like cardinality or hasValue
+			logger.info("Anonym superclass: " + axiom);
+			return;
+		} else {
+			OWLClass superClass = axiom.getSuperClass().asOWLClass();
+			AbstractClass vowlSuperClass = vowlData.getClassForIri(superClass.getIRI());
+			vowlSubclass.addSuperEntity(vowlSuperClass.getIri());
+			vowlSuperClass.addSubEntity(vowlSubclass.getIri());
+		}
 	}
 }
