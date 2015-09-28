@@ -66,4 +66,23 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 			vowlSuperClass.addSubEntity(vowlSubclass.getIri());
 		}
 	}
+
+	@Override
+	public void visit(OWLDisjointClassesAxiom axiom) {
+		for (OWLDisjointClassesAxiom pairwiseAxiom : axiom.asPairwiseAxioms()) {
+			IRI[] domainRange = new IRI[2];
+			int index = 0;
+
+			for (OWLClass aClass : pairwiseAxiom.getClassesInSignature()) {
+				domainRange[index++] = aClass.getIRI();
+			}
+
+			vowlData.getGenerator().generateDisjointProperty(domainRange[0], domainRange[1]);
+		}
+	}
+
+	@Override
+	public void visit(OWLDisjointUnionAxiom axiom) {
+		super.visit(axiom);
+	}
 }
