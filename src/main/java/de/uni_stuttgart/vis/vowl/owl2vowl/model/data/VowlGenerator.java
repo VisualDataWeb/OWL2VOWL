@@ -1,8 +1,11 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.data;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.PropertyType;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.AbstractProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.Collection;
@@ -50,5 +53,20 @@ public class VowlGenerator {
 		thing.setGenerated(VowlGenerationEnum.MANUALLY);
 		vowlData.addClass(thing);
 		return thing;
+	}
+
+	public AbstractProperty generateDisjointProperty(IRI domain, IRI range) {
+		if (domain == null || range == null) {
+			throw new IllegalArgumentException("Parameters should not be null!");
+		}
+
+		VowlObjectProperty property = new VowlObjectProperty(vowlData.getNewIri());
+		property.setGenerated(VowlGenerationEnum.MANUALLY);
+		property.setDomain(domain);
+		property.setRange(range);
+		property.setType(PropertyType.DISJOINT);
+		vowlData.addObjectProperty(property);
+
+		return property;
 	}
 }
