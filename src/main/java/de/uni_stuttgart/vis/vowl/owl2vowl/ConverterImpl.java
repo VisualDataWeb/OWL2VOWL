@@ -16,7 +16,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.OwlClassVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.OwlEquivalentsVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.OwlClassAxiomVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.EmptyDomainRangeFiller;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.PropertyVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
@@ -27,7 +27,6 @@ import org.semanticweb.owlapi.util.OWLOntologyWalker;
 
 import java.io.File;
 import java.util.Collection;
-import java.util.Map;
 
 public class ConverterImpl implements Converter {
 
@@ -46,6 +45,7 @@ public class ConverterImpl implements Converter {
 		postParsing(vowlData, manager);
 
 		exportToConsole(vowlData);
+		//exportToFile(vowlData);
 	}
 
 	private static void preParsing(OWLOntology ontology, VowlData vowlData) {
@@ -102,7 +102,7 @@ public class ConverterImpl implements Converter {
 	private static void processClasses(OWLOntology ontology, VowlData vowlData) {
 		for (OWLClass owlClass : ontology.getClassesInSignature(Imports.INCLUDED)) {
 			for (OWLClassAxiom owlClassAxiom : ontology.getAxioms(owlClass, Imports.INCLUDED)) {
-				owlClassAxiom.accept(new OwlEquivalentsVisitor(vowlData, owlClass));
+				owlClassAxiom.accept(new OwlClassAxiomVisitor(vowlData, owlClass));
 			}
 		}
 	}
