@@ -2,21 +2,25 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;
 
 import java.util.Set;
 
-public class OwlEquivalentsVisitor extends OWLObjectVisitorAdapter {
+public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 
 	private VowlData vowlData;
 	private OWLClass owlClass;
 
-	public OwlEquivalentsVisitor(VowlData vowlData, OWLClass owlClass) {
+	public OwlClassAxiomVisitor(VowlData vowlData, OWLClass owlClass) {
 		this.vowlData = vowlData;
 		this.owlClass = owlClass;
+	}
+
+	@Override
+	protected void handleDefault(OWLObject axiom) {
+		System.out.println(owlClass);
+		System.out.println("\t" + axiom);
 	}
 
 	@Override
@@ -35,6 +39,11 @@ public class OwlEquivalentsVisitor extends OWLObjectVisitorAdapter {
 	}
 
 	protected void createEquivalentClass(OWLEquivalentClassesAxiom axiom) {
+
+	}
+
+	@Override
+	public void visit(OWLSubClassOfAxiom axiom) {
 
 	}
 }
