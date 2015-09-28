@@ -17,6 +17,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.OwlClassVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.OwlClassAxiomVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlSubclassPropertyGenerator;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.EmptyDomainRangeFiller;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.PropertyVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
@@ -71,6 +72,11 @@ public class ConverterImpl implements Converter {
 		setCorrectType(vowlData.getEntityMap().values());
 		parseAnnotations(vowlData, manager);
 		fillDomainRanges(vowlData, vowlData.getObjectPropertyMap().values(), vowlData.getDatatypePropertyMap().values());
+		createSubclassProperties(vowlData);
+	}
+
+	private static void createSubclassProperties(VowlData vowlData) {
+		new VowlSubclassPropertyGenerator(vowlData).execute();
 	}
 
 	private static void fillDomainRanges(VowlData vowlData, Collection<VowlObjectProperty> values, Collection<VowlDatatypeProperty> vowlDatatypeProperties) {
