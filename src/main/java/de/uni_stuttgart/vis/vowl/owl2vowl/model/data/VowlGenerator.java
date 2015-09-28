@@ -2,6 +2,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model.data;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.PropertyType;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.AbstractProperty;
@@ -65,6 +66,22 @@ public class VowlGenerator {
 		property.setDomain(domain);
 		property.setRange(range);
 		property.setType(PropertyType.DISJOINT);
+		vowlData.addObjectProperty(property);
+
+		return property;
+	}
+
+	public AbstractProperty generateSubclassProperty(IRI domain, IRI range) {
+		if (domain == null || range == null) {
+			throw new IllegalArgumentException("Parameters should not be null!");
+		}
+
+		VowlObjectProperty property = new VowlObjectProperty(vowlData.getNewIri());
+		property.setGenerated(VowlGenerationEnum.MANUALLY);
+		property.setDomain(domain);
+		property.setRange(range);
+		property.setType(PropertyType.SUBCLASS);
+		property.getAnnotations().addLabel(new Annotation("label", "SubClassOf"));
 		vowlData.addObjectProperty(property);
 
 		return property;
