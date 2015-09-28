@@ -14,6 +14,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.VowlDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.VowlLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
+import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.IRI;
@@ -162,6 +163,9 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		propertyAttributes.put("superproperty", getListWithIds(vowlObjectProperty.getSuperEntities()));
 		propertyAttributes.put("subproperty", getListWithIds(vowlObjectProperty.getSubEntities()));
 		propertyAttributes.put("equivalent", getListWithIds(vowlObjectProperty.getEquivalentElements()));
+		propertyAttributes.put("minCardinality", getCardinality(vowlObjectProperty.getMinCardinality()));
+		propertyAttributes.put("maxCardinality", getCardinality(vowlObjectProperty.getMaxCardinality()));
+		propertyAttributes.put("cardinality", getCardinality(vowlObjectProperty.getExactCardinality()));
 
 		objectPropertyAttribute.add(propertyAttributes);
 	}
@@ -197,5 +201,17 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		}
 
 		return languageToValue;
+	}
+
+	/**
+	 *
+	 * @return Empty string if value is <= 0 else the value.
+	 */
+	protected String getCardinality(Integer value) {
+		if (value <= 0) {
+			return StringUtils.EMPTY;
+		}
+
+		return value.toString();
 	}
 }
