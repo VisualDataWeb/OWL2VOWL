@@ -13,10 +13,13 @@ import java.util.*;
 /**
  *
  */
-public abstract class AbstractProperty extends AbstractEntity implements HasInverse {
+public abstract class AbstractProperty extends AbstractEntity implements HasInverse, HasCardinality {
 	private IRI domain = null;
 	private IRI range = null;
 	private IRI inverse = null;
+	private int minCardinality;
+	private int maxCardinality;
+	private int exactCardinality;
 
 	protected AbstractProperty(IRI iri, String type) {
 		super(iri, type);
@@ -46,5 +49,35 @@ public abstract class AbstractProperty extends AbstractEntity implements HasInve
 	@Override
 	public void addInverse(IRI iri) {
 		this.inverse = iri;
+	}
+
+	@Override
+	public void setExactCardinality(Integer value) {
+		exactCardinality = value;
+	}
+
+	@Override
+	public void setMaxCardinality(Integer value) {
+		maxCardinality = value;
+	}
+
+	@Override
+	public void setMinCardinality(Integer value) {
+		minCardinality = value;
+	}
+
+	@Override
+	public Integer getExactCardinality() {
+		return exactCardinality;
+	}
+
+	@Override
+	public Integer getMaxCardinality() {
+		return maxCardinality;
+	}
+
+	@Override
+	public Integer getMinCardinality() {
+		return minCardinality;
 	}
 }
