@@ -31,6 +31,12 @@ public class VowlClassVisitor extends OWLClassExpressionVisitorAdapter {
 	}
 
 	@Override
+	protected void handleDefault(OWLClassExpression c) {
+		System.out.println("Not implemented VowlClassVisitor: " + c);
+		logger.info("Not implemented for equivalents: " + c);
+	}
+
+	@Override
 	public void visit(OWLObjectIntersectionOf ce) {
 		Set<OWLClassExpression> operands = ce.getOperands();
 
