@@ -1,5 +1,6 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.AbstractClass;
@@ -32,6 +33,7 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 		// TODO NamedClasses size != 1 means either
 		if (axiom.getNamedClasses().size() != 1) {
 			createEquivalentClass(axiom);
+			return;
 		}
 
 		OWLClass referencedClass = axiom.getNamedClasses().iterator().next();
@@ -43,7 +45,15 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 	}
 
 	protected void createEquivalentClass(OWLEquivalentClassesAxiom axiom) {
+		AbstractClass topClass = vowlData.getClassForIri(owlClass.getIRI());
 
+		for (OWLClassExpression owlClassExpression : axiom.getClassExpressionsMinus(owlClass)) {
+			topClass.addEquivalentElement(owlClassExpression.asOWLClass().getIRI());
+		}
+
+		topClass.addAttribute(VowlAttribute.EQUIVALENT);
+
+		// TODO post parsing determine correct top equivalent class?
 	}
 
 	@Override
@@ -83,6 +93,6 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLDisjointUnionAxiom axiom) {
-		super.visit(axiom);
+		// TODO DisjointUnion implementation
 	}
 }
