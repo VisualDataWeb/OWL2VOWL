@@ -94,5 +94,7 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 	@Override
 	public void visit(OWLDisjointUnionAxiom axiom) {
 		// TODO DisjointUnion implementation
+		logger.info("Disjoint union axiom not implemented yet.");
+		System.out.println("Disjoint union axiom not implemented yet.");
 	}
 }
