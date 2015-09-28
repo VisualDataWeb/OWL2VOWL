@@ -58,9 +58,7 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 		AbstractClass vowlSubclass = vowlData.getClassForIri(subClass.getIRI());
 
 		if (axiom.getSuperClass().isAnonymous()) {
-			// TODO anonym superclass like cardinality or hasValue
-			logger.info("Anonym superclass: " + axiom);
-			return;
+			axiom.getSuperClass().accept(new OwlSubclassAnonymVisitor(vowlData, owlClass));
 		} else {
 			OWLClass superClass = axiom.getSuperClass().asOWLClass();
 			AbstractClass vowlSuperClass = vowlData.getClassForIri(superClass.getIRI());
