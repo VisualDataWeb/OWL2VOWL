@@ -63,8 +63,8 @@ public class VowlGenerator {
 
 		VowlObjectProperty property = new VowlObjectProperty(vowlData.getNewIri());
 		property.setGenerated(VowlGenerationEnum.MANUALLY);
-		property.setDomain(domain);
-		property.setRange(range);
+		property.addDomain(domain);
+		property.addRange(range);
 		property.setType(PropertyType.DISJOINT);
 		vowlData.addObjectProperty(property);
 
@@ -78,8 +78,8 @@ public class VowlGenerator {
 
 		VowlObjectProperty property = new VowlObjectProperty(vowlData.getNewIri());
 		property.setGenerated(VowlGenerationEnum.MANUALLY);
-		property.setDomain(domain);
-		property.setRange(range);
+		property.addDomain(domain);
+		property.addRange(range);
 		property.setType(PropertyType.SUBCLASS);
 		property.getAnnotations().addLabel(new Annotation("label", "SubClassOf"));
 		vowlData.addObjectProperty(property);

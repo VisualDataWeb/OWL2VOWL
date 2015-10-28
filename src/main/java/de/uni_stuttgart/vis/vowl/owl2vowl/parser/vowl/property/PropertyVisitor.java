@@ -69,7 +69,7 @@ public class PropertyVisitor extends OWLObjectVisitorAdapter {
 			domainIri = axiom.getDomain().asOWLClass().getIRI();
 		}
 
-		prop.setDomain(domainIri);
+		prop.addDomain(domainIri);
 		vowlData.getClassForIri(domainIri).addOutGoingProperty(prop.getIri());
 	}
 
@@ -93,7 +93,7 @@ public class PropertyVisitor extends OWLObjectVisitorAdapter {
 			rangeIri = axiom.getRange().asOWLClass().getIRI();
 		}
 
-		prop.setRange(rangeIri);
+		prop.addRange(rangeIri);
 		vowlData.getClassForIri(rangeIri).addInGoingProperty(prop.getIri());
 	}
 

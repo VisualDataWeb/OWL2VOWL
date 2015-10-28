@@ -30,11 +30,11 @@ public class VowlThingProvider {
 		for (IRI out : node.getOutGoingProperties()) {
 			AbstractProperty prop = vowlData.getPropertyForIri(out);
 
-			if (prop.getRange() == null) {
+			if (prop.getRanges().size() != 1) {
 				continue;
 			}
 
-			AbstractNode rangeNode = vowlData.getNodeForIri(prop.getRange());
+			AbstractNode rangeNode = vowlData.getNodeForIri(prop.getRanges().iterator().next());
 
 			if (rangeNode.getType().equals(NodeType.TYPE_THING)) {
 				return (VowlThing) rangeNode;
@@ -44,11 +44,11 @@ public class VowlThingProvider {
 		for (IRI out : node.getInGoingProperties()) {
 			AbstractProperty prop = vowlData.getPropertyForIri(out);
 
-			if (prop.getDomain() == null) {
+			if (prop.getDomains().size() != 1) {
 				continue;
 			}
 
-			AbstractNode domainNode = vowlData.getNodeForIri(prop.getDomain());
+			AbstractNode domainNode = vowlData.getNodeForIri(prop.getDomains().iterator().next());
 
 			if (domainNode.getType().equals(NodeType.TYPE_THING)) {
 				return (VowlThing) domainNode;
@@ -69,11 +69,11 @@ public class VowlThingProvider {
 		for (IRI out : node1.getOutGoingProperties()) {
 			AbstractProperty prop = vowlData.getPropertyForIri(out);
 
-			if (prop.getRange() == null) {
+			if (prop.getRanges().size() != 1) {
 				continue;
 			}
 
-			AbstractNode rangeNode = vowlData.getNodeForIri(prop.getRange());
+			AbstractNode rangeNode = vowlData.getNodeForIri(prop.getRanges().iterator().next());
 
 			if (rangeNode.getType().equals(NodeType.TYPE_THING) && rangeNode == node2) {
 				return true;
@@ -83,11 +83,11 @@ public class VowlThingProvider {
 		for (IRI out : node1.getInGoingProperties()) {
 			AbstractProperty prop = vowlData.getPropertyForIri(out);
 
-			if (prop.getDomain() == null) {
+			if (prop.getDomains().size() != 1) {
 				continue;
 			}
 
-			AbstractNode domainNode = vowlData.getNodeForIri(prop.getDomain());
+			AbstractNode domainNode = vowlData.getNodeForIri(prop.getDomains().iterator().next());
 
 			if (domainNode.getType().equals(NodeType.TYPE_THING) && domainNode == node2) {
 				return true;
@@ -106,11 +106,11 @@ public class VowlThingProvider {
 		for (IRI out : thing.getOutGoingProperties()) {
 			AbstractProperty property = vowlData.getPropertyForIri(out);
 
-			if (property.getRange() == null) {
+			if (property.getRanges().size() != 1) {
 				continue;
 			}
 
-			AbstractNode rangeNode = vowlData.getNodeForIri(property.getRange());
+			AbstractNode rangeNode = vowlData.getNodeForIri(property.getRanges().iterator().next());
 
 			boolean allowed = rangeNode.getType().equals(NodeType.TYPE_DATATYPE)
 					|| rangeNode.getType().equals(NodeType.TYPE_LITERAL)
@@ -124,11 +124,11 @@ public class VowlThingProvider {
 		for (IRI out : thing.getInGoingProperties()) {
 			AbstractProperty property = vowlData.getPropertyForIri(out);
 
-			if (property.getDomain() == null) {
+			if (property.getDomains().size() != 1) {
 				continue;
 			}
 
-			AbstractNode domainNode = vowlData.getNodeForIri(property.getDomain());
+			AbstractNode domainNode = vowlData.getNodeForIri(property.getDomains().iterator().next());
 
 			boolean allowed = domainNode.getType().equals(NodeType.TYPE_DATATYPE)
 					|| domainNode.getType().equals(NodeType.TYPE_LITERAL)

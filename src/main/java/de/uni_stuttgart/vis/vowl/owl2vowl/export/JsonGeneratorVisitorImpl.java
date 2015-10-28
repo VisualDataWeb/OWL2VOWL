@@ -139,8 +139,8 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 
 	@Override
 	public void visit(VowlObjectProperty vowlObjectProperty) {
-		if (vowlObjectProperty.getDomain() == null || vowlObjectProperty.getRange() == null) {
-			logger.info("Domain or range is null in object property: " + vowlObjectProperty);
+		if (vowlObjectProperty.getDomains().isEmpty() || vowlObjectProperty.getRanges().isEmpty()) {
+			logger.info("Domain or range is empty in object property: " + vowlObjectProperty);
 			return;
 		}
 
@@ -151,8 +151,8 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		objectProperty.add(object);
 
 		Map<String, Object> propertyAttributes = new HashMap<>();
-		propertyAttributes.put("domain", vowlData.getIdForIri(vowlObjectProperty.getDomain()));
-		propertyAttributes.put("range", vowlData.getIdForIri(vowlObjectProperty.getRange()));
+		propertyAttributes.put("domain", vowlData.getIdForIri(vowlObjectProperty.getJsonDomain()));
+		propertyAttributes.put("range", vowlData.getIdForIri(vowlObjectProperty.getJsonRange()));
 		propertyAttributes.put("id", vowlData.getIdForEntity(vowlObjectProperty));
 		propertyAttributes.put("label", getLabelsFromAnnotations(vowlObjectProperty.getAnnotations().getLabels()));
 		propertyAttributes.put("iri", vowlObjectProperty.getIri().toString());
