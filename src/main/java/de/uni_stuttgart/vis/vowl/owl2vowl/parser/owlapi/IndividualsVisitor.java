@@ -43,7 +43,6 @@ public class IndividualsVisitor implements OWLIndividualVisitor {
 	}
 
 	private IRI createIndividual(OWLNamedIndividual owlNamedIndividual) {
-		// TODO label parsing fails
 		VowlIndividual individual = vowlData.getGenerator().generateIndividual(owlNamedIndividual.getIRI());
 		new AnnotationParser(vowlData, manager).parse(individual);
 

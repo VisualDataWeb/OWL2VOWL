@@ -130,7 +130,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 
 			Map<String, Object> fields = new HashMap<>();
 			fields.put("iri", individual.getIri().toString());
-			fields.put("label", getLabelsFromAnnotations(individual.getAnnotations().getLabels()));
+			fields.put("labels", getLabelsFromAnnotations(individual.getAnnotations().getLabels()));
 			fields.put("description", getLabelsFromAnnotations(individual.getAnnotations().getDescription()));
 			fields.put("comment", getLabelsFromAnnotations(individual.getAnnotations().getComments()));
 			fields.put("annotations", individual.getAnnotations().getIdentifierToAnnotation());
