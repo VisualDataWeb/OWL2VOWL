@@ -1,13 +1,14 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlElementVisitor;
 import org.semanticweb.owlapi.model.IRI;
 
@@ -63,6 +64,11 @@ public class VowlSubclassPropertyGenerator implements VowlElementVisitor {
 
 	@Override
 	public void visit(VowlDatatypeProperty vowlDatatypeProperty) {
+
+	}
+
+	@Override
+	public void visit(VowlIndividual vowlIndividual) {
 
 	}
 }

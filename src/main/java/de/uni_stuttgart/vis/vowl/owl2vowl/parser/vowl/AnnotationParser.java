@@ -1,6 +1,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractVowlObject;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
@@ -23,7 +24,11 @@ public class AnnotationParser {
 		vowlData.getEntityMap().values().stream().forEach(this::parseForEntity);
 	}
 
-	protected void parseForEntity(AbstractEntity entity) {
+	public void parse(AbstractVowlObject vowlObject) {
+		parseForEntity(vowlObject);
+	}
+
+	protected void parseForEntity(AbstractVowlObject entity) {
 		entity.accept(new AnnotationVisitor(vowlData, manager));
 
 		String iriLabel = IriFormatText.cutQuote(IriFormatText.extractNameFromIRI(entity.getIri().toString()));

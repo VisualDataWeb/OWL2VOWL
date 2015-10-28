@@ -8,6 +8,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDat
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
 
 import java.util.Collection;
 
@@ -39,6 +40,11 @@ public class TypeSetter implements VowlElementVisitor {
 
 	@Override
 	public void visit(VowlDatatypeProperty vowlDatatypeProperty) {
+
+	}
+
+	@Override
+	public void visit(VowlIndividual vowlIndividual) {
 
 	}
 

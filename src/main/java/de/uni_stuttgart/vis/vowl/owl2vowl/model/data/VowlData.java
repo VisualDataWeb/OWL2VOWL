@@ -12,6 +12,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.Abstrac
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.*;
@@ -26,6 +27,9 @@ public class VowlData {
 	private Map<IRI, AbstractDatatype> datatypeMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, VowlObjectProperty> objectPropertyMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, VowlDatatypeProperty> datatypePropertyMap = new AllEntityMap<>(entityMap);
+
+	// TODO vielleicht zu allen entities hinzunehmen?
+	private Map<IRI, VowlIndividual> individualMap = new HashMap<>();
 	private Set<String> languages = new HashSet<>();
 	private VowlSearcher searcher;
 	private VowlIriGenerator iriGenerator = new VowlIriGenerator();
@@ -36,6 +40,10 @@ public class VowlData {
 		searcher = new VowlSearcher(this);
 		generator = new VowlGenerator(this);
 		thingProvider = new VowlThingProvider(this, searcher, generator);
+	}
+
+	public Map<IRI, VowlIndividual> getIndividualMap() {
+		return individualMap;
 	}
 
 	public VowlThingProvider getThingProvider() {
@@ -168,6 +176,10 @@ public class VowlData {
 
 	public IRI getNewIri() {
 		return iriGenerator.generate();
+	}
+
+	public void addIndividual(VowlIndividual individual) {
+		individualMap.put(individual.getIri(), individual);
 	}
 
 	private class VowlIriGenerator {

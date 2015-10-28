@@ -14,6 +14,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDat
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
 import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -103,9 +104,9 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		classAttributeObject.put("iri", vowlClass.getIri().toString());
 		classAttributeObject.put("description", getLabelsFromAnnotations(vowlClass.getAnnotations().getDescription()));
 		classAttributeObject.put("comment", getLabelsFromAnnotations(vowlClass.getAnnotations().getComments()));
+		// TODO nötig?
 		classAttributeObject.put("isDefinedBy", 0);
 		classAttributeObject.put("owlVersion", 0);
-		classAttributeObject.put("attributes", 0);
 		classAttributeObject.put("superClasses", getListWithIds(vowlClass.getSuperEntities()));
 		classAttributeObject.put("subClasses", getListWithIds(vowlClass.getSubEntities()));
 		classAttributeObject.put("annotations", vowlClass.getAnnotations().getIdentifierToAnnotation());
@@ -114,9 +115,30 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		classAttributeObject.put("attributes", vowlClass.getAttributes());
 		classAttributeObject.put("equivalent", getListWithIds(vowlClass.getEquivalentElements()));
 		// TODO can a complement not be a list?
-		//lassAttributeObject.put("complement", 0);
+		//classAttributeObject.put("complement", getIdForIri(vowlClass.getComplement()));
+		classAttributeObject.put("instances", vowlClass.getInstances().size());
+		classAttributeObject.put("individuals", createIndividualsJson(vowlClass.getIndividuals()));
 
 		classAttribute.add(classAttributeObject);
+	}
+
+	private Object createIndividualsJson(Set<IRI> individuals) {
+		List<Object> individualList = new ArrayList<>();
+
+		for (IRI individualIri : individuals) {
+			VowlIndividual individual = vowlData.getIndividualMap().get(individualIri);
+
+			Map<String, Object> fields = new HashMap<>();
+			fields.put("iri", individual.getIri().toString());
+			fields.put("label", getLabelsFromAnnotations(individual.getAnnotations().getLabels()));
+			fields.put("description", getLabelsFromAnnotations(individual.getAnnotations().getDescription()));
+			fields.put("comment", getLabelsFromAnnotations(individual.getAnnotations().getComments()));
+			fields.put("annotations", individual.getAnnotations().getIdentifierToAnnotation());
+
+			individualList.add(fields);
+		}
+
+		return individualList;
 	}
 
 	@Override
@@ -178,6 +200,11 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		//object.put("type", vowlDatatypeProperty.getType());
 
 		objectProperty.add(object);
+	}
+
+	@Override
+	public void visit(VowlIndividual vowlIndividual) {
+
 	}
 
 	protected List<String> getListWithIds(Collection<IRI> iriList) {

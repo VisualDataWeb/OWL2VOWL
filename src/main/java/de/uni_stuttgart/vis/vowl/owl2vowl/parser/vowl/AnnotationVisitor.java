@@ -11,6 +11,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDat
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
@@ -121,5 +122,11 @@ public class AnnotationVisitor implements VowlElementVisitor {
 		OWLDataProperty owlDataProperty = manager.getOWLDataFactory().getOWLDataProperty(vowlDatatypeProperty.getIri());
 		vowlDatatypeProperty.getAnnotations().fillAnnotations(getAnnotations(owlDataProperty));
 		checkDeprecation(vowlDatatypeProperty);
+	}
+
+	@Override
+	public void visit(VowlIndividual vowlIndividual) {
+		OWLNamedIndividual owlNamedIndividual = manager.getOWLDataFactory().getOWLNamedIndividual(vowlIndividual.getIri());
+		vowlIndividual.getAnnotations().fillAnnotations(getAnnotations(owlNamedIndividual));
 	}
 }

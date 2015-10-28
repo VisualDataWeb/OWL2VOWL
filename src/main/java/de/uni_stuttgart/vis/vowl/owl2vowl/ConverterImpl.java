@@ -15,6 +15,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.EntityCreationVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes.OwlClassAxiomVisitor;
@@ -24,6 +25,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.VowlSubclassPrope
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
+import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
 
 import java.io.File;
@@ -41,22 +43,31 @@ public class ConverterImpl implements Converter {
 		VowlData vowlData = new VowlData();
 
 		// TODO Vielleicht mithilfe von Klassenannotationen Unterteilung schaffen und dann die on the fly die annotierten Klassen holen und ausführen
-		preParsing(ontology, vowlData);
-		parsing(ontology, vowlData);
+		preParsing(ontology, vowlData, manager);
+		parsing(ontology, vowlData, manager);
 		postParsing(vowlData, manager);
 
 		//exportToConsole(vowlData);
 		exportToFile(vowlData);
 	}
 
-	private static void preParsing(OWLOntology ontology, VowlData vowlData) {
+	private static void preParsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
 		OWLOntologyWalker walker = new OWLOntologyWalker(ontology.getImportsClosure());
 		walker.walkStructure(new EntityCreationVisitor(vowlData));
 	}
 
-	private static void parsing(OWLOntology ontology, VowlData vowlData) {
+	private static void parsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
 		processClasses(ontology, vowlData);
 		processObjectProperties(ontology, vowlData);
+		processIndividuals(ontology, vowlData, manager);
+	}
+
+	private static void processIndividuals(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
+		// TODO check all classes
+		ontology.getClassesInSignature(Imports.INCLUDED).forEach(owlClass -> {
+			// TODO Probably collection of ontologies?
+			EntitySearcher.getIndividuals(owlClass, ontology).forEach(owlIndividual -> owlIndividual.accept(new IndividualsVisitor(vowlData, owlIndividual, owlClass, manager)));
+		});
 	}
 
 	private static void processObjectProperties(OWLOntology ontology, VowlData vowlData) {

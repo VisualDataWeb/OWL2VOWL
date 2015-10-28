@@ -11,7 +11,7 @@ import org.semanticweb.owlapi.model.IRI;
 /**
  *
  */
-public abstract class AbstractVowlObject implements HasIri, HasAnnotations {
+public abstract class AbstractVowlObject implements HasIri, HasAnnotations, VowlVisitable {
 	protected IRI iri;
 	private Annotations annotations = new Annotations();
 

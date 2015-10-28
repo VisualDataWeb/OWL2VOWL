@@ -7,6 +7,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.Collection;
@@ -84,5 +85,12 @@ public class VowlGenerator {
 		vowlData.addObjectProperty(property);
 
 		return property;
+	}
+
+	public VowlIndividual generateIndividual(IRI iri) {
+		VowlIndividual individual = new VowlIndividual(iri);
+		vowlData.addIndividual(individual);
+
+		return individual;
 	}
 }

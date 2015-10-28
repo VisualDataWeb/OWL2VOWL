@@ -8,6 +8,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDat
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlElementVisitor;
 import org.semanticweb.owlapi.model.IRI;
 
@@ -91,6 +92,11 @@ public class VowlSearcher implements VowlElementVisitor {
 		if (vowlDatatypeProperty.getType().equals(PropertyType.DISJOINT)) {
 			addDisjoint(vowlDatatypeProperty.getDomains().iterator().next(), vowlDatatypeProperty.getRanges().iterator().next());
 		}
+	}
+
+	@Override
+	public void visit(VowlIndividual vowlIndividual) {
+
 	}
 
 	public boolean containsDisjoint(IRI... disjoint) {
