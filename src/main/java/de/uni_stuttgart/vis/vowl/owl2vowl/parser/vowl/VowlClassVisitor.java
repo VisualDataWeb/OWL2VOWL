@@ -10,9 +10,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.AbstractNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLClass;
-import org.semanticweb.owlapi.model.OWLClassExpression;
-import org.semanticweb.owlapi.model.OWLObjectIntersectionOf;
+import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLClassExpressionVisitorAdapter;
 
 import java.util.Set;
@@ -34,6 +32,24 @@ public class VowlClassVisitor extends OWLClassExpressionVisitorAdapter {
 	protected void handleDefault(OWLClassExpression c) {
 		System.out.println("Not implemented VowlClassVisitor: " + c);
 		logger.info("Not implemented for equivalents: " + c);
+	}
+
+	@Override
+	public void visit(OWLObjectUnionOf ce) {
+		System.out.println("Not implemented OWLObjectUnionOf: " + ce);
+		logger.info("Not implemented for OWLObjectUnionOf: " + ce);
+	}
+
+	@Override
+	public void visit(OWLObjectComplementOf ce) {
+		if (ce.getOperand().isAnonymous()) {
+			logger.info("Anonymous operand in object complement of.");
+			return;
+		}
+
+		vowlData.getClassForIri(ce.getOperand().asOWLClass().getIRI()).setComplement(referencedClass.getIRI());
+		vowlData.getClassForIri(referencedClass.getIRI()).setComplement(ce.getOperand().asOWLClass().getIRI());
+		vowlData.getClassForIri(referencedClass.getIRI()).addAttribute(VowlAttribute.COMPLEMENT);
 	}
 
 	@Override
