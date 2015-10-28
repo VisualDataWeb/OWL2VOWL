@@ -1,9 +1,9 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.data;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.NodeType;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.AbstractNode;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlThing;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.AbstractProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
 import org.semanticweb.owlapi.model.IRI;
 
 /**

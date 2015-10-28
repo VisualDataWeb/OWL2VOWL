@@ -1,4 +1,4 @@
-package de.uni_stuttgart.vis.vowl.owl2vowl.model.properties;
+package de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties;
 
 /**
  * @author Eduard

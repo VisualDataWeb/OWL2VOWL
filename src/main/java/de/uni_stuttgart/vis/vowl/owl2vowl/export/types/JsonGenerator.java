@@ -7,7 +7,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.export.types;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitorImpl;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.util.ProjectInformations;
 import org.codehaus.jackson.map.ObjectMapper;

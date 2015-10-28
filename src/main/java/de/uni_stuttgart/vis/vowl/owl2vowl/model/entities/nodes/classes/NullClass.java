@@ -1,7 +1,6 @@
-package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes;
+package de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlElementVisitor;
-import org.semanticweb.owlapi.model.IRI;
 
 /**
  * NullClass which has no functionality and should be just used for VisitorEx returns.

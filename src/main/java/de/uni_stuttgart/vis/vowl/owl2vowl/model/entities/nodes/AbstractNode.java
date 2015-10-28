@@ -1,6 +1,6 @@
-package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes;
+package de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.Collections;

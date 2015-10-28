@@ -1,9 +1,9 @@
 /*
- * VowlObjectProperty.java
+ * VowlDatatypeProperty.java
  *
  */
 
-package de.uni_stuttgart.vis.vowl.owl2vowl.model.properties;
+package de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.PropertyType;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlElementVisitor;
@@ -12,9 +12,9 @@ import org.semanticweb.owlapi.model.IRI;
 /**
  *
  */
-public class VowlObjectProperty extends AbstractProperty {
-	public VowlObjectProperty(IRI iri) {
-		super(iri, PropertyType.OBJECT);
+public class VowlDatatypeProperty extends AbstractProperty {
+	public VowlDatatypeProperty(IRI iri) {
+		super(iri, PropertyType.DATATYPE);
 	}
 
 	@Override

@@ -3,9 +3,9 @@
  *
  */
 
-package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes;
+package de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.AbstractNode;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
 import org.semanticweb.owlapi.model.IRI;
 
 /**

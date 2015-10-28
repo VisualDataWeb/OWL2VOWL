@@ -2,15 +2,15 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Vowl_Lang;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlClass;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlThing;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.VowlDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.VowlLiteral;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlDatatypeProperty;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 

@@ -3,9 +3,9 @@
  *
  */
 
-package de.uni_stuttgart.vis.vowl.owl2vowl.model.properties;
+package de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.HashSet;

@@ -3,7 +3,7 @@
  *
  */
 
-package de.uni_stuttgart.vis.vowl.owl2vowl.model;
+package de.uni_stuttgart.vis.vowl.owl2vowl.model.entities;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlElementVisitor;
 

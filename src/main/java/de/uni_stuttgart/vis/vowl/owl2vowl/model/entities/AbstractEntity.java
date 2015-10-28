@@ -1,6 +1,7 @@
-package de.uni_stuttgart.vis.vowl.owl2vowl.model;
+package de.uni_stuttgart.vis.vowl.owl2vowl.model.entities;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractVowlObject;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotations;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlGenerationEnum;
 import org.semanticweb.owlapi.model.IRI;
@@ -9,19 +10,17 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class AbstractEntity implements HasEquivalents, HasSubEntities, VowlVisitable {
-	private IRI iri;
+public abstract class AbstractEntity extends AbstractVowlObject implements HasEquivalents, HasSubEntities, VowlVisitable {
 	private String type;
 	private Set<VowlAttribute> attributes = new HashSet<>();
 	private Set<IRI> equivalents = new HashSet<>();
-	private Annotations annotations = new Annotations();
 	private Set<IRI> subEntities = new HashSet<>();
 	private Set<IRI> superEntities = new HashSet<>();
 
 	private VowlGenerationEnum generated = VowlGenerationEnum.AUTOMATIC;
 
 	protected AbstractEntity(IRI iri, String type) {
-		this.iri = iri;
+		super(iri);
 		this.type = type;
 	}
 
@@ -47,10 +46,6 @@ public abstract class AbstractEntity implements HasEquivalents, HasSubEntities, 
 
 	public void setType(String type) {
 		this.type = type;
-	}
-
-	public IRI getIri() {
-		return iri;
 	}
 
 	@Override
@@ -84,10 +79,6 @@ public abstract class AbstractEntity implements HasEquivalents, HasSubEntities, 
 	@Override
 	public String toString() {
 		return iri.toString();
-	}
-
-	public Annotations getAnnotations() {
-		return annotations;
 	}
 
 	@Override

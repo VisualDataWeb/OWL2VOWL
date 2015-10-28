@@ -3,7 +3,7 @@
  *
  */
 
-package de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes;
+package de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.NodeType;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlElementVisitor;

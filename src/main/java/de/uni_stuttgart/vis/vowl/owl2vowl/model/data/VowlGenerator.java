@@ -3,14 +3,13 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model.data;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.PropertyType;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlClass;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlThing;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.AbstractProperty;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * @author Eduard

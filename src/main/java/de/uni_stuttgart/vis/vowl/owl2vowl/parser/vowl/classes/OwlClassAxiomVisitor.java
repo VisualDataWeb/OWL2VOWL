@@ -2,7 +2,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.AbstractClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractClass;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;

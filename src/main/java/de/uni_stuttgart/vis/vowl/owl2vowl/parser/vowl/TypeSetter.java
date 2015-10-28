@@ -2,12 +2,12 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.NodeType;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlClass;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlThing;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.VowlDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.VowlLiteral;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlDatatypeProperty;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 
 import java.util.Collection;
 
