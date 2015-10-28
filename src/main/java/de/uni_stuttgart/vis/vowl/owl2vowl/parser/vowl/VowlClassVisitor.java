@@ -36,8 +36,18 @@ public class VowlClassVisitor extends OWLClassExpressionVisitorAdapter {
 
 	@Override
 	public void visit(OWLObjectUnionOf ce) {
-		System.out.println("Not implemented OWLObjectUnionOf: " + ce);
-		logger.info("Not implemented for OWLObjectUnionOf: " + ce);
+		Set<OWLClassExpression> operands = ce.getOperands();
+		AbstractNode node = vowlData.getClassForIri(referencedClass.getIRI());
+
+		for (OWLClassExpression operand : operands) {
+			if (!operand.isAnonymous()) {
+				node.addElementToUnion(operand.asOWLClass().getIRI());
+				node.addAttribute(VowlAttribute.UNION);
+			} else {
+				// TODO Anonymous undefined behaviour
+				logger.info("Anonymous exists in unions.");
+			}
+		}
 	}
 
 	@Override
@@ -58,7 +68,6 @@ public class VowlClassVisitor extends OWLClassExpressionVisitorAdapter {
 	@Override
 	public void visit(OWLObjectIntersectionOf ce) {
 		Set<OWLClassExpression> operands = ce.getOperands();
-
 		AbstractNode node = vowlData.getClassForIri(referencedClass.getIRI());
 
 		for (OWLClassExpression operand : operands) {
