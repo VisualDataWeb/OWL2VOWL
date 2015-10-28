@@ -93,8 +93,21 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLDisjointUnionAxiom axiom) {
-		// TODO DisjointUnion implementation
-		logger.info("Disjoint union axiom not implemented yet.");
-		System.out.println("Disjoint union axiom not implemented yet.");
+		if (axiom.getOWLClass().isAnonymous()) {
+			logger.info("Disjoint Union base is anonym.");
+			return;
+		}
+
+		AbstractClass baseClass = vowlData.getClassForIri(axiom.getOWLClass().getIRI());
+		baseClass.addAttribute(VowlAttribute.UNION);
+
+		for (OWLClassExpression owlClassExpression : axiom.getClassExpressions()) {
+			if (!owlClassExpression.isAnonymous()) {
+				baseClass.addElementToUnion(owlClassExpression.asOWLClass().getIRI());
+			} else {
+				// TODO anonymous behaviour
+				logger.info("Anonymous disjoint in disjoint union: " + owlClassExpression);
+			}
+		}
 	}
 }

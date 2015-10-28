@@ -45,8 +45,8 @@ public class ConverterImpl implements Converter {
 		parsing(ontology, vowlData);
 		postParsing(vowlData, manager);
 
-		exportToConsole(vowlData);
-		//exportToFile(vowlData);
+		//exportToConsole(vowlData);
+		exportToFile(vowlData);
 	}
 
 	private static void preParsing(OWLOntology ontology, VowlData vowlData) {
