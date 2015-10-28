@@ -16,11 +16,11 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.OwlClassVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.OwlClassAxiomVisitor;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlSubclassPropertyGenerator;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.EmptyDomainRangeFiller;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.PropertyVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes.OwlClassAxiomVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.DomainRangeFiller;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.PropertyVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.VowlSubclassPropertyGenerator;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
@@ -80,7 +80,7 @@ public class ConverterImpl implements Converter {
 	}
 
 	private static void fillDomainRanges(VowlData vowlData, Collection<VowlObjectProperty> values, Collection<VowlDatatypeProperty> vowlDatatypeProperties) {
-		new EmptyDomainRangeFiller(vowlData, values).execute();
+		new DomainRangeFiller(vowlData, values).execute();
 	}
 
 	private static void exportToFile(VowlData vowlData) {
