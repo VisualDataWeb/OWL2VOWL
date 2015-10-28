@@ -87,7 +87,9 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 				domainRange[index++] = aClass.getIRI();
 			}
 
-			vowlData.getGenerator().generateDisjointProperty(domainRange[0], domainRange[1]);
+			if (!vowlData.getSearcher().containsDisjoint(domainRange[0], domainRange[1])) {
+				vowlData.getGenerator().generateDisjointProperty(domainRange[0], domainRange[1]);
+			}
 		}
 	}
 

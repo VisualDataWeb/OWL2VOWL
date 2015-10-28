@@ -1,5 +1,6 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.data;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.PropertyType;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.VowlThing;
@@ -10,10 +11,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlElementVisitor;
 import org.semanticweb.owlapi.model.IRI;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author Eduard
@@ -25,6 +23,7 @@ public class VowlSearcher implements VowlElementVisitor {
 	private Set<VowlClass> intersections = new HashSet<>();
 	private Set<VowlClass> unions = new HashSet<>();
 	private Set<VowlThing> things = new HashSet<>();
+	private Map<IRI, Set<IRI>> disjointMapping = new HashMap<>();
 
 	public VowlSearcher(VowlData data) {
 		this.data = data;
@@ -40,6 +39,7 @@ public class VowlSearcher implements VowlElementVisitor {
 		intersections.clear();
 		unions.clear();
 		things.clear();
+		disjointMapping.clear();
 
 		for (AbstractEntity abstractEntity : data.getEntityMap().values()) {
 			abstractEntity.accept(this);
@@ -81,12 +81,21 @@ public class VowlSearcher implements VowlElementVisitor {
 
 	@Override
 	public void visit(VowlObjectProperty vowlObjectProperty) {
-
+		if (vowlObjectProperty.getType().equals(PropertyType.DISJOINT)) {
+			addDisjoint(vowlObjectProperty.getDomains().iterator().next(), vowlObjectProperty.getRanges().iterator().next());
+		}
 	}
 
 	@Override
 	public void visit(VowlDatatypeProperty vowlDatatypeProperty) {
+		if (vowlDatatypeProperty.getType().equals(PropertyType.DISJOINT)) {
+			addDisjoint(vowlDatatypeProperty.getDomains().iterator().next(), vowlDatatypeProperty.getRanges().iterator().next());
+		}
+	}
 
+	public boolean containsDisjoint(IRI... disjoint) {
+		checkConsistenty();
+		return disjointMapping.containsKey(disjoint[0]) && disjointMapping.get(disjoint[0]).contains(disjoint[1]);
 	}
 
 	public VowlClass getIntersection(Collection<IRI> intersectionIris) {
@@ -110,5 +119,18 @@ public class VowlSearcher implements VowlElementVisitor {
 		}
 
 		return null;
+	}
+
+	protected void addDisjoint(IRI... disjoints) {
+		if (!disjointMapping.containsKey(disjoints[0])) {
+			disjointMapping.put(disjoints[0], new HashSet<>());
+		}
+
+		if (!disjointMapping.containsKey(disjoints[1])) {
+			disjointMapping.put(disjoints[1], new HashSet<>());
+		}
+
+		disjointMapping.get(disjoints[0]).add(disjoints[1]);
+		disjointMapping.get(disjoints[1]).add(disjoints[0]);
 	}
 }
