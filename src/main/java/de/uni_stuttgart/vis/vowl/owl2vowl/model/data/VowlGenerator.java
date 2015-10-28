@@ -43,7 +43,7 @@ public class VowlGenerator {
 	public VowlClass generateComplement(IRI iri) {
 		VowlClass element = new VowlClass(vowlData.getNewIri());
 		element.setGenerated(VowlGenerationEnum.MANUALLY);
-		element.setComplement(iri);
+		element.addComplement(iri);
 		element.addAttribute(VowlAttribute.COMPLEMENT);
 		vowlData.addClass(element);
 		return element;

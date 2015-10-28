@@ -89,16 +89,6 @@ public class DomainRangeVisitor extends OWLObjectVisitorExAdapter<AbstractClass>
 			return new NullClass();
 		}
 
-		AbstractClass clazz = vowlData.getClassForIri(baseClass.asOWLClass().getIRI());
-		IRI complementIri = clazz.getComplement();
-		AbstractClass complementClass;
-
-		if (complementIri == null) {
-			complementClass = vowlData.getGenerator().generateComplement(clazz.getIri());
-		} else {
-			complementClass = vowlData.getClassForIri(complementIri);
-		}
-
-		return complementClass;
+		return vowlData.getGenerator().generateComplement(baseClass.asOWLClass().getIRI());
 	}
 }

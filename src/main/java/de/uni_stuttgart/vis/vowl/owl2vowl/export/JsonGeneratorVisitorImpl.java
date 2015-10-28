@@ -115,7 +115,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		classAttributeObject.put("attributes", vowlClass.getAttributes());
 		classAttributeObject.put("equivalent", getListWithIds(vowlClass.getEquivalentElements()));
 		// TODO can a complement not be a list?
-		//classAttributeObject.put("complement", getIdForIri(vowlClass.getComplement()));
+		classAttributeObject.put("complement", getListWithIds(vowlClass.getComplements()));
 		classAttributeObject.put("instances", vowlClass.getInstances().size());
 		classAttributeObject.put("individuals", createIndividualsJson(vowlClass.getIndividuals()));
 

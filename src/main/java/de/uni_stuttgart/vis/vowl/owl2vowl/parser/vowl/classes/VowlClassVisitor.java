@@ -60,8 +60,9 @@ public class VowlClassVisitor extends OWLClassExpressionVisitorAdapter {
 		IRI baseClassIri = ce.getOperand().asOWLClass().getIRI();
 		IRI complementIri = referencedClass.getIRI();
 
-		vowlData.getClassForIri(baseClassIri).setComplement(complementIri);
-		vowlData.getClassForIri(complementIri).setComplement(baseClassIri);
+		// TODO where to set the complement?
+		//vowlData.getClassForIri(baseClassIri).addComplement(complementIri);
+		vowlData.getClassForIri(complementIri).addComplement(baseClassIri);
 		vowlData.getClassForIri(complementIri).addAttribute(VowlAttribute.COMPLEMENT);
 	}
 

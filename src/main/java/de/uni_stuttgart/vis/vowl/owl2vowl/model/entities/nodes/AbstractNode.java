@@ -9,7 +9,7 @@ import java.util.Set;
 
 public abstract class AbstractNode extends AbstractEntity implements HasUnions, HasIntersections, HasComplement {
 
-	private IRI complement;
+	private Set<IRI> complements = new HashSet<>();
 	private Set<IRI> intersectionElements = new HashSet<>();
 	private Set<IRI> unionElements = new HashSet<>();
 	private Set<IRI> inGoingProperties = new HashSet<>();
@@ -28,13 +28,13 @@ public abstract class AbstractNode extends AbstractEntity implements HasUnions, 
 	}
 
 	@Override
-	public IRI getComplement() {
-		return complement;
+	public Set<IRI> getComplements() {
+		return Collections.unmodifiableSet(complements);
 	}
 
 	@Override
-	public void setComplement(IRI complement) {
-		this.complement = complement;
+	public void addComplement(IRI iri) {
+		complements.add(iri);
 	}
 
 	@Override
