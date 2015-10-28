@@ -1,4 +1,4 @@
-package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
+package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
