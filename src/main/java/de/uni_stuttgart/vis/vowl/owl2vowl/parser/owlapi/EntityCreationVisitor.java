@@ -9,11 +9,11 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.properties.VowlObjectProperty;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;
 
-public class OwlClassVisitor extends OWLObjectVisitorAdapter {
+public class EntityCreationVisitor extends OWLObjectVisitorAdapter {
 
 	private VowlData vowlData;
 
-	public OwlClassVisitor(VowlData vowlData) {
+	public EntityCreationVisitor(VowlData vowlData) {
 		this.vowlData = vowlData;
 	}
 
