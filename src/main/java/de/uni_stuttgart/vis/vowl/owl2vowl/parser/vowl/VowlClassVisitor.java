@@ -47,9 +47,12 @@ public class VowlClassVisitor extends OWLClassExpressionVisitorAdapter {
 			return;
 		}
 
-		vowlData.getClassForIri(ce.getOperand().asOWLClass().getIRI()).setComplement(referencedClass.getIRI());
-		vowlData.getClassForIri(referencedClass.getIRI()).setComplement(ce.getOperand().asOWLClass().getIRI());
-		vowlData.getClassForIri(referencedClass.getIRI()).addAttribute(VowlAttribute.COMPLEMENT);
+		IRI baseClassIri = ce.getOperand().asOWLClass().getIRI();
+		IRI complementIri = referencedClass.getIRI();
+
+		vowlData.getClassForIri(baseClassIri).setComplement(complementIri);
+		vowlData.getClassForIri(complementIri).setComplement(baseClassIri);
+		vowlData.getClassForIri(complementIri).addAttribute(VowlAttribute.COMPLEMENT);
 	}
 
 	@Override
