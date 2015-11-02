@@ -20,7 +20,7 @@ public class EntityCreationVisitor extends OWLObjectVisitorAdapter {
 	public void visit(OWLClass ce) {
 		AbstractClass clazz = null;
 
-		if (ce.isOWLThing()) {
+		if (ce.isOWLThing() || ce.isOWLNothing()) {
 			// General class do not create here
 			return;
 		} else if (!ce.isAnonymous()) {
