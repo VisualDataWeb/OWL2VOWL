@@ -6,6 +6,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
 import org.semanticweb.owlapi.model.IRI;
@@ -92,5 +93,21 @@ public class VowlGenerator {
 		vowlData.addIndividual(individual);
 
 		return individual;
+	}
+
+	public TypeOfProperty generateTypeOf(IRI domain, IRI range) {
+		if (domain == null || range == null) {
+			throw new IllegalArgumentException("Parameters should not be null!");
+		}
+
+		TypeOfProperty property = new TypeOfProperty(vowlData.getNewIri());
+		property.setGenerated(VowlGenerationEnum.MANUALLY);
+		property.addDomain(domain);
+		property.addRange(range);
+		property.setType(PropertyType.TYPEOF);
+		property.getAnnotations().addLabel(new Annotation("label", "type"));
+		vowlData.addTypeOfProperty(property);
+
+		return property;
 	}
 }

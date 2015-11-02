@@ -10,6 +10,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.AbstractDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
@@ -28,6 +29,8 @@ public class VowlData {
 	private Map<IRI, VowlObjectProperty> objectPropertyMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, VowlDatatypeProperty> datatypePropertyMap = new AllEntityMap<>(entityMap);
 
+	// Vielleicht generalisieren
+	private Map<IRI, TypeOfProperty> typeOfPropertyMap = new AllEntityMap<IRI, TypeOfProperty>(entityMap);
 	// TODO vielleicht zu allen entities hinzunehmen?
 	private Map<IRI, VowlIndividual> individualMap = new HashMap<>();
 	private Set<String> languages = new HashSet<>();
@@ -40,6 +43,14 @@ public class VowlData {
 		searcher = new VowlSearcher(this);
 		generator = new VowlGenerator(this);
 		thingProvider = new VowlThingProvider(this, searcher, generator);
+	}
+
+	public Map<IRI, TypeOfProperty> getTypeOfPropertyMap() {
+		return typeOfPropertyMap;
+	}
+
+	public void addTypeOfProperty(TypeOfProperty property) {
+		typeOfPropertyMap.put(property.getIri(), property);
 	}
 
 	public Map<IRI, VowlIndividual> getIndividualMap() {

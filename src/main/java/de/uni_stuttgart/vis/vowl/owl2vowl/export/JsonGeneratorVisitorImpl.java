@@ -12,6 +12,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
@@ -205,6 +206,29 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	@Override
 	public void visit(VowlIndividual vowlIndividual) {
 
+	}
+
+	@Override
+	public void visit(TypeOfProperty typeOfProperty) {
+		if (typeOfProperty.getDomains().isEmpty() || typeOfProperty.getRanges().isEmpty()) {
+			logger.info("Domain or range is empty in typeof property: " + typeOfProperty);
+			return;
+		}
+
+		Map<String, Object> object = new HashMap<>();
+		object.put("id", vowlData.getIdForEntity(typeOfProperty));
+		object.put("type", typeOfProperty.getType());
+
+		objectProperty.add(object);
+
+		Map<String, Object> propertyAttributes = new HashMap<>();
+		propertyAttributes.put("domain", vowlData.getIdForIri(typeOfProperty.getJsonDomain()));
+		propertyAttributes.put("range", vowlData.getIdForIri(typeOfProperty.getJsonRange()));
+		propertyAttributes.put("id", vowlData.getIdForEntity(typeOfProperty));
+		propertyAttributes.put("label", getLabelsFromAnnotations(typeOfProperty.getAnnotations().getLabels()));
+		propertyAttributes.put("iri", typeOfProperty.getIri().toString());
+
+		objectPropertyAttribute.add(propertyAttributes);
 	}
 
 	protected List<String> getListWithIds(Collection<IRI> iriList) {

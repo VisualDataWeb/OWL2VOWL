@@ -9,6 +9,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
@@ -128,5 +129,10 @@ public class AnnotationVisitor implements VowlElementVisitor {
 	public void visit(VowlIndividual vowlIndividual) {
 		OWLNamedIndividual owlNamedIndividual = manager.getOWLDataFactory().getOWLNamedIndividual(vowlIndividual.getIri());
 		vowlIndividual.getAnnotations().fillAnnotations(getAnnotations(owlNamedIndividual));
+	}
+
+	@Override
+	public void visit(TypeOfProperty typeOfProperty) {
+		// Nothing needed
 	}
 }

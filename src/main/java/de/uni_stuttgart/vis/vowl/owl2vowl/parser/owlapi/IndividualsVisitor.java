@@ -37,6 +37,7 @@ public class IndividualsVisitor implements OWLIndividualVisitor {
 	public void visit(@Nonnull OWLNamedIndividual owlNamedIndividual) {
 		if (vowlData.getClassMap().containsKey(owlNamedIndividual.getIRI())) {
 			vowlData.getClassForIri(baseClass.getIRI()).addInstance(owlNamedIndividual.getIRI());
+			vowlData.getGenerator().generateTypeOf(baseClass.getIRI(), owlNamedIndividual.getIRI());
 		} else {
 			vowlData.getClassForIri(baseClass.getIRI()).addIndividual(createIndividual(owlNamedIndividual));
 		}

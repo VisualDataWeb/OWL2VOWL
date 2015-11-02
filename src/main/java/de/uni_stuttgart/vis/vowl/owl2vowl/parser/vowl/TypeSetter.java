@@ -6,6 +6,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
@@ -45,6 +46,11 @@ public class TypeSetter implements VowlElementVisitor {
 
 	@Override
 	public void visit(VowlIndividual vowlIndividual) {
+
+	}
+
+	@Override
+	public void visit(TypeOfProperty typeOfProperty) {
 
 	}
 
