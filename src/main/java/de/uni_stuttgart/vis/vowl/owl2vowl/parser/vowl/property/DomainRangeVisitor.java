@@ -1,9 +1,13 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.NullClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.AbstractDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.DatatypeReference;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDatatype;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
@@ -16,12 +20,12 @@ import java.util.Set;
 /**
  * @author Eduard
  */
-public class DomainRangeVisitor extends OWLObjectVisitorExAdapter<AbstractClass> {
-	private final OWLObjectProperty owlObjectProperty;
+public class DomainRangeVisitor extends OWLObjectVisitorExAdapter<AbstractNode> {
+	private final OWLProperty owlObjectProperty;
 	private final VowlData vowlData;
 	private Logger logger = LogManager.getLogger(DomainRangeVisitor.class);
 
-	public DomainRangeVisitor(OWLObjectProperty owlObjectProperty, VowlData vowlData) {
+	public DomainRangeVisitor(OWLProperty owlObjectProperty, VowlData vowlData) {
 		super(new NullClass());
 		this.owlObjectProperty = owlObjectProperty;
 		this.vowlData = vowlData;
@@ -29,14 +33,15 @@ public class DomainRangeVisitor extends OWLObjectVisitorExAdapter<AbstractClass>
 
 	@Nonnull
 	@Override
-	protected AbstractClass doDefault(@Nonnull OWLObject object) {
+	protected AbstractNode doDefault(@Nonnull OWLObject object) {
 		logger.info("Missed object for domain/range: " + object);
+		System.out.println("Missed object for domain/range: " + object);
 		return super.doDefault(object);
 	}
 
 	@Nonnull
 	@Override
-	public AbstractClass visit(@Nonnull OWLObjectIntersectionOf ce) {
+	public AbstractNode visit(@Nonnull OWLObjectIntersectionOf ce) {
 		Set<OWLClassExpression> operands = ce.getOperands();
 		Set<IRI> iriList = new HashSet<>();
 
@@ -59,7 +64,7 @@ public class DomainRangeVisitor extends OWLObjectVisitorExAdapter<AbstractClass>
 
 	@Nonnull
 	@Override
-	public AbstractClass visit(OWLObjectUnionOf ce) {
+	public AbstractNode visit(OWLObjectUnionOf ce) {
 		Set<OWLClassExpression> operands = ce.getOperands();
 		Set<IRI> iriList = new HashSet<>();
 
@@ -82,7 +87,7 @@ public class DomainRangeVisitor extends OWLObjectVisitorExAdapter<AbstractClass>
 
 	@Nonnull
 	@Override
-	public AbstractClass visit(OWLObjectComplementOf ce) {
+	public AbstractNode visit(OWLObjectComplementOf ce) {
 		OWLClassExpression baseClass = ce.getOperand();
 		if (baseClass.isAnonymous()) {
 			logger.info("Complement base is anonym:" + baseClass);
@@ -90,5 +95,11 @@ public class DomainRangeVisitor extends OWLObjectVisitorExAdapter<AbstractClass>
 		}
 
 		return vowlData.getGenerator().generateComplement(baseClass.asOWLClass().getIRI());
+	}
+
+	@Nonnull
+	@Override
+	public AbstractNode visit(@Nonnull OWLDatatype node) {
+		return vowlData.getGenerator().generateDatatypeReference(node.getIRI());
 	}
 }

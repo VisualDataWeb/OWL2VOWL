@@ -6,12 +6,15 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.export;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.AbstractDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.DatatypeReference;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
@@ -37,8 +40,8 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	private List<Object> classAttribute;
 	private List<Object> datatype;
 	private List<Object> datatypeAttribute;
-	private List<Object> objectProperty;
-	private List<Object> objectPropertyAttribute;
+	private List<Object> propertyList;
+	private List<Object> propertyAttributeList;
 	private Logger logger = LogManager.getLogger(JsonGeneratorVisitorImpl.class);
 
 	public JsonGeneratorVisitorImpl(VowlData vowlData, Map<String, Object> root) {
@@ -55,8 +58,8 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		classAttribute = new ArrayList<>();
 		datatype = new ArrayList<>();
 		datatypeAttribute = new ArrayList<>();
-		objectProperty = new ArrayList<>();
-		objectPropertyAttribute = new ArrayList<>();
+		propertyList = new ArrayList<>();
+		propertyAttributeList = new ArrayList<>();
 
 		root.put("header", header);
 		root.put("namespace", namespace);
@@ -65,8 +68,8 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		root.put("classAttribute", classAttribute);
 		root.put("datatype", datatype);
 		root.put("datatypeAttribute", datatypeAttribute);
-		root.put("property", objectProperty);
-		root.put("propertyAttribute", objectPropertyAttribute);
+		root.put("property", propertyList);
+		root.put("propertyAttribute", propertyAttributeList);
 
 		namespace.add(new HashMap<>());
 	}
@@ -99,15 +102,11 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 
 		Map<String, Object> classAttributeObject = new HashMap<>();
 
-		// TODO
 		classAttributeObject.put("id", vowlData.getIdForEntity(vowlClass));
 		classAttributeObject.put("label", getLabelsFromAnnotations(vowlClass.getAnnotations().getLabels()));
 		classAttributeObject.put("iri", vowlClass.getIri().toString());
 		classAttributeObject.put("description", getLabelsFromAnnotations(vowlClass.getAnnotations().getDescription()));
 		classAttributeObject.put("comment", getLabelsFromAnnotations(vowlClass.getAnnotations().getComments()));
-		// TODO nötig?
-		classAttributeObject.put("isDefinedBy", 0);
-		classAttributeObject.put("owlVersion", 0);
 		classAttributeObject.put("superClasses", getListWithIds(vowlClass.getSuperEntities()));
 		classAttributeObject.put("subClasses", getListWithIds(vowlClass.getSubEntities()));
 		classAttributeObject.put("annotations", vowlClass.getAnnotations().getIdentifierToAnnotation());
@@ -115,7 +114,6 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		classAttributeObject.put("intersection", getListWithIds(vowlClass.getElementOfIntersection()));
 		classAttributeObject.put("attributes", vowlClass.getAttributes());
 		classAttributeObject.put("equivalent", getListWithIds(vowlClass.getEquivalentElements()));
-		// TODO can a complement not be a list?
 		classAttributeObject.put("complement", getListWithIds(vowlClass.getComplements()));
 		classAttributeObject.put("instances", vowlClass.getInstances().size());
 		classAttributeObject.put("individuals", createIndividualsJson(vowlClass.getIndividuals()));
@@ -144,63 +142,92 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 
 	@Override
 	public void visit(VowlLiteral vowlLiteral) {
-		Map<String, Object> object = new HashMap<>();
-		//object.put("id", vowlData.getIdForEntity(vowlLiteral));
-		//object.put("type", vowlLiteral.getType());
-
-		datatype.add(object);
+		// TODO Later
 	}
 
 	@Override
 	public void visit(VowlDatatype vowlDatatype) {
-		Map<String, Object> object = new HashMap<>();
-		//object.put("id", vowlData.getIdForEntity(vowlDatatype));
-		//object.put("type", vowlDatatype.getType());
+		if (!(vowlDatatype instanceof DatatypeReference)) {
+			// Skip datatype if it's not a reference node.
+			return;
+		}
 
-		datatype.add(object);
+		AbstractDatatype reference = vowlData.getDatatypeForIri(((DatatypeReference) vowlDatatype).getReferencedIri());
+
+		Map<String, Object> classObject = new HashMap<>();
+		classObject.put("id", vowlData.getIdForEntity(vowlDatatype));
+		classObject.put("type", vowlDatatype.getType());
+
+		_class.add(classObject);
+
+		Map<String, Object> classAttributeObject = new HashMap<>();
+
+		// TODO
+		classAttributeObject.put("id", vowlData.getIdForEntity(vowlDatatype));
+		classAttributeObject.put("label", getLabelsFromAnnotations(reference.getAnnotations().getLabels()));
+		classAttributeObject.put("iri", reference.getIri().toString());
+
+		/*
+		classAttributeObject.put("description", getLabelsFromAnnotations(vowlDatatype.getAnnotations().getDescription()));
+		classAttributeObject.put("comment", getLabelsFromAnnotations(vowlDatatype.getAnnotations().getComments()));
+		// TODO nötig?
+		classAttributeObject.put("isDefinedBy", 0);
+		classAttributeObject.put("owlVersion", 0);
+		classAttributeObject.put("superClasses", getListWithIds(vowlDatatype.getSuperEntities()));
+		classAttributeObject.put("subClasses", getListWithIds(vowlDatatype.getSubEntities()));
+		classAttributeObject.put("annotations", vowlDatatype.getAnnotations().getIdentifierToAnnotation());
+		classAttributeObject.put("union", getListWithIds(vowlDatatype.getElementsOfUnion()));
+		classAttributeObject.put("intersection", getListWithIds(vowlDatatype.getElementOfIntersection()));
+		classAttributeObject.put("attributes", vowlDatatype.getAttributes());
+		classAttributeObject.put("equivalent", getListWithIds(vowlDatatype.getEquivalentElements()));
+		// TODO can a complement not be a list?
+		classAttributeObject.put("complement", getListWithIds(vowlDatatype.getComplements()));
+		*/
+
+		classAttribute.add(classAttributeObject);
 	}
 
 	@Override
 	public void visit(VowlObjectProperty vowlObjectProperty) {
-		if (vowlObjectProperty.getDomains().isEmpty() || vowlObjectProperty.getRanges().isEmpty()) {
-			logger.info("Domain or range is empty in object property: " + vowlObjectProperty);
-			return;
-		}
-
-		Map<String, Object> object = new HashMap<>();
-		object.put("id", vowlData.getIdForEntity(vowlObjectProperty));
-		object.put("type", vowlObjectProperty.getType());
-
-		objectProperty.add(object);
-
-		Map<String, Object> propertyAttributes = new HashMap<>();
-		propertyAttributes.put("domain", vowlData.getIdForIri(vowlObjectProperty.getJsonDomain()));
-		propertyAttributes.put("range", vowlData.getIdForIri(vowlObjectProperty.getJsonRange()));
-		propertyAttributes.put("id", vowlData.getIdForEntity(vowlObjectProperty));
-		propertyAttributes.put("label", getLabelsFromAnnotations(vowlObjectProperty.getAnnotations().getLabels()));
-		propertyAttributes.put("iri", vowlObjectProperty.getIri().toString());
-		propertyAttributes.put("description", getLabelsFromAnnotations(vowlObjectProperty.getAnnotations().getDescription()));
-		propertyAttributes.put("comment", getLabelsFromAnnotations(vowlObjectProperty.getAnnotations().getComments()));
-		propertyAttributes.put("attributes", vowlObjectProperty.getAttributes());
-		propertyAttributes.put("annotations", vowlObjectProperty.getAnnotations().getIdentifierToAnnotation());
-		propertyAttributes.put("inverse", getIdForIri(vowlObjectProperty.getInverse()));
-		propertyAttributes.put("superproperty", getListWithIds(vowlObjectProperty.getSuperEntities()));
-		propertyAttributes.put("subproperty", getListWithIds(vowlObjectProperty.getSubEntities()));
-		propertyAttributes.put("equivalent", getListWithIds(vowlObjectProperty.getEquivalentElements()));
-		propertyAttributes.put("minCardinality", getCardinality(vowlObjectProperty.getMinCardinality()));
-		propertyAttributes.put("maxCardinality", getCardinality(vowlObjectProperty.getMaxCardinality()));
-		propertyAttributes.put("cardinality", getCardinality(vowlObjectProperty.getExactCardinality()));
-
-		objectPropertyAttribute.add(propertyAttributes);
+		addProperty(vowlObjectProperty);
 	}
 
 	@Override
 	public void visit(VowlDatatypeProperty vowlDatatypeProperty) {
-		Map<String, Object> object = new HashMap<>();
-		//object.put("id", vowlData.getIdForEntity(vowlDatatypeProperty));
-		//object.put("type", vowlDatatypeProperty.getType());
+		addProperty(vowlDatatypeProperty);
+	}
 
-		objectProperty.add(object);
+	protected void addProperty(AbstractProperty property) {
+		if (property.getDomains().isEmpty() || property.getRanges().isEmpty()) {
+			logger.info("Domain or range is empty in property: " + property);
+			return;
+		}
+
+		Map<String, Object> object = new HashMap<>();
+		object.put("id", vowlData.getIdForEntity(property));
+		object.put("type", property.getType());
+
+		propertyList.add(object);
+
+		Map<String, Object> propertyAttributes = new HashMap<>();
+		propertyAttributes.put("domain", vowlData.getIdForIri(property.getJsonDomain()));
+		propertyAttributes.put("range", vowlData.getIdForIri(property.getJsonRange()));
+		propertyAttributes.put("id", vowlData.getIdForEntity(property));
+		propertyAttributes.put("label", getLabelsFromAnnotations(property.getAnnotations().getLabels()));
+		propertyAttributes.put("iri", property.getIri().toString());
+		propertyAttributes.put("description", getLabelsFromAnnotations(property.getAnnotations().getDescription()));
+		propertyAttributes.put("comment", getLabelsFromAnnotations(property.getAnnotations().getComments()));
+		propertyAttributes.put("attributes", property.getAttributes());
+		propertyAttributes.put("annotations", property.getAnnotations().getIdentifierToAnnotation());
+		propertyAttributes.put("inverse", getIdForIri(property.getInverse()));
+		propertyAttributes.put("superproperty", getListWithIds(property.getSuperEntities()));
+		propertyAttributes.put("subproperty", getListWithIds(property.getSubEntities()));
+		propertyAttributes.put("equivalent", getListWithIds(property.getEquivalentElements()));
+		propertyAttributes.put("minCardinality", getCardinality(property.getMinCardinality()));
+		propertyAttributes.put("maxCardinality", getCardinality(property.getMaxCardinality()));
+		propertyAttributes.put("cardinality", getCardinality(property.getExactCardinality()));
+
+		propertyAttributeList.add(propertyAttributes);
 	}
 
 	@Override
@@ -219,7 +246,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		object.put("id", vowlData.getIdForEntity(typeOfProperty));
 		object.put("type", typeOfProperty.getType());
 
-		objectProperty.add(object);
+		propertyList.add(object);
 
 		Map<String, Object> propertyAttributes = new HashMap<>();
 		propertyAttributes.put("domain", vowlData.getIdForIri(typeOfProperty.getJsonDomain()));
@@ -228,13 +255,11 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		propertyAttributes.put("label", getLabelsFromAnnotations(typeOfProperty.getAnnotations().getLabels()));
 		propertyAttributes.put("iri", typeOfProperty.getIri().toString());
 
-		objectPropertyAttribute.add(propertyAttributes);
+		propertyAttributeList.add(propertyAttributes);
 	}
 
 	protected List<String> getListWithIds(Collection<IRI> iriList) {
-		List<String> idList = iriList.stream().map(iri -> String.valueOf(vowlData.getIdForIri(iri))).collect(Collectors.toList());
-
-		return idList;
+		return iriList.stream().map(iri -> String.valueOf(vowlData.getIdForIri(iri))).collect(Collectors.toList());
 	}
 
 	protected String getIdForIri(IRI iri) {

@@ -19,9 +19,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes.OwlClassAxiomVisitor;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.DomainRangeFiller;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.PropertyVisitor;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.VowlSubclassPropertyGenerator;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.*;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
@@ -59,6 +57,7 @@ public class ConverterImpl implements Converter {
 	private static void parsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
 		processClasses(ontology, vowlData);
 		processObjectProperties(ontology, vowlData);
+		processDataProperties(ontology, vowlData);
 		processIndividuals(ontology, vowlData, manager);
 	}
 
@@ -73,16 +72,23 @@ public class ConverterImpl implements Converter {
 	private static void processObjectProperties(OWLOntology ontology, VowlData vowlData) {
 		for (OWLObjectProperty owlObjectProperty : ontology.getObjectPropertiesInSignature(Imports.INCLUDED)) {
 			for (OWLObjectPropertyAxiom owlObjectPropertyAxiom : ontology.getAxioms(owlObjectProperty, Imports.INCLUDED)) {
-				owlObjectPropertyAxiom.accept(new PropertyVisitor(vowlData, owlObjectProperty));
+				owlObjectPropertyAxiom.accept(new ObjectPropertyVisitor(vowlData, owlObjectProperty));
 			}
 		}
+	}
 
+	private static void processDataProperties(OWLOntology ontology, VowlData vowlData) {
+		for (OWLDataProperty property : ontology.getDataPropertiesInSignature(Imports.INCLUDED)) {
+			for (OWLDataPropertyAxiom propertyAxiom : ontology.getAxioms(property, Imports.INCLUDED)) {
+				propertyAxiom.accept(new DataPropertyVisitor(vowlData, property));
+			}
+		}
 	}
 
 	private static void postParsing(VowlData vowlData, OWLOntologyManager manager) {
 		setCorrectType(vowlData.getEntityMap().values());
 		parseAnnotations(vowlData, manager);
-		fillDomainRanges(vowlData, vowlData.getObjectPropertyMap().values(), vowlData.getDatatypePropertyMap().values());
+		fillDomainRanges(vowlData);
 		createSubclassProperties(vowlData);
 	}
 
@@ -90,8 +96,8 @@ public class ConverterImpl implements Converter {
 		new VowlSubclassPropertyGenerator(vowlData).execute();
 	}
 
-	private static void fillDomainRanges(VowlData vowlData, Collection<VowlObjectProperty> values, Collection<VowlDatatypeProperty> vowlDatatypeProperties) {
-		new DomainRangeFiller(vowlData, values).execute();
+	private static void fillDomainRanges(VowlData vowlData) {
+		new DomainRangeFiller(vowlData, vowlData.getProperties()).execute();
 	}
 
 	private static void exportToFile(VowlData vowlData) {

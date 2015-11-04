@@ -201,6 +201,14 @@ public class VowlData {
 			return IRI.create(iriPrefix + generations++);
 		}
 	}
+
+	public Collection<AbstractProperty> getProperties() {
+		Set<AbstractProperty> concat = new HashSet<>();
+		concat.addAll(datatypePropertyMap.values());
+		concat.addAll(objectPropertyMap.values());
+
+		return Collections.unmodifiableSet(concat);
+	}
 }
 
 class AllEntityMap<K, V extends AbstractEntity> extends HashMap<K, V> {

@@ -5,6 +5,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.DatatypeReference;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
@@ -109,5 +110,17 @@ public class VowlGenerator {
 		vowlData.addTypeOfProperty(property);
 
 		return property;
+	}
+
+	public DatatypeReference generateDatatypeReference(IRI reference) {
+		if (reference == null) {
+			throw new IllegalArgumentException("Parameters should not be null!");
+		}
+
+		DatatypeReference reference1 = new DatatypeReference(vowlData.getNewIri(), reference);
+		reference1.setGenerated(VowlGenerationEnum.MANUALLY);
+		vowlData.addDatatype(reference1);
+
+		return reference1;
 	}
 }

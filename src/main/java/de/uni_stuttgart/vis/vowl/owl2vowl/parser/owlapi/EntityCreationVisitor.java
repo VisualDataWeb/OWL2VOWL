@@ -3,6 +3,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import org.semanticweb.owlapi.model.*;
@@ -38,6 +39,7 @@ public class EntityCreationVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLDatatype node) {
+		vowlData.addDatatype(new VowlDatatype(node.getIRI()));
 	}
 
 	@Override
