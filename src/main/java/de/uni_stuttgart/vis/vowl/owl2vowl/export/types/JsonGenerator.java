@@ -50,7 +50,7 @@ public class JsonGenerator {
 
 	public void execute(VowlData vowlData) throws Exception {
 		processHeader(vowlData);
-		processMetrics();
+		processMetrics(vowlData);
 
 		visitor = new JsonGeneratorVisitorImpl(vowlData, root);
 		convertEntities(vowlData.getEntityMap());
@@ -84,8 +84,19 @@ public class JsonGenerator {
 		}
 	}
 
-	public void processMetrics() {
-		// TODO implement
+	public void processMetrics(VowlData vowlData) {
+		int classCount = vowlData.getClassMap().size();
+		int datatypeCount = vowlData.getDatatypeMap().size();
+		int objectPropertyCounts = vowlData.getObjectPropertyMap().size();
+		int dataPropertyCount = vowlData.getDatatypePropertyMap().size();
+
+		metrics.put("classCount", classCount);
+		metrics.put("datatypeCount", datatypeCount);
+		metrics.put("objectPropertyCount", objectPropertyCounts);
+		metrics.put("datatypePropertyCount", dataPropertyCount);
+		metrics.put("propertyCount", objectPropertyCounts + dataPropertyCount + vowlData.getTypeOfPropertyMap().size());
+		metrics.put("nodeCount", classCount + datatypeCount);
+		metrics.put("individualCount", vowlData.getIndividualMap().size());
 	}
 
 
