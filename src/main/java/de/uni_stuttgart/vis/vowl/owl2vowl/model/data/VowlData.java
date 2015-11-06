@@ -14,6 +14,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProper
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyInformation;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.*;
@@ -33,6 +34,8 @@ public class VowlData {
 	private Map<IRI, TypeOfProperty> typeOfPropertyMap = new AllEntityMap<IRI, TypeOfProperty>(entityMap);
 	// TODO vielleicht zu allen entities hinzunehmen?
 	private Map<IRI, VowlIndividual> individualMap = new HashMap<>();
+
+	private OntologyInformation ontologyInformation = new OntologyInformation();
 	private Set<String> languages = new HashSet<>();
 	private VowlSearcher searcher;
 	private VowlIriGenerator iriGenerator = new VowlIriGenerator();
@@ -43,6 +46,10 @@ public class VowlData {
 		searcher = new VowlSearcher(this);
 		generator = new VowlGenerator(this);
 		thingProvider = new VowlThingProvider(this, searcher, generator);
+	}
+
+	public OntologyInformation getOntologyInformation() {
+		return ontologyInformation;
 	}
 
 	public Map<IRI, TypeOfProperty> getTypeOfPropertyMap() {
@@ -193,6 +200,14 @@ public class VowlData {
 		individualMap.put(individual.getIri(), individual);
 	}
 
+	public Collection<AbstractProperty> getProperties() {
+		Set<AbstractProperty> concat = new HashSet<>();
+		concat.addAll(datatypePropertyMap.values());
+		concat.addAll(objectPropertyMap.values());
+
+		return Collections.unmodifiableSet(concat);
+	}
+
 	private class VowlIriGenerator {
 		private String iriPrefix = "http://owl2vowl.de#";
 		private int generations = 0;
@@ -200,14 +215,6 @@ public class VowlData {
 		public IRI generate() {
 			return IRI.create(iriPrefix + generations++);
 		}
-	}
-
-	public Collection<AbstractProperty> getProperties() {
-		Set<AbstractProperty> concat = new HashSet<>();
-		concat.addAll(datatypePropertyMap.values());
-		concat.addAll(objectPropertyMap.values());
-
-		return Collections.unmodifiableSet(concat);
 	}
 }
 

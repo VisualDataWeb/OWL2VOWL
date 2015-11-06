@@ -9,6 +9,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitorImpl;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.util.ProjectInformations;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -23,7 +24,9 @@ public class JsonGenerator {
 	private final String VERSION_INFORMATION = "Created with OWL2VOWL (version " + ProjectInformations.getVersion()
 			+ "), http://vowl.visualdataweb.org";
 	private Map<String, Object> root;
-	private VowlData vowlData;
+	private Map<String, Object> header;
+	private Map<String, Object> metrics;
+	private List<Object> namespace;
 	private JsonGeneratorVisitor visitor;
 
 	public JsonGenerator() {
@@ -32,15 +35,24 @@ public class JsonGenerator {
 
 	private void initialize() {
 		root = new LinkedHashMap<>();
+		header = new LinkedHashMap<>();
+		metrics = new LinkedHashMap<>();
+		namespace = new ArrayList<>();
+
 		root.put("_comment", VERSION_INFORMATION);
+		root.put("header", header);
+		root.put("namespace", namespace);
+		root.put("metrics", metrics);
+
+		// TODO For WebVOWL needed but currently not used
+		namespace.add(new HashMap<>());
 	}
 
 	public void execute(VowlData vowlData) throws Exception {
-		this.vowlData = vowlData;
-		visitor = new JsonGeneratorVisitorImpl(vowlData, root);
-		processHeader();
+		processHeader(vowlData);
 		processMetrics();
 
+		visitor = new JsonGeneratorVisitorImpl(vowlData, root);
 		convertEntities(vowlData.getEntityMap());
 	}
 
@@ -52,11 +64,20 @@ public class JsonGenerator {
 		exporter.write(mapper.writeValueAsString(root));
 	}
 
-	public void processHeader() {
-		// TODO implement
+	protected void processHeader(VowlData vowlData) {
+		OntologyInformation ontologyInformation = vowlData.getOntologyInformation();
+		header.put("languages", vowlData.getLanguages());
+		header.put("title", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getTitles()));
+		header.put("iri", ontologyInformation.getIri());
+		header.put("version", ontologyInformation.getVersion());
+		header.put("author", ontologyInformation.getAuthors());
+		header.put("description", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getAnnotations().getDescription()));
+		header.put("labels", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getAnnotations().getLabels()));
+		header.put("comments", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getAnnotations().getComments()));
+		header.put("other", ontologyInformation.getAnnotations().getIdentifierToAnnotation());
 	}
 
-	public <V extends AbstractEntity> void convertEntities(Map<IRI, V> entityMap) {
+	protected <V extends AbstractEntity> void convertEntities(Map<IRI, V> entityMap) {
 		for (Map.Entry<IRI, V> irivEntry : entityMap.entrySet()) {
 			V entity = irivEntry.getValue();
 			entity.accept(visitor);

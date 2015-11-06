@@ -16,6 +16,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.EntityCreationVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.ImportedChecker;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.OntologyInformationParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes.OwlClassAxiomVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.*;
@@ -51,6 +52,7 @@ public class ConverterImpl implements Converter {
 	private static void preParsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
 		OWLOntologyWalker walker = new OWLOntologyWalker(ontology.getImportsClosure());
 		walker.walkStructure(new EntityCreationVisitor(vowlData));
+		new OntologyInformationParser(vowlData, ontology).execute();
 	}
 
 	private static void parsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {

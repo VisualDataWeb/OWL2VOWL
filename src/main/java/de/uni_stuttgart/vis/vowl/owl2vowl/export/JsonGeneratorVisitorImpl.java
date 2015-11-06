@@ -33,9 +33,6 @@ import java.util.stream.Collectors;
 public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	private final VowlData vowlData;
 	private final Map<String, Object> root;
-	private Map<String, Object> header;
-	private Map<String, Object> metrics;
-	private List<Object> namespace;
 	private List<Object> _class;
 	private List<Object> classAttribute;
 	private List<Object> datatype;
@@ -51,27 +48,18 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	}
 
 	protected void populateJsonRoot() {
-		header = new LinkedHashMap<>();
-		metrics = new LinkedHashMap<>();
-		namespace = new ArrayList<>();
 		_class = new ArrayList<>();
 		classAttribute = new ArrayList<>();
 		datatype = new ArrayList<>();
 		datatypeAttribute = new ArrayList<>();
 		propertyList = new ArrayList<>();
 		propertyAttributeList = new ArrayList<>();
-
-		root.put("header", header);
-		root.put("namespace", namespace);
-		root.put("metrics", metrics);
 		root.put("class", _class);
 		root.put("classAttribute", classAttribute);
 		root.put("datatype", datatype);
 		root.put("datatypeAttribute", datatypeAttribute);
 		root.put("property", propertyList);
 		root.put("propertyAttribute", propertyAttributeList);
-
-		namespace.add(new HashMap<>());
 	}
 
 	@Override
@@ -270,7 +258,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		return vowlData.getIdForIri(iri);
 	}
 
-	protected Map<String, String> getLabelsFromAnnotations(Collection<Annotation> annotations) {
+	public static Map<String, String> getLabelsFromAnnotations(Collection<Annotation> annotations) {
 		Map<String, String> languageToValue = new HashMap<>();
 
 		for (Annotation annotation : annotations) {

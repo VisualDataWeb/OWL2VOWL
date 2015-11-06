@@ -33,6 +33,10 @@ public class AnnotationVisitor implements VowlElementVisitor {
 		this.manager = manager;
 	}
 
+	public Set<Annotation> getOntologyAnnotations(OWLOntology ontology) {
+		return ontology.getAnnotations().stream().map(this::getVowlAnnotation).collect(Collectors.toSet());
+	}
+
 	protected Set<Annotation> getAnnotations(OWLEntity entity) {
 		Set<Annotation> allAnnotations = new HashSet<>();
 
