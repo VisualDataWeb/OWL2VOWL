@@ -10,6 +10,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.NullClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.DatatypeReference;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import org.apache.logging.log4j.LogManager;
@@ -83,5 +84,24 @@ public class DataPropertyVisitor extends PropertyVisitor {
 	public void visit(OWLSubDataPropertyOfAxiom axiom) {
 		logger.info("Sub Data property axiom not supported yet.");
 		System.out.println("Sub Data property axiom not supported yet.");
+	}
+
+	@Override
+	public void visit(OWLEquivalentDataPropertiesAxiom axiom) {
+		AbstractProperty base = vowlData.getPropertyForIri(owlObjectProperty.getIRI());
+
+		for (OWLDataPropertyExpression expr : axiom.getProperties()) {
+			if (expr.isAnonymous()) {
+				// TODO anonymous behaviour
+				logger.info("Anonysmous equivalent prop: " + expr);
+				continue;
+			}
+
+			if (expr.asOWLDataProperty().getIRI().equals(base.getIri())) {
+				continue;
+			}
+
+			base.addEquivalentElement(expr.asOWLDataProperty().getIRI());
+		}
 	}
 }
