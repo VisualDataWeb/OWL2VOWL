@@ -18,7 +18,8 @@ public enum VowlAttribute {
 	EQUIVALENT("equivalent"),
 	IRREFLEXIVE("irreflexive"),
 	ASYMMETRIC("asymmetric"),
-	REFLEXIVE("reflexive");
+	REFLEXIVE("reflexive"),
+	IMPORTED("external");
 
 	private final String value;
 

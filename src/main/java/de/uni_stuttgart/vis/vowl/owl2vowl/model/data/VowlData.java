@@ -121,7 +121,7 @@ public class VowlData {
 		}
 	}
 
-	protected AbstractEntity getEntityForIri(IRI iri) {
+	public AbstractEntity getEntityForIri(IRI iri) {
 		if (entityMap.containsKey(iri)) {
 			return entityMap.get(iri);
 		} else {

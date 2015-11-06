@@ -12,11 +12,10 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.FileExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.JsonGenerator;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.EntityCreationVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.ImportedChecker;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes.OwlClassAxiomVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.*;
@@ -43,7 +42,7 @@ public class ConverterImpl implements Converter {
 		// TODO Vielleicht mithilfe von Klassenannotationen Unterteilung schaffen und dann die on the fly die annotierten Klassen holen und ausführen
 		preParsing(ontology, vowlData, manager);
 		parsing(ontology, vowlData, manager);
-		postParsing(vowlData, manager);
+		postParsing(ontology, vowlData, manager);
 
 		//exportToConsole(vowlData);
 		exportToFile(vowlData);
@@ -85,11 +84,12 @@ public class ConverterImpl implements Converter {
 		}
 	}
 
-	private static void postParsing(VowlData vowlData, OWLOntologyManager manager) {
+	private static void postParsing(OWLOntology loadedOntology, VowlData vowlData, OWLOntologyManager manager) {
 		setCorrectType(vowlData.getEntityMap().values());
 		parseAnnotations(vowlData, manager);
 		fillDomainRanges(vowlData);
 		createSubclassProperties(vowlData);
+		new ImportedChecker(vowlData, manager, loadedOntology).execute();
 	}
 
 	private static void createSubclassProperties(VowlData vowlData) {
