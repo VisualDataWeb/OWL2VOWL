@@ -130,7 +130,20 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 
 	@Override
 	public void visit(VowlLiteral vowlLiteral) {
-		// TODO Later
+		Map<String, Object> objectMap = new HashMap<>();
+		objectMap.put("id", vowlData.getIdForEntity(vowlLiteral));
+		objectMap.put("type", vowlLiteral.getType());
+
+		_class.add(objectMap);
+
+		Map<String, Object> attributeMap = new HashMap<>();
+
+		// TODO
+		attributeMap.put("id", vowlData.getIdForEntity(vowlLiteral));
+		attributeMap.put("label", getLabelsFromAnnotations(vowlLiteral.getAnnotations().getLabels()));
+		attributeMap.put("iri", vowlLiteral.getGenericIri());
+
+		classAttribute.add(attributeMap);
 	}
 
 	@Override

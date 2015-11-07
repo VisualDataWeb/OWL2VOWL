@@ -6,6 +6,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.visitor.VowlPropertyVisitor;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.HashSet;
@@ -109,4 +110,6 @@ public abstract class AbstractProperty extends AbstractEntity implements HasInve
 	public void setMinCardinality(Integer value) {
 		minCardinality = value;
 	}
+
+	public abstract void accept(VowlPropertyVisitor visitor);
 }
