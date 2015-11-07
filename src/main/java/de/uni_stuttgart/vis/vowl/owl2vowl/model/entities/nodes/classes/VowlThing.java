@@ -8,7 +8,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.NodeType;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Standard_Iris;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlElementVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.visitor.VowlElementVisitor;
 import org.semanticweb.owlapi.model.IRI;
 
 /**

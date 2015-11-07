@@ -10,6 +10,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProper
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.visitor.VowlElementVisitor;
 
 import java.util.Collection;
 

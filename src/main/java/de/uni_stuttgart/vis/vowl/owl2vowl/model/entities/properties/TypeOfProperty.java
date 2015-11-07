@@ -6,7 +6,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.PropertyType;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlElementVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.visitor.VowlElementVisitor;
 import org.semanticweb.owlapi.model.IRI;
 
 /**

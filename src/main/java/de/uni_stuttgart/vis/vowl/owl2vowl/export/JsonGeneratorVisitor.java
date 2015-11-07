@@ -5,7 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.export;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.VowlElementVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.visitor.VowlElementVisitor;
 
 /**
  *
