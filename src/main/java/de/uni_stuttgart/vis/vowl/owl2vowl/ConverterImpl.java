@@ -36,8 +36,8 @@ public class ConverterImpl implements Converter {
 
 	public static void main(String[] args) throws OWLOntologyCreationException {
 		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.BENCHMARK2));
-		OWLOntology ontology = manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.BENCHMARK1));
+		//manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.BENCHMARK2));
+		OWLOntology ontology = manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.MUTO));
 		VowlData vowlData = new VowlData();
 
 		// TODO Vielleicht mithilfe von Klassenannotationen Unterteilung schaffen und dann die on the fly die annotierten Klassen holen und ausführen
@@ -91,7 +91,8 @@ public class ConverterImpl implements Converter {
 		parseAnnotations(vowlData, manager);
 		fillDomainRanges(vowlData);
 		createSubclassProperties(vowlData);
-		new ImportedChecker(vowlData, manager, loadedOntology).execute();
+		// TODO fix null as soon as the loaded path exists
+		new ImportedChecker(vowlData, manager, loadedOntology, null).execute();
 	}
 
 	private static void createSubclassProperties(VowlData vowlData) {

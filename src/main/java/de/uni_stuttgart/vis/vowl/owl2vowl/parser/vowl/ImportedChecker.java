@@ -7,6 +7,7 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
@@ -19,11 +20,13 @@ public class ImportedChecker implements OWLNamedObjectVisitor {
 	private final VowlData vowlData;
 	private final OWLOntologyManager manager;
 	private OWLOntology loadedOntology;
+	private String loadPath;
 
-	public ImportedChecker(VowlData vowlData, OWLOntologyManager manager, OWLOntology loadedOntology) {
+	public ImportedChecker(VowlData vowlData, OWLOntologyManager manager, OWLOntology loadedOntology, String loadPath) {
 		this.vowlData = vowlData;
 		this.manager = manager;
 		this.loadedOntology = loadedOntology;
+		this.loadPath = loadPath;
 	}
 
 	public void execute() {
@@ -33,12 +36,17 @@ public class ImportedChecker implements OWLNamedObjectVisitor {
 				element.accept(this);
 			});
 		});
-		/*
-		loadedOntology.getSignature().forEach(element -> {
-			element.accept(this);
-			//new OWLOntologyWalker(imports).walkStructure(this);
+
+		vowlData.getEntityMap().values().forEach(abstractEntity -> {
+			IRI entityIri = abstractEntity.getIri();
+			if (entityIri.toString().contains("http://owl2vowl.de#")) {
+				return;
+			}
+
+			if (ComparisonHelper.hasDifferentNameSpace(entityIri.toString(), loadedOntology, loadPath)) {
+				addImportedAttribute(entityIri);
+			}
 		});
-		*/
 	}
 
 	protected void addImportedAttribute(IRI iri) {
