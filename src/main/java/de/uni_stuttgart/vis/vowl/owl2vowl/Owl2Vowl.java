@@ -6,12 +6,10 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.BackupExporter;
-
 import org.semanticweb.owlapi.model.OWLOntology;
 
 /**
- * Global class for easy to use of this library to include in other projects. TODO good place to improve the
- * interfaces.
+ * Global class for easy to use of this library to include in other projects.
  */
 public class Owl2Vowl {
 	protected Converter converter;

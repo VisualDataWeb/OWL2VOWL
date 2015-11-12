@@ -14,5 +14,5 @@ public interface Converter {
 
 	void convert();
 
-	void export(Exporter exporter);
+	void export(Exporter exporter) throws Exception;
 }

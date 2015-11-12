@@ -19,7 +19,12 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.ImportedChecker;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.OntologyInformationParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes.OwlClassAxiomVisitor;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.*;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.DataPropertyVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.DomainRangeFiller;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.ObjectPropertyVisitor;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.VowlSubclassPropertyGenerator;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
@@ -28,25 +33,53 @@ import org.semanticweb.owlapi.util.OWLOntologyWalker;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 public class ConverterImpl implements Converter {
+	private final JsonGenerator jsonGenerator = new JsonGenerator();
+	protected String loadedOntologyPath;
+	protected OWLOntologyManager manager;
+	protected VowlData vowlData;
+	private Logger logger = LogManager.getLogger(ConverterImpl.class);
+	private OWLOntology ontology;
 
-	public ConverterImpl() {
+	public ConverterImpl(IRI ontologyIRI) throws OWLOntologyCreationException {
+		this(ontologyIRI, Collections.<IRI>emptyList());
 	}
 
-	public static void main(String[] args) throws OWLOntologyCreationException {
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		//manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.BENCHMARK2));
-		OWLOntology ontology = manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.MUTO));
-		VowlData vowlData = new VowlData();
+	public ConverterImpl(IRI ontologyIRI, List<IRI> necessaryExternals) throws OWLOntologyCreationException {
+		initApi();
+		logger.info("Loading ontologies ... [" + ontologyIRI + ",  " + necessaryExternals + "]");
 
-		// TODO Vielleicht mithilfe von Klassenannotationen Unterteilung schaffen und dann die on the fly die annotierten Klassen holen und ausführen
-		preParsing(ontology, vowlData, manager);
-		parsing(ontology, vowlData, manager);
-		postParsing(ontology, vowlData, manager);
+		if (!necessaryExternals.isEmpty()) {
+			for (IRI externalIRI : necessaryExternals) {
+				manager.loadOntology(externalIRI);
+			}
+			logger.info("External ontologies loaded!");
+		}
 
-		//exportToConsole(vowlData);
-		exportToFile(vowlData);
+		ontology = manager.loadOntology(ontologyIRI);
+		String logOntoName = ontologyIRI.toString();
+
+		if (!ontology.isAnonymous()) {
+			logOntoName = ontology.getOntologyID().getOntologyIRI().get().toString();
+		} else {
+			logger.info("Ontology IRI is anonymous. Use loaded URI/IRI instead.");
+		}
+
+		logger.info("Ontologies loaded! Main Ontology: " + logOntoName);
+	}
+
+	public ConverterImpl(OWLOntology ontology, String ontologyIRI) {
+		initApi();
+		this.ontology = ontology;
+		loadedOntologyPath = ontologyIRI;
+	}
+
+	public ConverterImpl(OWLOntology ontology) {
+		initApi();
+		this.ontology = ontology;
 	}
 
 	private static void preParsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
@@ -144,13 +177,49 @@ public class ConverterImpl implements Converter {
 		}
 	}
 
-	@Override
-	public void convert() {
+	public static void main(String[] args) throws OWLOntologyCreationException {
+		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
+		manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.BENCHMARK2));
+		OWLOntology ontology = manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.BENCHMARK1));
+		VowlData vowlData = new VowlData();
 
+		// TODO Vielleicht mithilfe von Klassenannotationen Unterteilung schaffen und dann die on the fly die annotierten Klassen holen und ausführen
+		preParsing(ontology, vowlData, manager);
+		parsing(ontology, vowlData, manager);
+		postParsing(ontology, vowlData, manager);
+
+		//exportToConsole(vowlData);
+		exportToFile(vowlData);
 	}
 
-	@Override
-	public void export(Exporter exporter) {
+	protected void initApi() {
+		manager = OWLManager.createOWLOntologyManager();
+	}
 
+	/**
+	 * Executes the complete conversion to the webvowl compatible json format.
+	 */
+	public void convert() {
+		vowlData = new VowlData();
+
+		// TODO Vielleicht mithilfe von Klassenannotationen Unterteilung schaffen und dann die on the fly die annotierten Klassen holen und ausführen
+		preParsing(ontology, vowlData, manager);
+		parsing(ontology, vowlData, manager);
+		postParsing(ontology, vowlData, manager);
+	}
+
+	/**
+	 * Exports the generated data according to the implemented {@link Exporter}.
+	 *
+	 * @param exporter The exporter.
+	 * @throws Exception Any exception during json generation.
+	 */
+	public void export(Exporter exporter) throws Exception {
+		if (vowlData == null) {
+			throw new IllegalAccessException("Ontology has to be converted first");
+		}
+
+		jsonGenerator.execute(vowlData);
+		jsonGenerator.export(exporter);
 	}
 }
