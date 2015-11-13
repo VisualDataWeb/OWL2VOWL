@@ -10,10 +10,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.AbstractDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.DatatypeReference;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
@@ -130,17 +127,23 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 
 	@Override
 	public void visit(VowlLiteral vowlLiteral) {
+		if (!(vowlLiteral instanceof LiteralReference)) {
+			// Skip literal if it's not a reference node.
+			return;
+		}
+
+		AbstractDatatype reference = vowlData.getDatatypeForIri(((LiteralReference) vowlLiteral).getReferencedIri());
+
 		Map<String, Object> objectMap = new HashMap<>();
 		objectMap.put("id", vowlData.getIdForEntity(vowlLiteral));
-		objectMap.put("type", vowlLiteral.getType());
+		objectMap.put("type", reference.getType());
 
 		_class.add(objectMap);
 
 		Map<String, Object> attributeMap = new HashMap<>();
 
-		// TODO
 		attributeMap.put("id", vowlData.getIdForEntity(vowlLiteral));
-		attributeMap.put("label", getLabelsFromAnnotations(vowlLiteral.getAnnotations().getLabels()));
+		attributeMap.put("label", getLabelsFromAnnotations(reference.getAnnotations().getLabels()));
 		attributeMap.put("iri", vowlLiteral.getGenericIri());
 
 		classAttribute.add(attributeMap);
@@ -157,7 +160,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 
 		Map<String, Object> classObject = new HashMap<>();
 		classObject.put("id", vowlData.getIdForEntity(vowlDatatype));
-		classObject.put("type", vowlDatatype.getType());
+		classObject.put("type", reference.getType());
 
 		_class.add(classObject);
 

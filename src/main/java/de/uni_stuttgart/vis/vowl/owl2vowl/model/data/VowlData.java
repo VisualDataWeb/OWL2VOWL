@@ -11,6 +11,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractC
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.NullClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.AbstractDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
@@ -25,18 +26,17 @@ import java.util.*;
  * Contains all data WebVOWL needs.
  */
 public class VowlData {
+	private final VowlLiteral genericLiteral;
 	private Map<AbstractEntity, String> entityToId = new HashMap<>();
 	private Map<IRI, AbstractEntity> entityMap = new HashMap<>();
 	private Map<IRI, AbstractClass> classMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, AbstractDatatype> datatypeMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, VowlObjectProperty> objectPropertyMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, VowlDatatypeProperty> datatypePropertyMap = new AllEntityMap<>(entityMap);
-
 	// Vielleicht generalisieren
 	private Map<IRI, TypeOfProperty> typeOfPropertyMap = new AllEntityMap<IRI, TypeOfProperty>(entityMap);
 	// TODO vielleicht zu allen entities hinzunehmen?
 	private Map<IRI, VowlIndividual> individualMap = new HashMap<>();
-
 	private OntologyInformation ontologyInformation = new OntologyInformation();
 	private Set<String> languages = new HashSet<>();
 	private VowlSearcher searcher;
@@ -48,6 +48,12 @@ public class VowlData {
 		searcher = new VowlSearcher(this);
 		generator = new VowlGenerator(this);
 		thingProvider = new VowlThingProvider(this, searcher, generator);
+		genericLiteral = new VowlLiteral(IRI.create(VowlLiteral.LITERAL_IRI));
+		addDatatype(genericLiteral);
+	}
+
+	public VowlLiteral getGenericLiteral() {
+		return genericLiteral;
 	}
 
 	public OntologyInformation getOntologyInformation() {

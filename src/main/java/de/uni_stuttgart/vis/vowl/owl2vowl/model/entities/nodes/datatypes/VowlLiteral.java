@@ -14,7 +14,7 @@ import org.semanticweb.owlapi.model.IRI;
  *
  */
 public class VowlLiteral extends AbstractDatatype {
-	protected static final String genericIri = "http://www.w3.org/2000/01/rdf-schema#Literal";
+	public static final String LITERAL_IRI = "http://www.w3.org/2000/01/rdf-schema#Literal";
 
 	public VowlLiteral(IRI iri) {
 		super(iri, NodeType.TYPE_LITERAL);
@@ -22,7 +22,7 @@ public class VowlLiteral extends AbstractDatatype {
 	}
 
 	public String getGenericIri() {
-		return genericIri;
+		return LITERAL_IRI;
 	}
 
 	@Override

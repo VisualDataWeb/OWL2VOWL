@@ -4,6 +4,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import org.semanticweb.owlapi.model.*;
@@ -39,6 +40,11 @@ public class EntityCreationVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLDatatype node) {
+		if (node.getIRI().toString().equals(VowlLiteral.LITERAL_IRI)) {
+			// Skip generic literal. Already included in the data as default.
+			return;
+		}
+
 		vowlData.addDatatype(new VowlDatatype(node.getIRI()));
 	}
 
