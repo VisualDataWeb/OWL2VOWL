@@ -8,6 +8,8 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.model.data;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.NullClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.AbstractDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProperty;
@@ -99,6 +101,8 @@ public class VowlData {
 	public AbstractClass getClassForIri(IRI iri) {
 		if (classMap.containsKey(iri)) {
 			return classMap.get(iri);
+		} else if (iri.toString().equals(VowlThing.THING_IRI)) {
+			return new NullClass();
 		} else {
 			throw new IllegalStateException("Can't find class for passed iri: " + iri);
 		}
