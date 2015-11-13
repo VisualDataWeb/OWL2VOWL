@@ -76,7 +76,7 @@ public class DomainRangeFiller implements VowlPropertyVisitor {
 		} else if (vowlDatatypeProperty.getDomains().isEmpty()) {
 			VowlThing connectedThing = searchForConnectedThing(vowlDatatypeProperty.getRanges());
 			if (connectedThing == null) {
-				connectedThing = vowlData.getGenerator().generateThing();
+				connectedThing = vowlData.getThingProvider().getDisconnectedThing();
 			}
 			connectedThing.addOutGoingProperty(vowlDatatypeProperty.getIri());
 			vowlDatatypeProperty.addDomain(connectedThing.getIri());
