@@ -24,6 +24,5 @@ public class PropertyVisitor extends OWLObjectVisitorAdapter {
 	protected void handleDefault(OWLObject axiom) {
 		super.handleDefault(axiom);
 		logger.info("Missing axiom: " + axiom);
-		System.out.println("Missing axiom: " + axiom);
 	}
 }

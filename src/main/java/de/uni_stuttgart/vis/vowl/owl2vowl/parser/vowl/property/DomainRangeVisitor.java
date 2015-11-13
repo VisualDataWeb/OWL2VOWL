@@ -35,7 +35,6 @@ public class DomainRangeVisitor extends OWLObjectVisitorExAdapter<AbstractNode> 
 	@Override
 	protected AbstractNode doDefault(@Nonnull OWLObject object) {
 		logger.info("Missed object for domain/range: " + object);
-		System.out.println("Missed object for domain/range: " + object);
 		return super.doDefault(object);
 	}
 

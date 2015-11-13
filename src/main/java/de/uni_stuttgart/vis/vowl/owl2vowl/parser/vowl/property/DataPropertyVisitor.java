@@ -83,7 +83,6 @@ public class DataPropertyVisitor extends PropertyVisitor {
 	@Override
 	public void visit(OWLSubDataPropertyOfAxiom axiom) {
 		logger.info("Sub Data property axiom not supported yet.");
-		System.out.println("Sub Data property axiom not supported yet.");
 	}
 
 	@Override

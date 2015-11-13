@@ -52,8 +52,6 @@ public class IndividualsVisitor implements OWLIndividualVisitor {
 
 	@Override
 	public void visit(@Nonnull OWLAnonymousIndividual owlAnonymousIndividual) {
-		System.out.println(baseClass);
-		System.out.println("\tAnonymous individual");
 		logger.info("Anonymous individual: " + owlAnonymousIndividual);
 	}
 }

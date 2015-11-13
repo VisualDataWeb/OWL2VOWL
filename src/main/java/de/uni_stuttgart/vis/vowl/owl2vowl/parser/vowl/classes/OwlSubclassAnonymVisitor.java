@@ -23,7 +23,6 @@ public class OwlSubclassAnonymVisitor extends OWLObjectVisitorAdapter {
 	@Override
 	protected void handleDefault(OWLObject axiom) {
 		logger.info("Missed implementation for: " + axiom);
-		System.out.println("Missing: " + axiom);
 	}
 
 	@Override

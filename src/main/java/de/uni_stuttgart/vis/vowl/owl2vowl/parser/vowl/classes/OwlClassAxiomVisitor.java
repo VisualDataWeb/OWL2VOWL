@@ -23,8 +23,7 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	protected void handleDefault(OWLObject axiom) {
-		System.out.println(owlClass);
-		System.out.println("\t" + axiom);
+		logger.info("Unsupported axiom: " + axiom);
 	}
 
 	@Override

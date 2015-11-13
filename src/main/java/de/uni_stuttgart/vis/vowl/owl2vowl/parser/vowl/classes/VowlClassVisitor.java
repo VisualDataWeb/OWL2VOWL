@@ -30,7 +30,6 @@ public class VowlClassVisitor extends OWLClassExpressionVisitorAdapter {
 
 	@Override
 	protected void handleDefault(OWLClassExpression c) {
-		System.out.println("Not implemented VowlClassVisitor: " + c);
 		logger.info("Not implemented for equivalents: " + c);
 	}
 
