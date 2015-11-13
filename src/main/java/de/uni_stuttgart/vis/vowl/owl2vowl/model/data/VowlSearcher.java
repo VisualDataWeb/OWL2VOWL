@@ -52,6 +52,7 @@ public class VowlSearcher implements VowlElementVisitor {
 		int currentSize = data.getEntityMap().keySet().size();
 		if (currentSize != dataSize) {
 			refresh();
+			dataSize = currentSize;
 		}
 	}
 
