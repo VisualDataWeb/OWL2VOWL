@@ -69,9 +69,8 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 
 		Map<String, Object> thingAttributeObject = new HashMap<>();
 
-		// TODO
 		thingAttributeObject.put("id", vowlData.getIdForEntity(vowlThing));
-		thingAttributeObject.put("label", 0);
+		thingAttributeObject.put("label", getLabelsFromAnnotations(vowlThing.getAnnotations().getLabels()));
 		thingAttributeObject.put("iri", Standard_Iris.OWL_THING_CLASS_URI);
 
 		classAttribute.add(thingAttributeObject);
