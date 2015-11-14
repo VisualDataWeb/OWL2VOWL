@@ -17,6 +17,7 @@ import org.semanticweb.owlapi.model.IRI;
  */
 public class VowlThing extends AbstractClass {
 	public static final String THING_IRI = Standard_Iris.OWL_THING_CLASS_URI;
+	public static final IRI GENERIC_THING_IRI = IRI.create(THING_IRI);
 
 	protected VowlThing(IRI iri, String type) {
 		super(iri, type);
