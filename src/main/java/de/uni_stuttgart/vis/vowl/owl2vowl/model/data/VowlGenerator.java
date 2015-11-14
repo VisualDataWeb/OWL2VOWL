@@ -107,8 +107,6 @@ public class VowlGenerator {
 		property.setGenerated(VowlGenerationEnum.MANUALLY);
 		property.addDomain(domain);
 		property.addRange(range);
-		property.setType(PropertyType.TYPEOF);
-		property.getAnnotations().addLabel(new Annotation("label", "type"));
 		vowlData.addTypeOfProperty(property);
 
 		return property;
