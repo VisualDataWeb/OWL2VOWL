@@ -98,8 +98,9 @@ public class ConverterImpl implements Converter {
 	private static void processIndividuals(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
 		// TODO check all classes
 		ontology.getClassesInSignature(Imports.INCLUDED).forEach(owlClass -> {
-			// TODO Probably collection of ontologies?
-			EntitySearcher.getIndividuals(owlClass, ontology).forEach(owlIndividual -> owlIndividual.accept(new IndividualsVisitor(vowlData, owlIndividual, owlClass, manager)));
+			for (OWLOntology owlOntology : manager.getOntologies()) {
+				EntitySearcher.getIndividuals(owlClass, owlOntology).forEach(owlIndividual -> owlIndividual.accept(new IndividualsVisitor(vowlData, owlIndividual, owlClass, manager)));
+			}
 		});
 	}
 
