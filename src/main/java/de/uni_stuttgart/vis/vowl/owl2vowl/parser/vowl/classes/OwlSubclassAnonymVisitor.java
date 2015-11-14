@@ -45,17 +45,41 @@ public class OwlSubclassAnonymVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLDataExactCardinality ce) {
-		logger.info(ce + " not supported yet.");
+		OWLDataPropertyExpression property = ce.getProperty();
+
+		if (property.isAnonymous()) {
+			logger.info("Anonymous dataproperty for exact cardinality.");
+			return;
+		}
+
+		AbstractProperty vowlProperty = vowlData.getPropertyForIri(property.asOWLDataProperty().getIRI());
+		vowlProperty.setExactCardinality(ce.getCardinality());
 	}
 
 	@Override
 	public void visit(OWLDataMaxCardinality ce) {
-		logger.info(ce + " not supported yet.");
+		OWLDataPropertyExpression property = ce.getProperty();
+
+		if (property.isAnonymous()) {
+			logger.info("Anonymous dataproperty for max cardinality.");
+			return;
+		}
+
+		AbstractProperty vowlProperty = vowlData.getPropertyForIri(property.asOWLDataProperty().getIRI());
+		vowlProperty.setMaxCardinality(ce.getCardinality());
 	}
 
 	@Override
 	public void visit(OWLDataMinCardinality ce) {
-		logger.info(ce + " not supported yet.");
+		OWLDataPropertyExpression property = ce.getProperty();
+
+		if (property.isAnonymous()) {
+			logger.info("Anonymous dataproperty for min cardinality.");
+			return;
+		}
+
+		AbstractProperty vowlProperty = vowlData.getPropertyForIri(property.asOWLDataProperty().getIRI());
+		vowlProperty.setMinCardinality(ce.getCardinality());
 	}
 
 	@Override
