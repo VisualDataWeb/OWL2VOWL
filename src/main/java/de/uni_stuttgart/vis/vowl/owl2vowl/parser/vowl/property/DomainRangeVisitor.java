@@ -5,6 +5,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.NullClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.AbstractDatatype;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.DatatypeReference;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDatatype;
@@ -52,6 +53,10 @@ public class DomainRangeVisitor extends OWLObjectVisitorExAdapter<AbstractNode> 
 			iriList.add(operand.asOWLClass().getIRI());
 		}
 
+		if (iriList.contains(VowlThing.GENERIC_THING_IRI)) {
+			iriList.remove(VowlThing.GENERIC_THING_IRI);
+		}
+
 		VowlClass intersection = vowlData.getSearcher().getIntersection(iriList);
 
 		if (intersection == null) {
@@ -72,7 +77,12 @@ public class DomainRangeVisitor extends OWLObjectVisitorExAdapter<AbstractNode> 
 				logger.info("Anonymous operand in intersections");
 				return new NullClass();
 			}
+
 			iriList.add(operand.asOWLClass().getIRI());
+		}
+
+		if (iriList.contains(VowlThing.GENERIC_THING_IRI)) {
+			iriList.remove(VowlThing.GENERIC_THING_IRI);
 		}
 
 		VowlClass intersection = vowlData.getSearcher().getUnion(iriList);

@@ -5,6 +5,7 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.SetWithoutNull;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.visitor.VowlPropertyVisitor;
 import org.semanticweb.owlapi.model.IRI;
@@ -16,8 +17,8 @@ import java.util.Set;
  *
  */
 public abstract class AbstractProperty extends AbstractEntity implements HasInverse, HasCardinality {
-	private Set<IRI> domains = new HashSet<>();
-	private Set<IRI> ranges = new HashSet<>();
+	private Set<IRI> domains = new SetWithoutNull<>();
+	private Set<IRI> ranges = new SetWithoutNull<>();
 
 	// Merged entities used only for json generation!
 	private IRI mergedDomain;
