@@ -61,6 +61,7 @@ public class ConverterImpl implements Converter {
 
 		ontology = manager.loadOntology(ontologyIRI);
 		String logOntoName = ontologyIRI.toString();
+		loadedOntologyPath = ontologyIRI.toString();
 
 		if (!ontology.isAnonymous()) {
 			logOntoName = ontology.getOntologyID().getOntologyIRI().get().toString();
@@ -82,20 +83,20 @@ public class ConverterImpl implements Converter {
 		this.ontology = ontology;
 	}
 
-	private static void preParsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
+	private void preParsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
 		OWLOntologyWalker walker = new OWLOntologyWalker(ontology.getImportsClosure());
 		walker.walkStructure(new EntityCreationVisitor(vowlData));
 		new OntologyInformationParser(vowlData, ontology).execute();
 	}
 
-	private static void parsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
+	private void parsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
 		processClasses(ontology, vowlData);
 		processObjectProperties(ontology, vowlData);
 		processDataProperties(ontology, vowlData);
 		processIndividuals(ontology, vowlData, manager);
 	}
 
-	private static void processIndividuals(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
+	private void processIndividuals(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
 		// TODO check all classes
 		ontology.getClassesInSignature(Imports.INCLUDED).forEach(owlClass -> {
 			for (OWLOntology owlOntology : manager.getOntologies()) {
@@ -104,7 +105,7 @@ public class ConverterImpl implements Converter {
 		});
 	}
 
-	private static void processObjectProperties(OWLOntology ontology, VowlData vowlData) {
+	private void processObjectProperties(OWLOntology ontology, VowlData vowlData) {
 		for (OWLObjectProperty owlObjectProperty : ontology.getObjectPropertiesInSignature(Imports.INCLUDED)) {
 			for (OWLObjectPropertyAxiom owlObjectPropertyAxiom : ontology.getAxioms(owlObjectProperty, Imports.INCLUDED)) {
 				owlObjectPropertyAxiom.accept(new ObjectPropertyVisitor(vowlData, owlObjectProperty));
@@ -112,7 +113,7 @@ public class ConverterImpl implements Converter {
 		}
 	}
 
-	private static void processDataProperties(OWLOntology ontology, VowlData vowlData) {
+	private void processDataProperties(OWLOntology ontology, VowlData vowlData) {
 		for (OWLDataProperty property : ontology.getDataPropertiesInSignature(Imports.INCLUDED)) {
 			for (OWLDataPropertyAxiom propertyAxiom : ontology.getAxioms(property, Imports.INCLUDED)) {
 				propertyAxiom.accept(new DataPropertyVisitor(vowlData, property));
@@ -120,46 +121,23 @@ public class ConverterImpl implements Converter {
 		}
 	}
 
-	private static void postParsing(OWLOntology loadedOntology, VowlData vowlData, OWLOntologyManager manager) {
+	private void postParsing(OWLOntology loadedOntology, VowlData vowlData, OWLOntologyManager manager) {
 		setCorrectType(vowlData.getEntityMap().values());
 		parseAnnotations(vowlData, manager);
 		fillDomainRanges(vowlData);
 		createSubclassProperties(vowlData);
-		// TODO fix null as soon as the loaded path exists
-		new ImportedChecker(vowlData, manager, loadedOntology, null).execute();
+		new ImportedChecker(vowlData, manager, loadedOntology, loadedOntologyPath).execute();
 	}
 
-	private static void createSubclassProperties(VowlData vowlData) {
+	private void createSubclassProperties(VowlData vowlData) {
 		new VowlSubclassPropertyGenerator(vowlData).execute();
 	}
 
-	private static void fillDomainRanges(VowlData vowlData) {
+	private void fillDomainRanges(VowlData vowlData) {
 		new DomainRangeFiller(vowlData, vowlData.getProperties()).execute();
 	}
 
-	private static void exportToFile(VowlData vowlData) {
-		Exporter exporter = new FileExporter(new File("export.json"));
-		JsonGenerator generator = new JsonGenerator();
-		try {
-			generator.execute(vowlData);
-			generator.export(exporter);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static void exportToConsole(VowlData vowlData) {
-		Exporter exporter = new ConsoleExporter();
-		JsonGenerator generator = new JsonGenerator();
-		try {
-			generator.execute(vowlData);
-			generator.export(exporter);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static void processClasses(OWLOntology ontology, VowlData vowlData) {
+	private void processClasses(OWLOntology ontology, VowlData vowlData) {
 		for (OWLClass owlClass : ontology.getClassesInSignature(Imports.INCLUDED)) {
 			for (OWLClassAxiom owlClassAxiom : ontology.getAxioms(owlClass, Imports.INCLUDED)) {
 				owlClassAxiom.accept(new OwlClassAxiomVisitor(vowlData, owlClass));
@@ -167,30 +145,21 @@ public class ConverterImpl implements Converter {
 		}
 	}
 
-	private static void parseAnnotations(VowlData vowlData, OWLOntologyManager manager) {
+	private void parseAnnotations(VowlData vowlData, OWLOntologyManager manager) {
 		AnnotationParser annotationParser = new AnnotationParser(vowlData, manager);
 		annotationParser.parse();
 	}
 
-	public static void setCorrectType(Collection<AbstractEntity> entities) {
+	public void setCorrectType(Collection<AbstractEntity> entities) {
 		for (AbstractEntity entity : entities) {
 			entity.accept(new TypeSetter());
 		}
 	}
 
-	public static void main(String[] args) throws OWLOntologyCreationException {
-		OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
-		manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.BENCHMARK2));
-		OWLOntology ontology = manager.loadOntologyFromOntologyDocument(new File(Ontology_Path.BENCHMARK1));
-		VowlData vowlData = new VowlData();
-
-		// TODO Vielleicht mithilfe von Klassenannotationen Unterteilung schaffen und dann die on the fly die annotierten Klassen holen und ausführen
-		preParsing(ontology, vowlData, manager);
-		parsing(ontology, vowlData, manager);
-		postParsing(ontology, vowlData, manager);
-
-		//exportToConsole(vowlData);
-		exportToFile(vowlData);
+	public static void main(String[] args) throws Exception {
+		Converter converter = new ConverterImpl(IRI.create(Ontology_Path.WINE));
+		converter.convert();
+		converter.export(new FileExporter(new File("export.json")));
 	}
 
 	protected void initApi() {
