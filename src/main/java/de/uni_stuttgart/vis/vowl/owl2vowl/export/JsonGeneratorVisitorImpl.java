@@ -97,7 +97,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		classAttributeObject.put("union", getListWithIds(vowlClass.getElementsOfUnion()));
 		classAttributeObject.put("intersection", getListWithIds(vowlClass.getElementOfIntersection()));
 		classAttributeObject.put("attributes", vowlClass.getAttributes());
-		classAttributeObject.put("equivalent", getListWithIds(vowlClass.getEquivalentElements()));
+		classAttributeObject.put("equivalent", getListWithIds(vowlClass.getSortedEquivalents()));
 		classAttributeObject.put("complement", getListWithIds(vowlClass.getComplements()));
 		classAttributeObject.put("instances", vowlClass.getInstances().size());
 		classAttributeObject.put("individuals", createIndividualsJson(vowlClass.getIndividuals()));
@@ -165,27 +165,9 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 
 		Map<String, Object> classAttributeObject = new HashMap<>();
 
-		// TODO
 		classAttributeObject.put("id", vowlData.getIdForEntity(vowlDatatype));
 		classAttributeObject.put("label", getLabelsFromAnnotations(reference.getAnnotations().getLabels()));
 		classAttributeObject.put("iri", reference.getIri().toString());
-
-		/*
-		classAttributeObject.put("description", getLabelsFromAnnotations(vowlDatatype.getAnnotations().getDescription()));
-		classAttributeObject.put("comment", getLabelsFromAnnotations(vowlDatatype.getAnnotations().getComments()));
-		// TODO nötig?
-		classAttributeObject.put("isDefinedBy", 0);
-		classAttributeObject.put("owlVersion", 0);
-		classAttributeObject.put("superClasses", getListWithIds(vowlDatatype.getSuperEntities()));
-		classAttributeObject.put("subClasses", getListWithIds(vowlDatatype.getSubEntities()));
-		classAttributeObject.put("annotations", vowlDatatype.getAnnotations().getIdentifierToAnnotation());
-		classAttributeObject.put("union", getListWithIds(vowlDatatype.getElementsOfUnion()));
-		classAttributeObject.put("intersection", getListWithIds(vowlDatatype.getElementOfIntersection()));
-		classAttributeObject.put("attributes", vowlDatatype.getAttributes());
-		classAttributeObject.put("equivalent", getListWithIds(vowlDatatype.getEquivalentElements()));
-		// TODO can a complement not be a list?
-		classAttributeObject.put("complement", getListWithIds(vowlDatatype.getComplements()));
-		*/
 
 		classAttribute.add(classAttributeObject);
 	}
@@ -225,7 +207,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		propertyAttributes.put("inverse", getIdForIri(property.getInverse()));
 		propertyAttributes.put("superproperty", getListWithIds(property.getSuperEntities()));
 		propertyAttributes.put("subproperty", getListWithIds(property.getSubEntities()));
-		propertyAttributes.put("equivalent", getListWithIds(property.getEquivalentElements()));
+		propertyAttributes.put("equivalent", getListWithIds(property.getSortedEquivalents()));
 		propertyAttributes.put("minCardinality", getCardinality(property.getMinCardinality()));
 		propertyAttributes.put("maxCardinality", getCardinality(property.getMaxCardinality()));
 		propertyAttributes.put("cardinality", getCardinality(property.getExactCardinality()));

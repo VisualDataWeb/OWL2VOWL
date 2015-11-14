@@ -50,8 +50,6 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 		}
 
 		topClass.addAttribute(VowlAttribute.EQUIVALENT);
-
-		// TODO post parsing determine correct top equivalent class?
 	}
 
 	@Override

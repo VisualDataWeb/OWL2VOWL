@@ -6,22 +6,28 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.SetWithoutNull;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlGenerationEnum;
 import org.semanticweb.owlapi.model.IRI;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public abstract class AbstractEntity extends AbstractVowlObject implements HasEquivalents, HasSubEntities {
 	private String type;
 	private Set<VowlAttribute> attributes = new HashSet<>();
 	private Set<IRI> equivalents = new SetWithoutNull<>();
+	private List<IRI> sortedEquivalents = new ArrayList<>();
 	private Set<IRI> subEntities = new SetWithoutNull<>();
 	private Set<IRI> superEntities = new SetWithoutNull<>();
-
 	private VowlGenerationEnum generated = VowlGenerationEnum.AUTOMATIC;
 
 	protected AbstractEntity(IRI iri, String type) {
 		super(iri);
 		this.type = type;
+	}
+
+	public List<IRI> getSortedEquivalents() {
+		return Collections.unmodifiableList(sortedEquivalents);
+	}
+
+	public void setSortedEquivalents(List<IRI> sortedEquivalents) {
+		this.sortedEquivalents = sortedEquivalents;
 	}
 
 	public VowlGenerationEnum getGenerated() {

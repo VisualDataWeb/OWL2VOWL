@@ -6,7 +6,6 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Ontology_Path;
-import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.ConsoleExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.FileExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.JsonGenerator;
@@ -14,10 +13,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.EntityCreationVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.ImportedChecker;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.OntologyInformationParser;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes.OwlClassAxiomVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.DataPropertyVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.DomainRangeFiller;
@@ -32,6 +28,7 @@ import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -121,12 +118,12 @@ public class ConverterImpl implements Converter {
 		}
 	}
 
-	private void postParsing(OWLOntology loadedOntology, VowlData vowlData, OWLOntologyManager manager) {
-		setCorrectType(vowlData.getEntityMap().values());
-		parseAnnotations(vowlData, manager);
-		fillDomainRanges(vowlData);
-		createSubclassProperties(vowlData);
-		new ImportedChecker(vowlData, manager, loadedOntology, loadedOntologyPath).execute();
+	public static void main(String[] args) throws Exception {
+		List<IRI> dep = new ArrayList<>();
+		dep.add(IRI.create(new File(Ontology_Path.BENCHMARK2)));
+		Converter converter = new ConverterImpl(IRI.create(new File(Ontology_Path.BENCHMARK1)), dep);
+		converter.convert();
+		converter.export(new FileExporter(new File("export.json")));
 	}
 
 	private void createSubclassProperties(VowlData vowlData) {
@@ -156,10 +153,13 @@ public class ConverterImpl implements Converter {
 		}
 	}
 
-	public static void main(String[] args) throws Exception {
-		Converter converter = new ConverterImpl(IRI.create(Ontology_Path.WINE));
-		converter.convert();
-		converter.export(new FileExporter(new File("export.json")));
+	private void postParsing(OWLOntology loadedOntology, VowlData vowlData, OWLOntologyManager manager) {
+		setCorrectType(vowlData.getEntityMap().values());
+		parseAnnotations(vowlData, manager);
+		fillDomainRanges(vowlData);
+		createSubclassProperties(vowlData);
+		new ImportedChecker(vowlData, manager, loadedOntology, loadedOntologyPath).execute();
+		vowlData.getEntityMap().values().forEach(entity -> entity.accept(new EquivalentSorter(ontology.getOntologyID().getOntologyIRI().get(), vowlData)));
 	}
 
 	protected void initApi() {
