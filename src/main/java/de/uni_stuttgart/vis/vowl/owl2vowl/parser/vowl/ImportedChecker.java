@@ -55,6 +55,10 @@ public class ImportedChecker implements OWLNamedObjectVisitor {
 
 	@Override
 	public void visit(@Nonnull OWLClass owlClass) {
+		if (owlClass.isOWLThing() || owlClass.isOWLNothing()) {
+			// Ignore imported things or owl things
+			return;
+		}
 		addImportedAttribute(owlClass.getIRI());
 	}
 
@@ -70,7 +74,8 @@ public class ImportedChecker implements OWLNamedObjectVisitor {
 
 	@Override
 	public void visit(@Nonnull OWLNamedIndividual owlNamedIndividual) {
-		addImportedAttribute(owlNamedIndividual.getIRI());
+		// TODO Do we need to mark individuals as imported?
+		//addImportedAttribute(owlNamedIndividual.getIRI());
 	}
 
 	@Override
