@@ -38,14 +38,14 @@ public class ConverterImpl implements Converter {
 	protected String loadedOntologyPath;
 	protected OWLOntologyManager manager;
 	protected VowlData vowlData;
-	private Logger logger = LogManager.getLogger(ConverterImpl.class);
+	private static final Logger logger = LogManager.getLogger(ConverterImpl.class);
 	private OWLOntology ontology;
 
 	public ConverterImpl(IRI ontologyIRI) throws OWLOntologyCreationException {
 		this(ontologyIRI, Collections.<IRI>emptyList());
 	}
 
-	public ConverterImpl(IRI ontologyIRI, List<IRI> necessaryExternals) throws OWLOntologyCreationException {
+	public ConverterImpl(IRI ontologyIRI, Collection<IRI> necessaryExternals) throws OWLOntologyCreationException {
 		initApi();
 		logger.info("Loading ontologies ... [" + ontologyIRI + ",  " + necessaryExternals + "]");
 
@@ -159,7 +159,7 @@ public class ConverterImpl implements Converter {
 		fillDomainRanges(vowlData);
 		createSubclassProperties(vowlData);
 		new ImportedChecker(vowlData, manager, loadedOntology, loadedOntologyPath).execute();
-		vowlData.getEntityMap().values().forEach(entity -> entity.accept(new EquivalentSorter(ontology.getOntologyID().getOntologyIRI().get(), vowlData)));
+		vowlData.getEntityMap().values().forEach(entity -> entity.accept(new EquivalentSorter(ontology.getOntologyID().getOntologyIRI().or(IRI.create(loadedOntologyPath)), vowlData)));
 	}
 
 	protected void initApi() {
