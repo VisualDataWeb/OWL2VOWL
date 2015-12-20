@@ -18,8 +18,9 @@
 	<properties>
 		<java.version>1.8</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<sprint.boot.version>1.2.4.RELEASE</sprint.boot.version>
-		<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.Main</mainClass>
+		<sprint.boot.version>1.3.1.RELEASE</sprint.boot.version>
+		<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.ConsoleMain</mainClass>
+		<packaging.type>jar</packaging.type>
 	</properties>
 
 	<prerequisites>
@@ -185,7 +186,7 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.Main</mainClass>
+									<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.ConsoleMain</mainClass>
 								</manifest>
 								<manifestEntries>
 									<Version>${project.version}</Version>
@@ -231,10 +232,12 @@
 				</plugins>
 			</build>
 		</profile>
+
 		<profile>
 			<id>war-release</id>
 			<properties>
 				<packaging.type>war</packaging.type>
+				<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.ServerMain</mainClass>
 			</properties>
 			<activation>
 				<property>
@@ -243,48 +246,21 @@
 				</property>
 			</activation>
 			<build>
-				<finalName>owl2vowl</finalName>
 				<plugins>
 					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-compiler-plugin</artifactId>
-						<version>3.3</version>
+						<version>3.1</version>
 						<configuration>
-							<source>${java.version}</source>
-							<target>${java.version}</target>
+							<source>1.8</source>
+							<target>1.8</target>
 						</configuration>
 					</plugin>
 					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-shade-plugin</artifactId>
-						<version>2.1</version>
-						<executions>
-							<execution>
-								<phase>package</phase>
-								<goals>
-									<goal>shade</goal>
-								</goals>
-								<configuration>
-									<filters>
-										<filter>
-											<artifact>*:*</artifact>
-											<excludes>
-												<exclude>META-INF/*.SF</exclude>
-												<exclude>META-INF/*.DSA</exclude>
-												<exclude>META-INF/*.RSA</exclude>
-											</excludes>
-										</filter>
-									</filters>
-									<createDependencyReducedPom>false</createDependencyReducedPom>
-									<transformers>
-										<transformer
-												implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-											<mainClass>${mainClass}</mainClass>
-										</transformer>
-									</transformers>
-								</configuration>
-							</execution>
-						</executions>
+						<artifactId>maven-war-plugin</artifactId>
+						<version>2.4</version>
+						<configuration>
+							<failOnMissingWebXml>false</failOnMissingWebXml>
+						</configuration>
 					</plugin>
 					<plugin>
 						<groupId>org.springframework.boot</groupId>
@@ -299,32 +275,6 @@
 						</executions>
 						<configuration>
 							<mainClass>${mainClass}</mainClass>
-						</configuration>
-					</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<version>2.10</version>
-						<executions>
-							<execution>
-								<id>copy-dependencies</id>
-								<phase>package</phase>
-								<goals>
-									<goal>copy-dependencies</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>versions-maven-plugin</artifactId>
-						<version>2.1</version>
-					</plugin>
-					<plugin>
-						<artifactId>maven-war-plugin</artifactId>
-						<version>2.1.1</version>
-						<configuration>
-							<failOnMissingWebXml>false</failOnMissingWebXml>
 						</configuration>
 					</plugin>
 				</plugins>
@@ -375,5 +325,31 @@
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>${sprint.boot.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+		</dependency>
+
 	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<!--  Import dependency management from Spring Boot  -->
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${sprint.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 </project>

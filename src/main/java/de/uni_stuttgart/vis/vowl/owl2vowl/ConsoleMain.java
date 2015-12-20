@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Main {
+public class ConsoleMain {
 	private static final String IRI_OPTION_NAME = "iri";
 	private static final String FILE_OPTION_NAME = "file";
 	private static final String DEPENDENCIES_OPTION_NAME = "dependencies";
