@@ -6,6 +6,8 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.server;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.Owl2Vowl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.springframework.http.HttpStatus;
@@ -25,6 +27,9 @@ import java.util.UUID;
  */
 @RestController
 public class Owl2VowlController {
+
+	private static final Logger conversionLogger = LogManager.getLogger("conversion");
+
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Parameter not correct")
 	@ExceptionHandler(IllegalArgumentException.class)
 	public void parameterException(Exception e) {
@@ -72,14 +77,32 @@ public class Owl2VowlController {
 			}
 		}
 
-		Owl2Vowl owl2Vowl = new Owl2Vowl(mainIri, dependencies);
-		return owl2Vowl.getJsonAsString();
+		String jsonAsString;
+
+		try {
+			Owl2Vowl owl2Vowl = new Owl2Vowl(mainIri, dependencies);
+			jsonAsString = owl2Vowl.getJsonAsString();
+		} catch (Exception e) {
+			conversionLogger.info(mainIri + " " + 0);
+			throw e;
+		}
+
+		return jsonAsString;
 	}
 
 	@RequestMapping(value = "/owl2vowl", method = RequestMethod.GET)
 	public String convertIRI(@RequestParam("iri") String iri) throws IOException, OWLOntologyCreationException {
-		Owl2Vowl owl2Vowl = new Owl2Vowl(IRI.create(iri));
-		String jsonAsString = owl2Vowl.getJsonAsString();
+		String jsonAsString;
+
+		try {
+			Owl2Vowl owl2Vowl = new Owl2Vowl(IRI.create(iri));
+			jsonAsString = owl2Vowl.getJsonAsString();
+		} catch (Exception e) {
+			conversionLogger.info(iri + " " + 1);
+			throw e;
+		}
+
+		conversionLogger.info(iri + " " + 0);
 		return jsonAsString;
 	}
 }
