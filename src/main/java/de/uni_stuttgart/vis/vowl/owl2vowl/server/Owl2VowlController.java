@@ -37,7 +37,7 @@ public class Owl2VowlController {
 		System.out.println("--- Parameter exception: " + e.getMessage());
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.POST)
+	@RequestMapping(value = "/owl2vowl", method = RequestMethod.POST)
 	public String uploadOntology(@RequestParam("ontology") MultipartFile[] files) throws IOException, OWLOntologyCreationException {
 		if (files == null || files.length == 0) {
 			throw new IllegalArgumentException("No file uploaded!");
@@ -76,7 +76,7 @@ public class Owl2VowlController {
 		return owl2Vowl.getJsonAsString();
 	}
 
-	@RequestMapping(value = "/", method = RequestMethod.GET)
+	@RequestMapping(value = "/owl2vowl", method = RequestMethod.GET)
 	public String convertIRI(@RequestParam("iri") String iri) throws IOException, OWLOntologyCreationException {
 		Owl2Vowl owl2Vowl = new Owl2Vowl(IRI.create(iri));
 		String jsonAsString = owl2Vowl.getJsonAsString();
