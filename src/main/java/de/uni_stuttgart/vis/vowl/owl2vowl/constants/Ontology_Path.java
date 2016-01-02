@@ -27,7 +27,7 @@ public class Ontology_Path {
 	public static final String EXT_GEONAMES = "http://www.geonames.org/ontology/ontology_v3.1.rdf";
 	public static final String EXT_PROV = "http://www.w3.org/ns/prov-o";
 	public static final String EXT_PIZZA = "http://130.88.198.11/co-ode-files/ontologies/pizza.owl";
-	public static final String EXT_ONTOVIBE = "http://ontovibe.visualdataweb.org/2.0";
+	public static final String EXT_ONTOVIBE = "http://ontovibe.visualdataweb.org/2.1";
 	public static final String EXT_ONTO_CARD = "http://ontovibe.visualdataweb.org/cardinalities/";
 	public static final String EXT_NICETAG = "http://ns.inria.fr/nicetag/2010/09/09/voc";
 	public static final String EXT_SIOC = "http://rdfs.org/sioc/ns#";
