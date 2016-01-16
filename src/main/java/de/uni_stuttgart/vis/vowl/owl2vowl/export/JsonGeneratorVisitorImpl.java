@@ -89,6 +89,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		classAttributeObject.put("id", vowlData.getIdForEntity(vowlClass));
 		classAttributeObject.put("label", getLabelsFromAnnotations(vowlClass.getAnnotations().getLabels()));
 		classAttributeObject.put("iri", vowlClass.getIri().toString());
+		classAttributeObject.put("baseIri", vowlClass.getBaseIri().toString());
 		classAttributeObject.put("description", getLabelsFromAnnotations(vowlClass.getAnnotations().getDescription()));
 		classAttributeObject.put("comment", getLabelsFromAnnotations(vowlClass.getAnnotations().getComments()));
 		classAttributeObject.put("superClasses", getListWithIds(vowlClass.getSuperEntities()));
@@ -113,6 +114,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 
 			Map<String, Object> fields = new HashMap<>();
 			fields.put("iri", individual.getIri().toString());
+			fields.put("baseIri", individual.getBaseIri().toString());
 			fields.put("labels", getLabelsFromAnnotations(individual.getAnnotations().getLabels()));
 			fields.put("description", getLabelsFromAnnotations(individual.getAnnotations().getDescription()));
 			fields.put("comment", getLabelsFromAnnotations(individual.getAnnotations().getComments()));
@@ -168,6 +170,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		classAttributeObject.put("id", vowlData.getIdForEntity(vowlDatatype));
 		classAttributeObject.put("label", getLabelsFromAnnotations(reference.getAnnotations().getLabels()));
 		classAttributeObject.put("iri", reference.getIri().toString());
+		classAttributeObject.put("baseIri", reference.getBaseIri().toString());
 
 		classAttribute.add(classAttributeObject);
 	}
@@ -200,6 +203,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		propertyAttributes.put("id", vowlData.getIdForEntity(property));
 		propertyAttributes.put("label", getLabelsFromAnnotations(property.getAnnotations().getLabels()));
 		propertyAttributes.put("iri", property.getIri().toString());
+		propertyAttributes.put("baseIri", property.getBaseIri().toString());
 		propertyAttributes.put("description", getLabelsFromAnnotations(property.getAnnotations().getDescription()));
 		propertyAttributes.put("comment", getLabelsFromAnnotations(property.getAnnotations().getComments()));
 		propertyAttributes.put("attributes", property.getAttributes());

@@ -16,6 +16,7 @@ import org.codehaus.jackson.map.SerializationConfig;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -67,6 +68,7 @@ public class JsonGenerator {
 	protected void processHeader(VowlData vowlData) {
 		OntologyInformation ontologyInformation = vowlData.getOntologyInformation();
 		header.put("languages", vowlData.getLanguages());
+		header.put("baseIris", vowlData.getBaseIris().stream().map(IRI::toString).collect(Collectors.toSet()));
 		header.put("title", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getTitles()));
 		header.put("iri", ontologyInformation.getIri());
 		header.put("version", ontologyInformation.getVersion());
