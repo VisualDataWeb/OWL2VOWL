@@ -66,17 +66,24 @@ public class ComparisonHelper {
 	}
 
 	public static String extractBaseIRI(String iri) {
-		String baseIri = removeTrailingHash(iri);
-
-		if (baseIri.contains("#")) {
-			baseIri = baseIri.split("#")[0];
+		if (iri.endsWith("#")) {
+			// e.g. http://test.de/working#
+			return iri.substring(0, iri.lastIndexOf("#"));
 		}
 
-		if (baseIri.endsWith("/")) {
-			baseIri = baseIri.substring(0, baseIri.lastIndexOf("/" + 1));
+		if (iri.contains("#")) {
+			// e.g. http://test.de/working#theworker
+			iri = iri.split("#")[0];
+			return iri;
 		}
 
-		return baseIri;
+		if (iri.endsWith("/")) {
+			// e.g. http://test.de/working/theworker/
+			iri = iri.substring(0, iri.lastIndexOf("/"));
+		}
+
+		// e.g. http://test.de/working/theworker
+		return iri.substring(0, iri.lastIndexOf("/"));
 	}
 
 
