@@ -39,17 +39,29 @@ public class VowlData {
 	private Map<IRI, VowlIndividual> individualMap = new HashMap<>();
 	private OntologyInformation ontologyInformation = new OntologyInformation();
 	private Set<String> languages = new HashSet<>();
+
+	private Set<IRI> baseIris = new HashSet<>();
 	private VowlSearcher searcher;
 	private VowlIriGenerator iriGenerator = new VowlIriGenerator();
 	private VowlGenerator generator;
 	private VowlThingProvider thingProvider;
-
 	public VowlData() {
 		searcher = new VowlSearcher(this);
 		generator = new VowlGenerator(this);
 		thingProvider = new VowlThingProvider(this, searcher, generator);
 		genericLiteral = new VowlLiteral(IRI.create(VowlLiteral.LITERAL_IRI));
 		addDatatype(genericLiteral);
+	}
+
+	public Set<IRI> getBaseIris() {
+		return baseIris;
+	}
+
+	public void addBaseIri(IRI iri) {
+		if (iri.toString().contains(VowlIriGenerator.baseIri)) {
+			return;
+		}
+		baseIris.add(iri);
 	}
 
 	public VowlLiteral getGenericLiteral() {
@@ -219,7 +231,8 @@ public class VowlData {
 	}
 
 	private class VowlIriGenerator {
-		private String iriPrefix = "http://owl2vowl.de#";
+		public static final String iriPrefix = "http://owl2vowl.de#";
+		public static final String baseIri = "http://owl2vowl.de";
 		private int generations = 0;
 
 		public IRI generate() {
