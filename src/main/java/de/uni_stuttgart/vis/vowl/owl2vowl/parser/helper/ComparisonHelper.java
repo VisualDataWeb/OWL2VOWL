@@ -65,6 +65,20 @@ public class ComparisonHelper {
 		return hasDifferentNameSpace(elementNamespace, ontologyIri);
 	}
 
+	public static String extractBaseIRI(String iri) {
+		String baseIri = removeTrailingHash(iri);
+
+		if (baseIri.contains("#")) {
+			baseIri = baseIri.split("#")[0];
+		}
+
+		if (baseIri.endsWith("/")) {
+			baseIri = baseIri.substring(0, baseIri.lastIndexOf("/" + 1));
+		}
+
+		return baseIri;
+	}
+
 
 	private static String removeTrailingHash(String text) {
 		return text.replaceAll("#$", "");
