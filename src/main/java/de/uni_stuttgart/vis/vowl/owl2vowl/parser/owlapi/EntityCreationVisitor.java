@@ -20,7 +20,7 @@ public class EntityCreationVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLClass ce) {
-		AbstractClass clazz = null;
+		AbstractClass clazz;
 
 		if (ce.isOWLThing() || ce.isOWLNothing()) {
 			// General class do not create here
@@ -29,6 +29,7 @@ public class EntityCreationVisitor extends OWLObjectVisitorAdapter {
 			clazz = new VowlClass(ce.getIRI());
 		} else {
 			// TODO Anonymous behaviour undefined
+			return;
 		}
 
 		vowlData.addClass(clazz);
@@ -50,12 +51,13 @@ public class EntityCreationVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLObjectProperty property) {
-		VowlObjectProperty prop = null;
+		VowlObjectProperty prop;
 
 		if(!property.isAnonymous()) {
 			prop = new VowlObjectProperty(property.getIRI());
 		} else {
 			// TODO anonymous behaviour
+			return;
 		}
 
 		vowlData.addObjectProperty(prop);
@@ -63,12 +65,13 @@ public class EntityCreationVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLDataProperty property) {
-		VowlDatatypeProperty prop = null;
+		VowlDatatypeProperty prop;
 
 		if(!property.isAnonymous()) {
 			prop = new VowlDatatypeProperty(property.getIRI());
 		} else {
 			// TODO anonymous behaviour
+			return;
 		}
 
 		vowlData.addDatatypeProperty(prop);
