@@ -27,14 +27,14 @@ public class VowlGenerator {
 		this.vowlData = vowlData;
 	}
 
-	protected void applyManualAttributes(AbstractEntity entity) {
+	protected void applyAnonymous(AbstractEntity entity) {
 		entity.setGenerated(VowlGenerationEnum.MANUALLY);
 		entity.addAttribute(VowlAttribute.ANONYMOUS);
 	}
 
 	public VowlClass generateIntersection(Collection<IRI> iriList) {
 		VowlClass element = new VowlClass(vowlData.getNewIri());
-		applyManualAttributes(element);
+		applyAnonymous(element);
 		iriList.stream().forEach(element::addElementToIntersection);
 		element.addAttribute(VowlAttribute.INTERSECTION);
 		vowlData.addClass(element);
@@ -43,7 +43,7 @@ public class VowlGenerator {
 
 	public VowlClass generateUnion(Collection<IRI> iriList) {
 		VowlClass element = new VowlClass(vowlData.getNewIri());
-		applyManualAttributes(element);
+		applyAnonymous(element);
 		iriList.stream().forEach(element::addElementToUnion);
 		element.addAttribute(VowlAttribute.UNION);
 		vowlData.addClass(element);
@@ -52,7 +52,7 @@ public class VowlGenerator {
 
 	public VowlClass generateComplement(IRI iri) {
 		VowlClass element = new VowlClass(vowlData.getNewIri());
-		applyManualAttributes(element);
+		applyAnonymous(element);
 		element.addComplement(iri);
 		element.addAttribute(VowlAttribute.COMPLEMENT);
 		vowlData.addClass(element);
@@ -72,7 +72,7 @@ public class VowlGenerator {
 		}
 
 		VowlObjectProperty property = new VowlObjectProperty(vowlData.getNewIri());
-		applyManualAttributes(property);
+		applyAnonymous(property);
 		property.addDomain(domain);
 		property.addRange(range);
 		property.setType(PropertyType.DISJOINT);
@@ -87,7 +87,7 @@ public class VowlGenerator {
 		}
 
 		VowlObjectProperty property = new VowlObjectProperty(vowlData.getNewIri());
-		applyManualAttributes(property);
+		applyAnonymous(property);
 		property.addDomain(domain);
 		property.addRange(range);
 		property.setType(PropertyType.SUBCLASS);
@@ -110,7 +110,7 @@ public class VowlGenerator {
 		}
 
 		TypeOfProperty property = new TypeOfProperty(vowlData.getNewIri());
-		applyManualAttributes(property);
+		property.setGenerated(VowlGenerationEnum.MANUALLY);
 		property.addDomain(domain);
 		property.addRange(range);
 		vowlData.addTypeOfProperty(property);
@@ -124,7 +124,7 @@ public class VowlGenerator {
 		}
 
 		DatatypeReference reference1 = new DatatypeReference(vowlData.getNewIri(), reference);
-		applyManualAttributes(reference1);
+		reference1.setGenerated(VowlGenerationEnum.MANUALLY);
 		vowlData.addDatatype(reference1);
 
 		return reference1;
@@ -132,7 +132,7 @@ public class VowlGenerator {
 
 	public VowlLiteral generateLiteral() {
 		VowlLiteral vowlLiteral = new LiteralReference(vowlData.getNewIri(), vowlData.getGenericLiteral().getIri());
-		applyManualAttributes(vowlLiteral);
+		vowlLiteral.setGenerated(VowlGenerationEnum.MANUALLY);
 		vowlData.addDatatype(vowlLiteral);
 
 		return vowlLiteral;
