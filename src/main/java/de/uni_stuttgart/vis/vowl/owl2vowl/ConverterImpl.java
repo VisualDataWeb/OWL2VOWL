@@ -161,7 +161,6 @@ public class ConverterImpl implements Converter {
 		new ImportedChecker(vowlData, manager, loadedOntology, loadedOntologyPath).execute();
 		vowlData.getEntityMap().values().forEach(entity -> entity.accept(new EquivalentSorter(ontology.getOntologyID().getOntologyIRI().or(IRI.create(loadedOntologyPath)), vowlData)));
 		new BaseIriCollector(vowlData).execute();
-		System.out.println(vowlData.getBaseIris());
 	}
 
 	protected void initApi() {
