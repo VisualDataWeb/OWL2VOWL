@@ -1,9 +1,14 @@
 OWL2VOWL converter [![Build Status](https://travis-ci.org/VisualDataWeb/OWL2VOWL.svg)](https://travis-ci.org/VisualDataWeb/OWL2VOWL)
 ==================
 
+Currently under new restructering of the complete api.
+Following stuff is happening:
+- Update to JDK 8 (JDK 6 and 7 already outdated and owlapi 4 needs at least JDK 7)
+- Update to owlapi 4
+
 Requirements
 ------------
-*   Java 6 (or higher)
+*   Java 8 (or higher)
 *   Maven
 
 

@@ -5,239 +5,266 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.export;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.BaseEntity;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.BaseEdge;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.edges.properties.*;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.BaseNode;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.classes.*;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.BaseDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.nodes.datatypes.RdfsLiteral;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.*;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
+import org.apache.commons.lang.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.semanticweb.owlapi.model.IRI;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
-/**
- *
- */
 public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
-	private Map<String, Object> entityJson;
-	private Map<String, Object> entityAttributes;
-	private boolean failure = false;
+	private final VowlData vowlData;
+	private final Map<String, Object> root;
+	private List<Object> _class;
+	private List<Object> classAttribute;
+	private List<Object> datatype;
+	private List<Object> datatypeAttribute;
+	private List<Object> propertyList;
+	private List<Object> propertyAttributeList;
+	private Logger logger = LogManager.getLogger(JsonGeneratorVisitorImpl.class);
 
-	public JsonGeneratorVisitorImpl() {
-		entityJson = new LinkedHashMap<String, Object>();
-		entityAttributes = new LinkedHashMap<String, Object>();
+	public JsonGeneratorVisitorImpl(VowlData vowlData, Map<String, Object> root) {
+		this.vowlData = vowlData;
+		this.root = root;
+		populateJsonRoot();
 	}
 
-	public Map<String, Object> getEntityJson() {
-		return entityJson;
+	protected void populateJsonRoot() {
+		_class = new ArrayList<>();
+		classAttribute = new ArrayList<>();
+		datatype = new ArrayList<>();
+		datatypeAttribute = new ArrayList<>();
+		propertyList = new ArrayList<>();
+		propertyAttributeList = new ArrayList<>();
+		root.put("class", _class);
+		root.put("classAttribute", classAttribute);
+		root.put("datatype", datatype);
+		root.put("datatypeAttribute", datatypeAttribute);
+		root.put("property", propertyList);
+		root.put("propertyAttribute", propertyAttributeList);
 	}
 
-	public Map<String, Object> getEntityAttributes() {
-		return entityAttributes;
+	protected void addCommonFields(AbstractEntity entity, Map<String, Object> object, Map<String, Object> attributes) {
+		object.put("id", vowlData.getIdForEntity(entity));
+		object.put("type", entity.getType());
+
+		attributes.put("id", vowlData.getIdForEntity(entity));
+
+		// In case of anonymous elements further fields are not needed!
+		if (!entity.getAttributes().contains(VowlAttribute.ANONYMOUS)) {
+			attributes.put("label", getLabelsFromAnnotations(entity.getAnnotations().getLabels()));
+			attributes.put("iri", entity.getIri().toString());
+
+			if (entity.getBaseIri() != null) {
+				attributes.put("baseIri", entity.getBaseIri().toString());
+			}
+		}
 	}
 
-	public boolean isFailure() {
-		return failure;
+	@Override
+	public void visit(VowlThing vowlThing) {
+		Map<String, Object> object = new HashMap<>();
+		Map<String, Object> attributes = new HashMap<>();
+
+		addCommonFields(vowlThing, object, attributes);
+		attributes.put("iri", VowlThing.GENERIC_THING_IRI);
+
+		_class.add(object);
+		classAttribute.add(attributes);
 	}
 
-	public void visit(BaseEntity entity) {
-		entityJson.put("id", entity.getId());
-		entityJson.put("type", entity.getType());
+	@Override
+	public void visit(VowlClass vowlClass) {
+		Map<String, Object> object = new HashMap<>();
+		Map<String, Object> attributes = new HashMap<>();
 
-		List<Object> subClasses = new ArrayList<Object>();
-		List<Object> superClasses = new ArrayList<Object>();
+		addCommonFields(vowlClass, object, attributes);
+		attributes.put("description", getLabelsFromAnnotations(vowlClass.getAnnotations().getDescription()));
+		attributes.put("comment", getLabelsFromAnnotations(vowlClass.getAnnotations().getComments()));
+		attributes.put("superClasses", getListWithIds(vowlClass.getSuperEntities()));
+		attributes.put("subClasses", getListWithIds(vowlClass.getSubEntities()));
+		attributes.put("annotations", vowlClass.getAnnotations().getIdentifierToAnnotation());
+		attributes.put("union", getListWithIds(vowlClass.getElementsOfUnion()));
+		attributes.put("intersection", getListWithIds(vowlClass.getElementOfIntersection()));
+		attributes.put("attributes", vowlClass.getAttributes());
+		attributes.put("equivalent", getListWithIds(vowlClass.getSortedEquivalents()));
+		attributes.put("complement", getListWithIds(vowlClass.getComplements()));
+		attributes.put("instances", vowlClass.getInstances().size());
+		attributes.put("individuals", createIndividualsJson(vowlClass.getIndividuals()));
 
-		for (BaseNode current : entity.getSubClasses()) {
-			subClasses.add(current.getId());
+		_class.add(object);
+		classAttribute.add(attributes);
+	}
+
+	private Object createIndividualsJson(Set<IRI> individuals) {
+		List<Object> individualList = new ArrayList<>();
+
+		for (IRI individualIri : individuals) {
+			VowlIndividual individual = vowlData.getIndividualMap().get(individualIri);
+
+			Map<String, Object> fields = new HashMap<>();
+			fields.put("iri", individual.getIri().toString());
+			fields.put("baseIri", individual.getBaseIri().toString());
+			fields.put("labels", getLabelsFromAnnotations(individual.getAnnotations().getLabels()));
+			fields.put("description", getLabelsFromAnnotations(individual.getAnnotations().getDescription()));
+			fields.put("comment", getLabelsFromAnnotations(individual.getAnnotations().getComments()));
+			fields.put("annotations", individual.getAnnotations().getIdentifierToAnnotation());
+
+			individualList.add(fields);
 		}
 
-		// Apply super classes
-		for (BaseNode current : entity.getSuperClasses()) {
-			superClasses.add(current.getId());
-		}
-
-		entityAttributes.put("id", entity.getId());
-		entityAttributes.put("label", entity.getLabels());
-		entityAttributes.put("iri", entity.getIri());
-		entityAttributes.put("comment", entity.getComments());
-		entityAttributes.put("isDefinedBy", entity.getDefinedBy());
-		entityAttributes.put("owlVersion", entity.getOwlVersion());
-		entityAttributes.put("attributes", entity.getAttributes());
-		entityAttributes.put("subClasses", subClasses);
-		entityAttributes.put("superClasses", superClasses);
-		entityAttributes.put("annotations", entity.getAnnotations());
+		return individualList;
 	}
 
-	public void visit(BaseEdge entity) {
-		if (entity.getDomain() == null || entity.getRange() == null) {
-			failure = true;
+	@Override
+	public void visit(VowlLiteral vowlLiteral) {
+		if (!(vowlLiteral instanceof LiteralReference)) {
+			// Skip literal if it's not a reference node.
 			return;
 		}
 
-		entityAttributes.put("domain", entity.getDomain().getId());
-		entityAttributes.put("range", entity.getRange().getId());
+		AbstractDatatype reference = vowlData.getDatatypeForIri(((LiteralReference) vowlLiteral).getReferencedIri());
+		Map<String, Object> object = new HashMap<>();
+		Map<String, Object> attributes = new HashMap<>();
+
+		object.put("id", vowlData.getIdForEntity(vowlLiteral));
+		object.put("type", reference.getType());
+
+		attributes.put("id", vowlData.getIdForEntity(vowlLiteral));
+		attributes.put("label", getLabelsFromAnnotations(reference.getAnnotations().getLabels()));
+		attributes.put("iri", vowlLiteral.getGenericIri());
+
+		_class.add(object);
+		classAttribute.add(attributes);
 	}
 
-	public void visit(BaseProperty entity) {
-		List<Object> equivalent = new ArrayList<Object>();
-		List<Object> subProperty = new ArrayList<Object>();
-		List<Object> superProperty = new ArrayList<Object>();
-		List<Object> disjoints = new ArrayList<Object>();
-
-		// Apply sub props
-		for (String current : entity.getSubProperties()) {
-			subProperty.add(current);
+	@Override
+	public void visit(VowlDatatype vowlDatatype) {
+		if (!(vowlDatatype instanceof DatatypeReference)) {
+			// Skip datatype if it's not a reference node.
+			return;
 		}
 
-		// Apply super props
-		for (String current : entity.getSuperProperties()) {
-			superProperty.add(current);
+		AbstractDatatype reference = vowlData.getDatatypeForIri(((DatatypeReference) vowlDatatype).getReferencedIri());
+		Map<String, Object> object = new HashMap<>();
+		Map<String, Object> attributes = new HashMap<>();
+
+		object.put("id", vowlData.getIdForEntity(vowlDatatype));
+		object.put("type", reference.getType());
+
+		attributes.put("id", vowlData.getIdForEntity(vowlDatatype));
+		attributes.put("label", getLabelsFromAnnotations(reference.getAnnotations().getLabels()));
+		attributes.put("iri", reference.getIri().toString());
+		attributes.put("baseIri", reference.getBaseIri().toString());
+
+		_class.add(object);
+		classAttribute.add(attributes);
+	}
+
+	@Override
+	public void visit(VowlObjectProperty vowlObjectProperty) {
+		addProperty(vowlObjectProperty);
+	}
+
+	@Override
+	public void visit(VowlDatatypeProperty vowlDatatypeProperty) {
+		addProperty(vowlDatatypeProperty);
+	}
+
+	protected void addProperty(AbstractProperty property) {
+		if (property.getDomains().isEmpty() || property.getRanges().isEmpty()) {
+			logger.info("Domain or range is empty in property: " + property);
+			return;
 		}
 
-		// Apply equivalents
-		for (String current : entity.getEquivalents()) {
-			equivalent.add(current);
+		Map<String, Object> object = new HashMap<>();
+		Map<String, Object> attributes = new HashMap<>();
+
+		addCommonFields(property, object, attributes);
+		attributes.put("domain", vowlData.getIdForIri(property.getJsonDomain()));
+		attributes.put("range", vowlData.getIdForIri(property.getJsonRange()));
+		attributes.put("description", getLabelsFromAnnotations(property.getAnnotations().getDescription()));
+		attributes.put("comment", getLabelsFromAnnotations(property.getAnnotations().getComments()));
+		attributes.put("attributes", property.getAttributes());
+		attributes.put("annotations", property.getAnnotations().getIdentifierToAnnotation());
+		attributes.put("inverse", getIdForIri(property.getInverse()));
+		attributes.put("superproperty", getListWithIds(property.getSuperEntities()));
+		attributes.put("subproperty", getListWithIds(property.getSubEntities()));
+		attributes.put("equivalent", getListWithIds(property.getSortedEquivalents()));
+		attributes.put("minCardinality", getCardinality(property.getMinCardinality()));
+		attributes.put("maxCardinality", getCardinality(property.getMaxCardinality()));
+		attributes.put("cardinality", getCardinality(property.getExactCardinality()));
+
+		propertyList.add(object);
+		propertyAttributeList.add(attributes);
+	}
+
+	@Override
+	public void visit(VowlIndividual vowlIndividual) {
+		// Individuals not needed in json.
+	}
+
+	@Override
+	public void visit(TypeOfProperty typeOfProperty) {
+		if (typeOfProperty.getDomains().isEmpty() || typeOfProperty.getRanges().isEmpty()) {
+			logger.info("Domain or range is empty in typeof property: " + typeOfProperty);
+			return;
 		}
 
-		// Apply disjoints
-		for (String current : entity.getDisjoints()) {
-			disjoints.add(current);
+		Map<String, Object> object = new HashMap<>();
+		Map<String, Object> attributes = new HashMap<>();
+
+		addCommonFields(typeOfProperty, object, attributes);
+		attributes.put("domain", vowlData.getIdForIri(typeOfProperty.getJsonDomain()));
+		attributes.put("range", vowlData.getIdForIri(typeOfProperty.getJsonRange()));
+
+		propertyList.add(object);
+		propertyAttributeList.add(attributes);
+	}
+
+	protected List<String> getListWithIds(Collection<IRI> iriList) {
+		return iriList.stream().map(iri -> String.valueOf(vowlData.getIdForIri(iri))).collect(Collectors.toList());
+	}
+
+	protected String getIdForIri(IRI iri) {
+		if (iri == null) {
+			return null;
 		}
 
-		entityAttributes.put("inverse", entity.getInverseID());
-		entityAttributes.put("equivalent", equivalent);
-		entityAttributes.put("subproperty", subProperty);
-		entityAttributes.put("superproperty", superProperty);
-		entityAttributes.put("disjoint", disjoints);
+		return vowlData.getIdForIri(iri);
+	}
 
-		// Cardinality
-		int exact = entity.getExactCardinality();
-		int min = entity.getMinCardinality();
-		int max = entity.getMaxCardinality();
+	public static Map<String, String> getLabelsFromAnnotations(Collection<Annotation> annotations) {
+		Map<String, String> languageToValue = new HashMap<>();
 
-		if (exact != -1) {
-			entityAttributes.put("cardinality", entity.getExactCardinality());
+		for (Annotation annotation : annotations) {
+			languageToValue.put(annotation.getLanguage(), annotation.getValue());
 		}
 
-		if (min != -1) {
-			entityAttributes.put("minCardinality", entity.getMinCardinality());
+		return languageToValue;
+	}
+
+	/**
+	 * @return Empty string if value is <= 0 else the value.
+	 */
+	protected String getCardinality(Integer value) {
+		if (value <= 0) {
+			return StringUtils.EMPTY;
 		}
 
-		if (max != -1) {
-			entityAttributes.put("maxCardinality", entity.getMaxCardinality());
-		}
-	}
-
-	public void visit(TypeOfProperty entity) {
-
-	}
-
-	public void visit(DisjointProperty entity) {
-
-	}
-
-	public void visit(OwlDatatypeProperty entity) {
-
-	}
-
-	public void visit(OwlObjectProperty entity) {
-
-	}
-
-	public void visit(SubClassProperty entity) {
-
-	}
-
-	public void visit(BaseNode entity) {
-
-	}
-
-	public void visit(BaseClass entity) {
-		entityAttributes.put("instances", entity.getNumberOfIndividuals());
-		entityAttributes.put("individuals", entity.getIndividuals());
-	}
-
-	public void visit(ExternalClass entity) {
-
-	}
-
-	public void visit(OwlClass entity) {
-
-	}
-
-	public void visit(OwlComplementOf entity) {
-
-	}
-
-	public void visit(OwlDeprecatedClass entity) {
-
-	}
-
-	public void visit(OwlEquivalentClass entity) {
-		List<Object> equivalent = new ArrayList<Object>();
-
-		for (BaseNode current : entity.getEquivalentClasses()) {
-			equivalent.add(current.getId());
-		}
-
-		entityAttributes.put("equivalent", equivalent);
-	}
-
-	public void visit(OwlIntersectionOf entity) {
-
-	}
-
-	public void visit(OwlThing entity) {
-
-	}
-
-	public void visit(OwlUnionOf entity) {
-
-	}
-
-	public void visit(RdfsClass entity) {
-
-	}
-
-	public void visit(RdfsResource entity) {
-
-	}
-
-	public void visit(SpecialClass entity) {
-		List<Object> union = new ArrayList<Object>();
-		List<Object> intersection = new ArrayList<Object>();
-		List<Object> complement = new ArrayList<Object>();
-
-		for (BaseNode current : entity.getUnionOf()) {
-			union.add(current.getId());
-		}
-
-		for (BaseNode current : entity.getIntersectionOf()) {
-			intersection.add(current.getId());
-		}
-
-		for (BaseNode current : entity.getComplementOf()) {
-			complement.add(current.getId());
-		}
-
-		entityAttributes.put("union", union);
-		entityAttributes.put("intersection", intersection);
-		entityAttributes.put("complement", complement);
-	}
-
-	public void visit(BaseDatatype entity) {
-
-	}
-
-	public void visit(RdfsDatatype entity) {
-
-	}
-
-	public void visit(RdfsLiteral entity) {
-
+		return value.toString();
 	}
 }

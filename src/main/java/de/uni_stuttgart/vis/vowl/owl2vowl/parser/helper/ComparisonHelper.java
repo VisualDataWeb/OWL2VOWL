@@ -1,41 +1,20 @@
 /*
- * ComparisonHelper.java
+ * Tes.java
  *
  */
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper;
 
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.container.OntologyInformation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.OWLEntity;
+import org.semanticweb.owlapi.model.OWLOntology;
 
-/**
- *
- */
 public class ComparisonHelper {
 	private static final Logger logger = LogManager.getLogger(ComparisonHelper.class);
 
-	public static boolean hasDifferentNameSpace(OWLEntity entity, OntologyInformation information) {
-		return hasDifferentNameSpace(entity.getIRI().toString(), information);
-	}
-
-	private static boolean hasDifferentNameSpace(String elementNamespace, OntologyInformation information) {
-		if (elementNamespace == null) {
-			logger.info("Namespace check: Element has no namespace!");
-			return false;
-		}
-
-		String ontologyIri;
-
-		// Use ontology iri or the iri path to the ontology.
-		if (information.getOntology().isAnonymous()) {
-			ontologyIri = information.getLoadedIri().toString();
-		} else {
-			ontologyIri = information.getOntology().getOntologyID().getOntologyIRI().toString();
-		}
-
-		return hasDifferentNameSpace(elementNamespace, ontologyIri);
+	public static boolean hasDifferentNameSpace(OWLEntity entity, OWLOntology ontology, String loadedIri) {
+		return hasDifferentNameSpace(entity.getIRI().toString(), ontology, loadedIri);
 	}
 
 	public static boolean hasDifferentNameSpace(String elementIri, String ontologyIri) {
@@ -68,11 +47,47 @@ public class ComparisonHelper {
 		return true;
 	}
 
-	private static String removeTrailingHash(String text) {
-		return text.replaceAll("#$", "");
+	public static boolean hasDifferentNameSpace(String elementNamespace, OWLOntology ontology, String loadedIri) {
+		if (elementNamespace == null) {
+			logger.info("Namespace check: Element has no namespace!");
+			return false;
+		}
+
+		String ontologyIri;
+
+		// Use ontology iri or the iri path to the ontology.
+		if (ontology.isAnonymous()) {
+			ontologyIri = loadedIri;
+		} else {
+			ontologyIri = ontology.getOntologyID().getOntologyIRI().get().toString();
+		}
+
+		return hasDifferentNameSpace(elementNamespace, ontologyIri);
 	}
 
-	public static String getIndividualName(String iri) {
-		return iri.substring(iri.lastIndexOf("#") + 1);
+	public static String extractBaseIRI(String iri) {
+		if (iri.endsWith("#")) {
+			// e.g. http://test.de/working#
+			return iri.substring(0, iri.lastIndexOf("#"));
+		}
+
+		if (iri.contains("#")) {
+			// e.g. http://test.de/working#theworker
+			iri = iri.split("#")[0];
+			return iri;
+		}
+
+		if (iri.endsWith("/")) {
+			// e.g. http://test.de/working/theworker/
+			iri = iri.substring(0, iri.lastIndexOf("/"));
+		}
+
+		// e.g. http://test.de/working/theworker
+		return iri.substring(0, iri.lastIndexOf("/"));
+	}
+
+
+	private static String removeTrailingHash(String text) {
+		return text.replaceAll("#$", "");
 	}
 }

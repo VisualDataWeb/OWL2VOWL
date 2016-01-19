@@ -1,22 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
 	<Properties>
-		<Property name="log-path">logs</Property>
+		<Property name="log-path">owl2vowl_logs</Property>
 	</Properties>
+
 	<Appenders>
-		<!--<RollingFile name="info-log" fileName="${log-path}/ontology-structure.log"-->
-		             <!--filePattern="${log-path}/ontology-structure-%d{yyyy-MM-dd}.log" append="false">-->
-			<!--<PatternLayout>-->
-				<!--<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>-->
-			<!--</PatternLayout>-->
-			<!--<Policies>-->
-				<!--<TimeBasedTriggeringPolicy interval="1" modulate="true"/>-->
-			<!--</Policies>-->
-		<!--</RollingFile>-->
+		<RollingFile name="info-log" fileName="${log-path}/ontology-structure.log"
+		             filePattern="${log-path}/ontology-structure-%d{yyyy-MM-dd}.log">
+			<PatternLayout>
+				<pattern>%d{yyyy-MM-dd HH:mm:ss} %c{1} - %msg%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+			</Policies>
+		</RollingFile>
+
+		<RollingFile name="conversion" fileName="${log-path}/conversion.log"
+		             filePattern="${log-path}/conversion-%d{yyyy-MM-dd}.log">
+			<PatternLayout>
+				<pattern>%d{yyyy-MM-dd HH:mm:ss} - %msg%n</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+			</Policies>
+		</RollingFile>
 	</Appenders>
+
 	<Loggers>
+		<Logger name="conversion" level="trace" additivity="false">
+			<appender-ref ref="conversion"/>
+		</Logger>
 		<Root level="info" additivity="false">
-			<!--<appender-ref ref="info-log" level="debug"/>-->
+			<appender-ref ref="info-log" level="debug"/>
 		</Root>
+
 	</Loggers>
 </Configuration>
