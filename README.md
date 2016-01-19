@@ -1,8 +1,6 @@
 OWL2VOWL converter [![Build Status](https://travis-ci.org/VisualDataWeb/OWL2VOWL.svg)](https://travis-ci.org/VisualDataWeb/OWL2VOWL)
 ==================
 
-Currently under new restructering of the complete api.
-Following stuff is happening:
 - Update to JDK 8 (JDK 6 and 7 already outdated and owlapi 4 needs at least JDK 7)
 - Update to owlapi 4
 
@@ -12,7 +10,7 @@ Requirements
 *   Maven
 
 
-Instructions for using OWL2VOWL
+Instructions for using OWL2VOWL JAR
 ------------
 
 The converted ontology will be written in a .json file in the working directory by default.
@@ -45,15 +43,18 @@ Instructions for developing with OWL2VOWL
 
 ### First steps
 `Maven` is required to develop with OWL2VOWL and compile the code. It will load all dependencies automatically. If there occur any problems, refreshing the dependencies might solve them.
-OWL2VOWL has been developed to work with Java 6, so `JDK 6` has to be used for compiling.
+OWL2VOWL has been developed to work with Java 8, so `JDK 8` has to be used for compiling.
 
 ### Build the jar
 To build the jar file, simply execute `mvn package`. The built `jar` only contains the compiled source code. 
-To build a jar file that can be executed standalone, you have to use the package option with parameter: `mvn package -Denv=standalone`. This will build the file `owl2vowl.jar` containing all dependencies needed to be executable. There will also be a `zip` file created containing the `owl2vowl.jar`, README and the license files.
+To build a jar file that can be executed standalone, you have to use the package option with parameter: `mvn package -Denv=standalone` or `mvn package -P standalone-release`. This will build the file `owl2vowl.jar` containing all dependencies needed to be executable. There will also be a `zip` file created containing the `owl2vowl.jar`, README and the license files.
+
+### Build the war
+To build the war file, simply execute `mvn package -P war-release`. This will generate a war file.
+This war can be execute like a jar file to start a local server.
 
 ### Running in IDE
-It would be a pain always building the jar only to test some new implemented stuff. We included a possiblity to run the conversion directly with the IDE. For this you need to change the `Main.java` class.
+It would be a pain always building the jar only to test some new implemented stuff. We included a possiblity to run the conversion directly with the IDE. For this you need to change the `ConverterImpl.java` class.
 
-Change the field `CONVERT_ONE = false` to `CONVERT_ONE = true`. Now you can work with the `convertOneOntology`-method to convert those ontologies you would like to test with. Some ontologies for testing can also be found in the `Ontology_Path.java`.
+To run a Spring Server directly from the IDE you have to start the `ServerMain.java` class.
 
-BUT if you want to create the `jar`, you have to change the field back to `CONVERT_ONE = false` - otherwise it will still only execute the `convertOneOntology`-method.
