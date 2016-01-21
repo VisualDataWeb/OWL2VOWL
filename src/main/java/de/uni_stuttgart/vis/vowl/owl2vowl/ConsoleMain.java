@@ -1,8 +1,3 @@
-/*
- * Main.java
- *
- */
-
 package de.uni_stuttgart.vis.vowl.owl2vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.ConsoleExporter;
@@ -37,14 +32,16 @@ public class ConsoleMain {
 		Options options = createOptions();
 
 		try {
-			line = new BasicParser().parse(options, args);
+			line = new DefaultParser().parse(options, args);
 		} catch (ParseException exp) {
 			System.err.println("Parsing failed.  Reason: " + exp.getMessage());
-			printHelpMenuAndExit(options);
+			printHelpMenu(options);
+			System.exit(0);
 		}
 
 		if (line.hasOption(HELP_OPTION_NAME)) {
-			printHelpMenuAndExit(options);
+			printHelpMenu(options);
+			System.exit(0);
 		}
 
 		IRI ontologyIri;
@@ -77,27 +74,16 @@ public class ConsoleMain {
 
 	protected Options createOptions() {
 		Options options = new Options();
-
-		options.addOption(new Option(HELP_OPTION_NAME, "views this help text"));
+		options.addOption(Option.builder(HELP_OPTION_NAME).desc("views this help text").build());
 
 		OptionGroup inputOptions = new OptionGroup();
 		inputOptions.setRequired(true);
-		inputOptions.addOption(OptionBuilder.withArgName("IRI")
-				.hasArg()
-				.withDescription("the iri of an ontology")
-				.create(IRI_OPTION_NAME));
-		inputOptions.addOption(OptionBuilder.withArgName("PATH")
-				.hasArg()
-				.withDescription("the local path to an ontology")
-				.create(FILE_OPTION_NAME));
-
-		options.addOption(OptionBuilder.withArgName("PATHS")
-				.hasArgs()
-				.withDescription("paths to dependencies of a local ontology")
-				.create(DEPENDENCIES_OPTION_NAME));
+		inputOptions.addOption(Option.builder(IRI_OPTION_NAME).argName("IRI").hasArg().desc("the iri of an ontology").build());
+		inputOptions.addOption(Option.builder(FILE_OPTION_NAME).argName("PATH").hasArg().desc("the local path to an ontology").build());
+		options.addOption(Option.builder(DEPENDENCIES_OPTION_NAME).argName("PATHS").hasArgs().desc("paths to dependencies of a local ontology").build());
 
 		OptionGroup outputOptions = new OptionGroup();
-		outputOptions.addOption(new Option(ECHO_OPTION_NAME, "prints the converted ontology on the console"));
+		outputOptions.addOption(Option.builder(HELP_OPTION_NAME).desc("prints the converted ontology on the console").build());
 		outputOptions.addOption(Option.builder(OUTPUT_OPTION_NAME).argName("PATH").hasArg().desc("specify the path for the desired output location").build());
 
 		options.addOptionGroup(inputOptions);
@@ -106,10 +92,9 @@ public class ConsoleMain {
 		return options;
 	}
 
-	protected void printHelpMenuAndExit(Options options) {
+	protected void printHelpMenu(Options options) {
 		HelpFormatter helpFormatter = new HelpFormatter();
 		helpFormatter.printHelp("java -jar owl2vowl.jar", options);
-		System.exit(0);
 	}
 
 	protected Exporter createExporterFromOption(CommandLine line, IRI ontologyIri) {
