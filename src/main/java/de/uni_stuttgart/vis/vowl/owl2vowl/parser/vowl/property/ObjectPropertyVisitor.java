@@ -95,7 +95,7 @@ public class ObjectPropertyVisitor extends PropertyVisitor {
 
 	@Override
 	public void visit(OWLDisjointObjectPropertiesAxiom axiom) {
-		logger.info("Disjoint object properties not supported yet.");
+		logger.info("Disjoint object properties not supported: " + axiom);
 	}
 
 	@Override
