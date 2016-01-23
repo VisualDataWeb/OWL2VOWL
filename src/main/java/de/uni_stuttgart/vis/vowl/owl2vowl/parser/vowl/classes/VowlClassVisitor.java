@@ -8,11 +8,13 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractClass;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.util.OWLClassExpressionVisitorAdapter;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 /**
@@ -79,5 +81,21 @@ public class VowlClassVisitor extends OWLClassExpressionVisitorAdapter {
 				logger.info("Anonymous exists in intersections.");
 			}
 		}
+	}
+
+	@Override
+	public void visit(OWLObjectOneOf ce) {
+		AbstractClass oneOfClass = vowlData.getClassForIri(referencedClass.getIRI());
+		ce.getIndividuals().forEach(individual -> individual.accept(new OWLIndividualVisitor() {
+			@Override
+			public void visit(@Nonnull OWLNamedIndividual owlNamedIndividual) {
+				oneOfClass.addIndividual(owlNamedIndividual.getIRI());
+			}
+
+			@Override
+			public void visit(@Nonnull OWLAnonymousIndividual owlAnonymousIndividual) {
+				// TODO anonymous behaviour of individuals
+			}
+		}));
 	}
 }
