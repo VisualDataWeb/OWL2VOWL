@@ -59,6 +59,13 @@ public class VowlGenerator {
 		return element;
 	}
 
+	public VowlClass generateAnonymousClass() {
+		VowlClass element = new VowlClass(vowlData.getNewIri());
+		applyAnonymous(element);
+		vowlData.addClass(element);
+		return element;
+	}
+
 	public VowlThing generateThing() {
 		VowlThing thing = new VowlThing(vowlData.getNewIri());
 		thing.setGenerated(VowlGenerationEnum.MANUALLY);
