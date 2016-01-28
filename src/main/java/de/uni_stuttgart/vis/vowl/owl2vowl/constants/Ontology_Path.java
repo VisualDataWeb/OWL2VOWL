@@ -39,6 +39,7 @@ public class Ontology_Path {
 	public static final String EXT_MARINE_TLO = "http://www.ics.forth.gr/isl/MarineTLO/v3/marinetloimarine.owl";
 	public static final String EXT_DC_TERMS = "http://purl.org/dc/terms/";
 	public static final String EXT_HOLY = "http://www.holygoat.co.uk/owl/redwood/0.1/tags/";
+	public static final String EXT_PERSONAS = "http://blankdots.com/open/personasonto.owl";
 	// NOT WORKING FOR ONTOLOGY PARSERS
 	public static final String EXT_HP_NOT_WORKING = "http://purl.org/voc/hp/";
 	public static final String EXT_HP = "https://raw.githubusercontent.com/AKSW/vocab.hp/master/schema.ttl";
