@@ -12,3 +12,5 @@
 # Release directory
 /release
 /logs/
+
+/src/main/resources/static/
