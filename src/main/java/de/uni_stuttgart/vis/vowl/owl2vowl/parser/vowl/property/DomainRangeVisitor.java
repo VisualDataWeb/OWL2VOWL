@@ -115,7 +115,7 @@ public class DomainRangeVisitor extends OWLObjectVisitorExAdapter<AbstractNode> 
 	@Nonnull
 	@Override
 	public AbstractNode visit(OWLObjectOneOf ce) {
-		AbstractClass oneOfClass = vowlData.getGenerator().generateAnonymousClass();
+		VowlClass oneOfClass = vowlData.getGenerator().generateAnonymousClass();
 		ce.getIndividuals().forEach(individual -> individual.accept(new OWLIndividualVisitor() {
 			@Override
 			public void visit(@Nonnull OWLNamedIndividual owlNamedIndividual) {
