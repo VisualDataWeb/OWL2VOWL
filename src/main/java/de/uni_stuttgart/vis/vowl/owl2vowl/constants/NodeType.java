@@ -11,6 +11,7 @@ public class NodeType {
 	public static final String TYPE_RDFSRESOURCE = "rdfs:Resource";
 	public static final String TYPE_UNION = "owl:unionOf";
 	public static final String TYPE_INTERSECTION = "owl:intersectionOf";
+	public static final String TYPE_DISJOINTUNION = "owl:disjointUnion";
 	public static final String TYPE_COMPLEMENT = "owl:complementOf";
 	public static final String TYPE_DATATYPE = "rdfs:Datatype";
 	public static final String TYPE_LITERAL = "rdfs:Literal";

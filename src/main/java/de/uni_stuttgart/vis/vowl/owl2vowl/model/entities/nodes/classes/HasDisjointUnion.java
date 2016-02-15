@@ -10,9 +10,9 @@ import org.semanticweb.owlapi.model.IRI;
 import java.util.Set;
 
 /**
- * Interface for disjoint unions. Not necessary at the moment because realized as union construct.
+ * Interface to enable disjoint union functionality in classes.
  */
 public interface HasDisjointUnion {
-	Set getDisjoints();
-	void addDisjoint(IRI disjointIri);
+	Set getDisjointUnion();
+	void addDisjointUnion(IRI disjointIri);
 }

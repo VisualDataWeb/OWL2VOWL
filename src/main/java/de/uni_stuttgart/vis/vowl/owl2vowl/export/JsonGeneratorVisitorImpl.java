@@ -98,6 +98,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		attributes.put("subClasses", getListWithIds(vowlClass.getSubEntities()));
 		attributes.put("annotations", vowlClass.getAnnotations().getIdentifierToAnnotation());
 		attributes.put("union", getListWithIds(vowlClass.getElementsOfUnion()));
+		attributes.put("disjointUnion", getListWithIds(vowlClass.getDisjointUnion()));
 		attributes.put("intersection", getListWithIds(vowlClass.getElementOfIntersection()));
 		attributes.put("attributes", vowlClass.getAttributes());
 		attributes.put("equivalent", getListWithIds(vowlClass.getSortedEquivalents()));

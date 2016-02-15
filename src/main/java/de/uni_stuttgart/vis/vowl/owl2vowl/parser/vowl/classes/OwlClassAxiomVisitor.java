@@ -89,6 +89,7 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 		}
 	}
 
+	// TODO equivalent expressions not processed
 	@Override
 	public void visit(OWLDisjointUnionAxiom axiom) {
 		if (axiom.getOWLClass().isAnonymous()) {
@@ -97,15 +98,10 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 		}
 
 		AbstractClass baseClass = vowlData.getClassForIri(axiom.getOWLClass().getIRI());
-		baseClass.addAttribute(VowlAttribute.UNION);
+		baseClass.addAttribute(VowlAttribute.DISJOINTUNION);
 
-		for (OWLClassExpression owlClassExpression : axiom.getClassExpressions()) {
-			if (!owlClassExpression.isAnonymous()) {
-				baseClass.addElementToUnion(owlClassExpression.asOWLClass().getIRI());
-			} else {
-				// TODO anonymous behaviour
-				logger.info("Anonymous disjoint in disjoint union: " + owlClassExpression);
-			}
+		for (OWLClass disjointClass : axiom.getOWLDisjointClassesAxiom().getClassesInSignature()) {
+			baseClass.addDisjointUnion(disjointClass.getIRI());
 		}
 	}
 }

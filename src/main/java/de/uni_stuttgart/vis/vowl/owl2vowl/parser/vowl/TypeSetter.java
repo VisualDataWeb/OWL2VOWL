@@ -56,10 +56,9 @@ public class TypeSetter implements VowlElementVisitor {
 	}
 
 	/**
-	 * 1. Intersection, Union, Complement
+	 * 1. Intersection, Union, Complement, DisjointUnion
 	 * 2. Equivalent
 	 * 3. rdf
-	 * @param attributes
 	 */
 	protected String getClassType(Collection<VowlAttribute> attributes) {
 		if (attributes.contains(VowlAttribute.INTERSECTION)) {
@@ -72,6 +71,10 @@ public class TypeSetter implements VowlElementVisitor {
 
 		if (attributes.contains(VowlAttribute.COMPLEMENT)) {
 			return NodeType.TYPE_COMPLEMENT;
+		}
+
+		if (attributes.contains(VowlAttribute.DISJOINTUNION)) {
+			return NodeType.TYPE_DISJOINTUNION;
 		}
 
 		if (attributes.contains(VowlAttribute.EQUIVALENT)) {
