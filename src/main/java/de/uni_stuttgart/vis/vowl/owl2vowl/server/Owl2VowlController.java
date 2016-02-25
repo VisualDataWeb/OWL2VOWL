@@ -1,8 +1,3 @@
-/*
- * Owl2VowlController.java
- *
- */
-
 package de.uni_stuttgart.vis.vowl.owl2vowl.server;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.Owl2Vowl;
@@ -22,9 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/**
- *
- */
 @RestController
 public class Owl2VowlController {
 
@@ -32,17 +24,26 @@ public class Owl2VowlController {
 
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Parameter not correct")
 	@ExceptionHandler(IllegalArgumentException.class)
-	public void parameterException(Exception e) {
+	public void parameterExceptionHandler(Exception e) {
 		System.out.println("--- Parameter exception: " + e.getMessage());
+		conversionLogger.error("Problems with parameters: " + e.getMessage());
 	}
 
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Ontology could not be created")
 	@ExceptionHandler(OWLOntologyCreationException.class)
-	public void ontologyCreationException(Exception e) {
-		System.out.println("--- Parameter exception: " + e.getMessage());
+	public void ontologyCreationExceptionHandler(Exception e) {
+		System.out.println("--- Ontology creation exception: " + e.getMessage());
+		conversionLogger.error("Problems in ontology creation process: " + e.getMessage());
 	}
 
-	@RequestMapping(value = {"/owl2vowl", "/converter.php"}, method = RequestMethod.POST)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Problems while generating uploaded file on server.")
+	@ExceptionHandler(IOException.class)
+	public void fileExceptionHandler(Exception e) {
+		System.out.println("--- IO exception: " + e.getMessage());
+		conversionLogger.error("IO exception while generating file on server: " + e.getMessage());
+	}
+
+	@RequestMapping(value = "/convert", method = RequestMethod.POST)
 	public String uploadOntology(@RequestParam("ontology") MultipartFile[] files) throws IOException, OWLOntologyCreationException {
 		if (files == null || files.length == 0) {
 			throw new IllegalArgumentException("No file uploaded!");
@@ -63,7 +64,7 @@ public class Owl2VowlController {
 				createdFiles.add(serverFile);
 			} catch (Exception e) {
 				System.err.println("Error creating file: External file name <" + file.getName() + "> | local file name <" + serverFile.getName() + ">. Reason: " + e.getMessage());
-				throw new IOException();
+				throw new IOException(e);
 			}
 		}
 
@@ -90,7 +91,7 @@ public class Owl2VowlController {
 		return jsonAsString;
 	}
 
-	@RequestMapping(value = {"/owl2vowl", "/converter.php"}, method = RequestMethod.GET)
+	@RequestMapping(value = "/convert", method = RequestMethod.GET)
 	public String convertIRI(@RequestParam("iri") String iri) throws IOException, OWLOntologyCreationException {
 		String jsonAsString;
 
