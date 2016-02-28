@@ -20,7 +20,8 @@ import java.util.UUID;
 @RestController
 public class Owl2VowlController {
 
-	private static final Logger conversionLogger = LogManager.getLogger("conversion");
+	private static final Logger conversionLogger = LogManager.getLogger(Owl2VowlController.class);
+	private static final String СONVERT_MAPPING = "/convert";
 
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Parameter not correct")
 	@ExceptionHandler(IllegalArgumentException.class)
@@ -43,8 +44,9 @@ public class Owl2VowlController {
 		conversionLogger.error("IO exception while generating file on server: " + e.getMessage());
 	}
 
-	@RequestMapping(value = "/convert", method = RequestMethod.POST)
-	public String uploadOntology(@RequestParam("ontology") MultipartFile[] files) throws IOException, OWLOntologyCreationException {
+	@RequestMapping(value = СONVERT_MAPPING, method = RequestMethod.POST)
+	public String uploadOntology(@RequestParam("ontology") MultipartFile[] files) throws IOException,
+			OWLOntologyCreationException {
 		if (files == null || files.length == 0) {
 			throw new IllegalArgumentException("No file uploaded!");
 		}
@@ -63,7 +65,8 @@ public class Owl2VowlController {
 				stream.write(bytes);
 				createdFiles.add(serverFile);
 			} catch (Exception e) {
-				System.err.println("Error creating file: External file name <" + file.getName() + "> | local file name <" + serverFile.getName() + ">. Reason: " + e.getMessage());
+				System.err.println("Error creating file: External file name <" + file.getName() + "> | local file name <" + serverFile.getName() +
+						">. Reason: " + e.getMessage());
 				throw new IOException(e);
 			}
 		}
@@ -86,12 +89,14 @@ public class Owl2VowlController {
 		} catch (Exception e) {
 			conversionLogger.info(mainIri + " " + 0);
 			throw e;
+		} finally {
+			createdFiles.forEach(File::delete);
 		}
 
 		return jsonAsString;
 	}
 
-	@RequestMapping(value = "/convert", method = RequestMethod.GET)
+	@RequestMapping(value = СONVERT_MAPPING, method = RequestMethod.GET)
 	public String convertIRI(@RequestParam("iri") String iri) throws IOException, OWLOntologyCreationException {
 		String jsonAsString;
 
