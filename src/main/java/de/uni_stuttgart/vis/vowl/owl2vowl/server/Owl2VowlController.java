@@ -9,18 +9,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 public class Owl2VowlController {
 
-	private static final Logger conversionLogger = LogManager.getLogger(Owl2VowlController.class);
+	private static final Logger conversionLogger = LogManager.getLogger("conversion");
 	private static final String СONVERT_MAPPING = "/convert";
 
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Parameter not correct")
@@ -51,46 +49,24 @@ public class Owl2VowlController {
 			throw new IllegalArgumentException("No file uploaded!");
 		}
 
-		List<File> createdFiles = new ArrayList<>();
-
-		for (MultipartFile file : files) {
-			byte[] bytes = file.getBytes();
-			File serverFile = new File(UUID.randomUUID().toString().replace(" ", "%20"));
-
-			while (serverFile.exists()) {
-				serverFile = new File(UUID.randomUUID().toString().replace(" ", "%20"));
-			}
-
-			try (BufferedOutputStream stream = new BufferedOutputStream(new FileOutputStream(serverFile))) {
-				stream.write(bytes);
-				createdFiles.add(serverFile);
-			} catch (Exception e) {
-				System.err.println("Error creating file: External file name <" + file.getName() + "> | local file name <" + serverFile.getName() +
-						">. Reason: " + e.getMessage());
-				throw new IOException(e);
-			}
+		if (files.length > 1) {
+			throw new IllegalArgumentException("Currently only one file supported");
 		}
 
-		IRI mainIri = IRI.create(createdFiles.get(0));
-		List<IRI> dependencies = new ArrayList<>();
+		List<InputStream> inputStreams = new ArrayList<>();
 
-		if (createdFiles.size() > 1) {
-			for (int i = 1; i < createdFiles.size(); i++) {
-				File dependency = createdFiles.get(i);
-				dependencies.add(IRI.create(dependency));
-			}
+		for (MultipartFile file : files) {
+			inputStreams.add(file.getInputStream());
 		}
 
 		String jsonAsString;
 
 		try {
-			Owl2Vowl owl2Vowl = new Owl2Vowl(mainIri, dependencies);
+			Owl2Vowl owl2Vowl = new Owl2Vowl(inputStreams.get(0));
 			jsonAsString = owl2Vowl.getJsonAsString();
 		} catch (Exception e) {
-			conversionLogger.info(mainIri + " " + 0);
+			conversionLogger.info("Uploaded files " + files[0].getName() + ": " + 0);
 			throw e;
-		} finally {
-			createdFiles.forEach(File::delete);
 		}
 
 		return jsonAsString;

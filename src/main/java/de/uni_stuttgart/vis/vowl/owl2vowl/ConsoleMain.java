@@ -1,5 +1,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.converter.Converter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.converter.IRIConverter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.ConsoleExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.FileExporter;
@@ -61,7 +63,7 @@ public class ConsoleMain {
 		}
 
 		try {
-			Converter converter = new ConverterImpl(ontologyIri, dependencies);
+			Converter converter = new IRIConverter(ontologyIri, dependencies);
 			converter.convert();
 			converter.export(createExporterFromOption(line, ontologyIri));
 		} catch (Exception e) {

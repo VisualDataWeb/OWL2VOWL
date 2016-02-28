@@ -3,7 +3,7 @@
  *
  */
 
-package de.uni_stuttgart.vis.vowl.owl2vowl;
+package de.uni_stuttgart.vis.vowl.owl2vowl.converter;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
 

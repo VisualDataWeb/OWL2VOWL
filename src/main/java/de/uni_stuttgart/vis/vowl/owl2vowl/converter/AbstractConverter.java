@@ -1,13 +1,6 @@
-/*
- * ConverterImpl.java
- *
- */
+package de.uni_stuttgart.vis.vowl.owl2vowl.converter;
 
-package de.uni_stuttgart.vis.vowl.owl2vowl;
-
-import de.uni_stuttgart.vis.vowl.owl2vowl.constants.Ontology_Path;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
-import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.FileExporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.JsonGenerator;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
@@ -27,58 +20,31 @@ import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
-public class ConverterImpl implements Converter {
-	private final JsonGenerator jsonGenerator = new JsonGenerator();
+public abstract class AbstractConverter implements Converter {
+
+	private static final Logger logger = LogManager.getLogger(AbstractConverter.class);
+	protected final JsonGenerator jsonGenerator = new JsonGenerator();
 	protected String loadedOntologyPath;
 	protected OWLOntologyManager manager;
 	protected VowlData vowlData;
-	private static final Logger logger = LogManager.getLogger(ConverterImpl.class);
-	private OWLOntology ontology;
+	protected OWLOntology ontology;
+	protected boolean initialized = false;
 
-	public ConverterImpl(IRI ontologyIRI) throws OWLOntologyCreationException {
-		this(ontologyIRI, Collections.<IRI>emptyList());
-	}
-
-	public ConverterImpl(IRI ontologyIRI, Collection<IRI> necessaryExternals) throws OWLOntologyCreationException {
+	public void preLoadOntology() {
 		initApi();
-		logger.info("Loading ontologies ... [" + ontologyIRI + ",  " + necessaryExternals + "]");
 
-		if (!necessaryExternals.isEmpty()) {
-			for (IRI externalIRI : necessaryExternals) {
-				manager.loadOntology(externalIRI);
-			}
-			logger.info("External ontologies loaded!");
+		try {
+			loadOntology();
+		} catch (OWLOntologyCreationException e) {
+			throw new RuntimeException(e);
 		}
 
-		ontology = manager.loadOntology(ontologyIRI);
-		String logOntoName = ontologyIRI.toString();
-		loadedOntologyPath = ontologyIRI.toString();
-
-		if (!ontology.isAnonymous()) {
-			logOntoName = ontology.getOntologyID().getOntologyIRI().get().toString();
-		} else {
-			logger.info("Ontology IRI is anonymous. Use loaded URI/IRI instead.");
-		}
-
-		logger.info("Ontologies loaded! Main Ontology: " + logOntoName);
+		initialized = true;
 	}
 
-	public ConverterImpl(OWLOntology ontology, String ontologyIRI) {
-		initApi();
-		this.ontology = ontology;
-		loadedOntologyPath = ontologyIRI;
-	}
-
-	public ConverterImpl(OWLOntology ontology) {
-		initApi();
-		this.ontology = ontology;
-	}
+	protected abstract void loadOntology() throws OWLOntologyCreationException;
 
 	private void preParsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
 		OWLOntologyWalker walker = new OWLOntologyWalker(ontology.getImportsClosure());
@@ -97,7 +63,8 @@ public class ConverterImpl implements Converter {
 		// TODO check all classes
 		ontology.getClassesInSignature(Imports.INCLUDED).forEach(owlClass -> {
 			for (OWLOntology owlOntology : manager.getOntologies()) {
-				EntitySearcher.getIndividuals(owlClass, owlOntology).forEach(owlIndividual -> owlIndividual.accept(new IndividualsVisitor(vowlData, owlIndividual, owlClass, manager)));
+				EntitySearcher.getIndividuals(owlClass, owlOntology).forEach(owlIndividual -> owlIndividual.accept(new IndividualsVisitor(vowlData,
+						owlIndividual, owlClass, manager)));
 			}
 		});
 	}
@@ -116,14 +83,6 @@ public class ConverterImpl implements Converter {
 				propertyAxiom.accept(new DataPropertyVisitor(vowlData, property));
 			}
 		}
-	}
-
-	public static void main(String[] args) throws Exception {
-		List<IRI> dep = new ArrayList<>();
-		dep.add(IRI.create(new File(Ontology_Path.BENCHMARK2)));
-		Converter converter = new ConverterImpl(IRI.create(new File(Ontology_Path.BENCHMARK1)), dep);
-		converter.convert();
-		converter.export(new FileExporter(new File("export.json")));
 	}
 
 	private void createSubclassProperties(VowlData vowlData) {
@@ -159,7 +118,8 @@ public class ConverterImpl implements Converter {
 		fillDomainRanges(vowlData);
 		createSubclassProperties(vowlData);
 		new ImportedChecker(vowlData, manager, loadedOntology, loadedOntologyPath).execute();
-		vowlData.getEntityMap().values().forEach(entity -> entity.accept(new EquivalentSorter(ontology.getOntologyID().getOntologyIRI().or(IRI.create(loadedOntologyPath)), vowlData)));
+		vowlData.getEntityMap().values().forEach(entity -> entity.accept(new EquivalentSorter(ontology.getOntologyID().getOntologyIRI().or(IRI
+				.create(loadedOntologyPath)), vowlData)));
 		new BaseIriCollector(vowlData).execute();
 	}
 
@@ -171,6 +131,10 @@ public class ConverterImpl implements Converter {
 	 * Executes the complete conversion to the webvowl compatible json format.
 	 */
 	public void convert() {
+		if (!initialized) {
+			preLoadOntology();
+		}
+
 		vowlData = new VowlData();
 
 		// TODO Vielleicht mithilfe von Klassenannotationen Unterteilung schaffen und dann die on the fly die annotierten Klassen holen und ausführen

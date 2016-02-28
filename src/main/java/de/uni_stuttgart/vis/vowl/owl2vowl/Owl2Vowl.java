@@ -5,11 +5,16 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.converter.Converter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.converter.IRIConverter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.converter.InputStreamConverter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.converter.OntologyConverter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.BackupExporter;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
+import java.io.InputStream;
 import java.util.Collection;
 
 /**
@@ -18,29 +23,28 @@ import java.util.Collection;
 public class Owl2Vowl {
 	protected Converter converter;
 
-	/**
-	 * Without function yet
-	 */
 	public Owl2Vowl(OWLOntology ontology) {
-		// TODO not implemented yet
+		converter = new OntologyConverter(ontology);
 	}
 
-	/**
-	 * Initialize the converter.
-	 *
-	 * @param ontology    The desired ontology to convert.
-	 * @param ontologyIri The iri of the ontology. Should not be null!
-	 */
 	public Owl2Vowl(OWLOntology ontology, String ontologyIri) {
-		converter = new ConverterImpl(ontology, ontologyIri);
+		converter = new OntologyConverter(ontology, ontologyIri);
 	}
 
-	public Owl2Vowl(IRI ontologyIri) throws OWLOntologyCreationException {
-		converter = new ConverterImpl(ontologyIri);
+	public Owl2Vowl(IRI ontologyIri) {
+		converter = new IRIConverter(ontologyIri);
 	}
 
-	public Owl2Vowl(IRI ontologyIri, Collection<IRI> dependencies) throws OWLOntologyCreationException {
-		converter = new ConverterImpl(ontologyIri, dependencies);
+	public Owl2Vowl(IRI ontologyIri, Collection<IRI> dependencies) {
+		converter = new IRIConverter(ontologyIri, dependencies);
+	}
+
+	public Owl2Vowl(InputStream ontology) {
+		converter = new InputStreamConverter(ontology);
+	}
+
+	public Owl2Vowl(InputStream ontology, Collection<InputStream> dependencies) {
+		converter = new InputStreamConverter(ontology, dependencies);
 	}
 
 	/**
