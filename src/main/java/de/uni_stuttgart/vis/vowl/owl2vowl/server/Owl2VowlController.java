@@ -50,7 +50,7 @@ public class Owl2VowlController {
 		}
 
 		if (files.length > 1) {
-			throw new IllegalArgumentException("Currently only one file supported");
+			throw new IllegalArgumentException("Please upload only the main ontology!");
 		}
 
 		List<InputStream> inputStreams = new ArrayList<>();
