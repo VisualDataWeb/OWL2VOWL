@@ -136,6 +136,7 @@ public abstract class AbstractConverter implements Converter {
 		}
 
 		vowlData = new VowlData();
+		vowlData.setOwlManager(manager);
 
 		// TODO Vielleicht mithilfe von Klassenannotationen Unterteilung schaffen und dann die on the fly die annotierten Klassen holen und ausführen
 		preParsing(ontology, vowlData, manager);

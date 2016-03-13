@@ -1,8 +1,3 @@
-/*
- * VowlData.java
- *
- */
-
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.data;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
@@ -19,6 +14,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectPr
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyInformation;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import java.util.*;
 
@@ -27,6 +23,8 @@ import java.util.*;
  */
 public class VowlData {
 	private final VowlLiteral genericLiteral;
+	// Not sure if context information should be stored here
+	protected OWLOntologyManager owlManager;
 	private Map<AbstractEntity, String> entityToId = new HashMap<>();
 	private Map<IRI, AbstractEntity> entityMap = new HashMap<>();
 	private Map<IRI, AbstractClass> classMap = new AllEntityMap<>(entityMap);
@@ -39,18 +37,26 @@ public class VowlData {
 	private Map<IRI, VowlIndividual> individualMap = new HashMap<>();
 	private OntologyInformation ontologyInformation = new OntologyInformation();
 	private Set<String> languages = new HashSet<>();
-
 	private Set<IRI> baseIris = new HashSet<>();
 	private VowlSearcher searcher;
 	private VowlIriGenerator iriGenerator = new VowlIriGenerator();
 	private VowlGenerator generator;
 	private VowlThingProvider thingProvider;
+
 	public VowlData() {
 		searcher = new VowlSearcher(this);
 		generator = new VowlGenerator(this);
 		thingProvider = new VowlThingProvider(this, searcher, generator);
 		genericLiteral = new VowlLiteral(IRI.create(VowlLiteral.LITERAL_IRI));
 		addDatatype(genericLiteral);
+	}
+
+	public OWLOntologyManager getOwlManager() {
+		return owlManager;
+	}
+
+	public void setOwlManager(OWLOntologyManager owlManager) {
+		this.owlManager = owlManager;
 	}
 
 	public Set<IRI> getBaseIris() {
