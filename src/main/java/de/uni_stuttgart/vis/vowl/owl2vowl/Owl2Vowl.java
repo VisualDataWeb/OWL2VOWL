@@ -59,7 +59,7 @@ public class Owl2Vowl {
 		try {
 			converter.export(exporter);
 		} catch (Exception e) {
-			throw new IllegalStateException("Problems during export happend. " + e);
+			throw new IllegalStateException("Problems during export happend. ", e);
 		}
 
 		return exporter.getConvertedJson();
