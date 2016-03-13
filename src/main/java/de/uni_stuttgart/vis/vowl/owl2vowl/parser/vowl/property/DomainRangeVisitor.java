@@ -2,13 +2,10 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.NullClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.AbstractDatatype;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.DatatypeReference;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDatatype;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
@@ -116,17 +113,10 @@ public class DomainRangeVisitor extends OWLObjectVisitorExAdapter<AbstractNode> 
 	@Override
 	public AbstractNode visit(OWLObjectOneOf ce) {
 		VowlClass oneOfClass = vowlData.getGenerator().generateAnonymousClass();
-		ce.getIndividuals().forEach(individual -> individual.accept(new OWLIndividualVisitor() {
-			@Override
-			public void visit(@Nonnull OWLNamedIndividual owlNamedIndividual) {
-				oneOfClass.addIndividual(owlNamedIndividual.getIRI());
-			}
 
-			@Override
-			public void visit(@Nonnull OWLAnonymousIndividual owlAnonymousIndividual) {
-				// TODO anonymous behaviour of individuals
-			}
-		}));
+		ce.getIndividuals().forEach(owlIndividual -> {
+			owlIndividual.accept(new IndividualsVisitor(vowlData, vowlData.getOwlManager(), oneOfClass.getIri()));
+		});
 
 		return oneOfClass;
 	}

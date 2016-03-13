@@ -9,6 +9,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
@@ -86,16 +87,8 @@ public class VowlClassVisitor extends OWLClassExpressionVisitorAdapter {
 	@Override
 	public void visit(OWLObjectOneOf ce) {
 		AbstractClass oneOfClass = vowlData.getClassForIri(referencedClass.getIRI());
-		ce.getIndividuals().forEach(individual -> individual.accept(new OWLIndividualVisitor() {
-			@Override
-			public void visit(@Nonnull OWLNamedIndividual owlNamedIndividual) {
-				oneOfClass.addIndividual(owlNamedIndividual.getIRI());
-			}
-
-			@Override
-			public void visit(@Nonnull OWLAnonymousIndividual owlAnonymousIndividual) {
-				// TODO anonymous behaviour of individuals
-			}
-		}));
+		ce.getIndividuals().forEach(owlIndividual -> {
+			owlIndividual.accept(new IndividualsVisitor(vowlData, owlIndividual, referencedClass, vowlData.getOwlManager()));
+		});
 	}
 }
