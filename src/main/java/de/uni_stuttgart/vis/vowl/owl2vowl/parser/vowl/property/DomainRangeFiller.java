@@ -54,7 +54,7 @@ public class DomainRangeFiller implements VowlPropertyVisitor {
 
 			if (value.getDomains().size() > 1) {
 				VowlClass domainUnion = vowlData.getGenerator().generateUnion(value.getDomains());
-				value.setMergedRange(domainUnion.getIri());
+				value.setMergedDomain(domainUnion.getIri());
 			}
 		}
 	}
