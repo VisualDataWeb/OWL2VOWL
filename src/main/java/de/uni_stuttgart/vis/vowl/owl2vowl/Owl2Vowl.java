@@ -10,10 +10,11 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.converter.IRIConverter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.converter.InputStreamConverter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.converter.OntologyConverter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.BackupExporter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.FileExporter;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
-import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 
@@ -53,7 +54,6 @@ public class Owl2Vowl {
 	 * @return The webvowl compatible json format.
 	 */
 	public String getJsonAsString() {
-		converter.convert();
 		BackupExporter exporter = new BackupExporter();
 
 		try {
@@ -63,5 +63,14 @@ public class Owl2Vowl {
 		}
 
 		return exporter.getConvertedJson();
+	}
+
+	public void writeToFile(File file) {
+		try {
+			converter.export(new FileExporter(file));
+		} catch (Exception e) {
+			throw new IllegalStateException("Problems during export happend. ", e);
+		}
+
 	}
 }

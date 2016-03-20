@@ -129,6 +129,7 @@ public abstract class AbstractConverter implements Converter {
 
 	/**
 	 * Executes the complete conversion to the webvowl compatible json format.
+	 * Normally is only called ones during export. But if a new conversion is required just call this method before exporting.
 	 */
 	public void convert() {
 		if (!initialized) {
@@ -152,7 +153,7 @@ public abstract class AbstractConverter implements Converter {
 	 */
 	public void export(Exporter exporter) throws Exception {
 		if (vowlData == null) {
-			throw new IllegalAccessException("Ontology has to be converted first");
+			convert();
 		}
 
 		jsonGenerator.execute(vowlData);
