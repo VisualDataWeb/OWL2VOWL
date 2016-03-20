@@ -4,7 +4,9 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.SetWithoutNull;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
 import org.semanticweb.owlapi.model.IRI;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractClass extends AbstractNode implements HasDisjointUnion, HasIndividuals {
@@ -12,6 +14,7 @@ public abstract class AbstractClass extends AbstractNode implements HasDisjointU
 	protected Set<IRI> disjointUnion = new SetWithoutNull<>();
 	protected Set<IRI> instances = new SetWithoutNull<>();
 	protected Set<IRI> individuals = new SetWithoutNull<>();
+	private Set<IRI> keys = new SetWithoutNull<>();
 
 	protected AbstractClass(IRI iri, String type) {
 		super(iri, type);
@@ -46,5 +49,13 @@ public abstract class AbstractClass extends AbstractNode implements HasDisjointU
 	@Override
 	public Set<IRI> getInstances() {
 		return Collections.unmodifiableSet(instances);
+	}
+
+	public Set<IRI> getKeys() {
+		return Collections.unmodifiableSet(keys);
+	}
+
+	public void addKey(IRI keyIri) {
+		keys.add(keyIri);
 	}
 }

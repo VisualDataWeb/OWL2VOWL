@@ -21,7 +21,8 @@ public enum VowlAttribute {
 	REFLEXIVE("reflexive"),
 	IMPORTED("external"),
 	ANONYMOUS("anonymous"),
-	DISJOINTUNION("disjointUnion");
+	DISJOINTUNION("disjointUnion"),
+	KEY("key");
 
 	private final String value;
 
