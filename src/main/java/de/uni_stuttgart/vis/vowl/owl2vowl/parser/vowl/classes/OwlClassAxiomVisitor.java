@@ -2,7 +2,10 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractClass;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
@@ -38,11 +41,11 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 
 		Set<OWLClassExpression> expressionsWithoutRefClass = axiom.getClassExpressionsMinus(referencedClass);
 		for (OWLClassExpression anonymExpressions : expressionsWithoutRefClass) {
-			anonymExpressions.accept(new VowlClassVisitor(vowlData, referencedClass));
+			anonymExpressions.accept(new OwlClassAxiomVisitor(vowlData, referencedClass));
 		}
 	}
 
-	protected void createEquivalentClass(OWLEquivalentClassesAxiom axiom) {
+	private void createEquivalentClass(OWLEquivalentClassesAxiom axiom) {
 		AbstractClass topClass = vowlData.getClassForIri(owlClass.getIRI());
 
 		for (OWLClassExpression owlClassExpression : axiom.getClassExpressionsMinus(owlClass)) {
@@ -64,7 +67,7 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 		AbstractClass vowlSubclass = vowlData.getClassForIri(subClass.getIRI());
 
 		if (axiom.getSuperClass().isAnonymous()) {
-			axiom.getSuperClass().accept(new OwlSubclassAnonymVisitor(vowlData, owlClass));
+			axiom.getSuperClass().accept(new OwlClassAxiomVisitor(vowlData, owlClass));
 		} else {
 			OWLClass superClass = axiom.getSuperClass().asOWLClass();
 			AbstractClass vowlSuperClass = vowlData.getClassForIri(superClass.getIRI());
@@ -103,5 +106,163 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 		for (OWLClass disjointClass : axiom.getOWLDisjointClassesAxiom().getClassesInSignature()) {
 			baseClass.addDisjointUnion(disjointClass.getIRI());
 		}
+	}
+
+	@Override
+	public void visit(OWLObjectMinCardinality ce) {
+		if (!ce.getFiller().isOWLThing() && !ce.getFiller().isOWLNothing()) {
+			// TODO specification of a filler class
+			logger.info("Specification of cardinalities not supported yet: " + ce);
+			return;
+		}
+
+		OWLObjectProperty property = ce.getProperty().getNamedProperty();
+		AbstractProperty vowlProperty = vowlData.getPropertyForIri(property.getIRI());
+		vowlProperty.setMinCardinality(ce.getCardinality());
+	}
+
+	@Override
+	public void visit(OWLDataAllValuesFrom ce) {
+		logger.info(ce + " not supported yet.");
+	}
+
+	@Override
+	public void visit(OWLDataExactCardinality ce) {
+		OWLDataPropertyExpression property = ce.getProperty();
+
+		if (property.isAnonymous()) {
+			logger.info("Anonymous dataproperty for exact cardinality.");
+			return;
+		}
+
+		AbstractProperty vowlProperty = vowlData.getPropertyForIri(property.asOWLDataProperty().getIRI());
+		vowlProperty.setExactCardinality(ce.getCardinality());
+	}
+
+	@Override
+	public void visit(OWLDataMaxCardinality ce) {
+		OWLDataPropertyExpression property = ce.getProperty();
+
+		if (property.isAnonymous()) {
+			logger.info("Anonymous dataproperty for max cardinality.");
+			return;
+		}
+
+		AbstractProperty vowlProperty = vowlData.getPropertyForIri(property.asOWLDataProperty().getIRI());
+		vowlProperty.setMaxCardinality(ce.getCardinality());
+	}
+
+	@Override
+	public void visit(OWLDataMinCardinality ce) {
+		OWLDataPropertyExpression property = ce.getProperty();
+
+		if (property.isAnonymous()) {
+			logger.info("Anonymous dataproperty for min cardinality.");
+			return;
+		}
+
+		AbstractProperty vowlProperty = vowlData.getPropertyForIri(property.asOWLDataProperty().getIRI());
+		vowlProperty.setMinCardinality(ce.getCardinality());
+	}
+
+	@Override
+	public void visit(OWLDataSomeValuesFrom ce) {
+		logger.info(ce + " not supported yet.");
+	}
+
+	@Override
+	public void visit(OWLDataHasValue ce) {
+		logger.info(ce + " not supported yet.");
+	}
+
+	@Override
+	public void visit(OWLObjectAllValuesFrom ce) {
+		logger.info(ce + " not supported yet.");
+	}
+
+	@Override
+	public void visit(OWLObjectSomeValuesFrom ce) {
+		logger.info(ce + " not supported yet.");
+	}
+
+	@Override
+	public void visit(OWLObjectMaxCardinality ce) {
+		if (!ce.getFiller().isOWLThing() && !ce.getFiller().isOWLNothing()) {
+			// TODO specification of a filler class
+			logger.info("Specification of cardinalities not supported yet: " + ce);
+			return;
+		}
+
+		OWLObjectProperty property = ce.getProperty().getNamedProperty();
+		AbstractProperty vowlProperty = vowlData.getPropertyForIri(property.getIRI());
+		vowlProperty.setMaxCardinality(ce.getCardinality());
+	}
+
+	@Override
+	public void visit(OWLObjectExactCardinality ce) {
+		if (!ce.getFiller().isOWLThing() && !ce.getFiller().isOWLNothing()) {
+			// TODO specification of a filler class
+			logger.info("Specification of cardinalities not supported yet: " + ce);
+			return;
+		}
+
+		OWLObjectProperty property = ce.getProperty().getNamedProperty();
+		AbstractProperty vowlProperty = vowlData.getPropertyForIri(property.getIRI());
+		vowlProperty.setExactCardinality(ce.getCardinality());
+	}
+	@Override
+	public void visit(OWLObjectUnionOf ce) {
+		Set<OWLClassExpression> operands = ce.getOperands();
+		AbstractNode node = vowlData.getClassForIri(owlClass.getIRI());
+
+		for (OWLClassExpression operand : operands) {
+			if (!operand.isAnonymous()) {
+				node.addElementToUnion(operand.asOWLClass().getIRI());
+				node.addAttribute(VowlAttribute.UNION);
+			} else {
+				// TODO Anonymous undefined behaviour
+				logger.info("Anonymous exists in unions.");
+			}
+		}
+	}
+
+	@Override
+	public void visit(OWLObjectComplementOf ce) {
+		if (ce.getOperand().isAnonymous()) {
+			logger.info("Anonymous operand in object complement of.");
+			return;
+		}
+
+		IRI baseClassIri = ce.getOperand().asOWLClass().getIRI();
+		IRI complementIri = owlClass.getIRI();
+
+		// TODO where to set the complement?
+		//vowlData.getClassForIri(baseClassIri).addComplement(complementIri);
+		vowlData.getClassForIri(complementIri).addComplement(baseClassIri);
+		vowlData.getClassForIri(complementIri).addAttribute(VowlAttribute.COMPLEMENT);
+	}
+
+	@Override
+	public void visit(OWLObjectIntersectionOf ce) {
+		Set<OWLClassExpression> operands = ce.getOperands();
+		AbstractNode node = vowlData.getClassForIri(owlClass.getIRI());
+
+		for (OWLClassExpression operand : operands) {
+			if (!operand.isAnonymous()) {
+				node.addElementToIntersection(operand.asOWLClass().getIRI());
+				node.addAttribute(VowlAttribute.INTERSECTION);
+			} else {
+				// TODO Anonymous undefined behaviour
+				logger.info("Anonymous exists in intersections.");
+			}
+		}
+	}
+
+	@Override
+	public void visit(OWLObjectOneOf ce) {
+		AbstractClass oneOfClass = vowlData.getClassForIri(owlClass.getIRI());
+		ce.getIndividuals().forEach(owlIndividual -> {
+			owlIndividual.accept(new IndividualsVisitor(vowlData, owlIndividual, owlClass, vowlData.getOwlManager()));
+		});
 	}
 }
