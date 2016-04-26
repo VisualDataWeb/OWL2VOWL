@@ -16,6 +16,7 @@ public abstract class AbstractEntity extends AbstractVowlObject implements HasEq
 	private Set<IRI> subEntities = new SetWithoutNull<>();
 	private Set<IRI> superEntities = new SetWithoutNull<>();
 	private VowlGenerationEnum generated = VowlGenerationEnum.AUTOMATIC;
+	private boolean exportToJson = true;
 
 	protected AbstractEntity(IRI iri, String type) {
 		super(iri);
@@ -105,5 +106,13 @@ public abstract class AbstractEntity extends AbstractVowlObject implements HasEq
 	@Override
 	public void addSubEntity(IRI iri) {
 		subEntities.add(iri);
+	}
+
+	public boolean isExportToJson() {
+		return exportToJson;
+	}
+
+	public void setExportToJson(boolean exportToJson) {
+		this.exportToJson = exportToJson;
 	}
 }

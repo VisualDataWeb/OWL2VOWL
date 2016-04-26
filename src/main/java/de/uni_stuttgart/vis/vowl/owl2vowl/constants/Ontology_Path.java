@@ -24,6 +24,7 @@ public class Ontology_Path {
 	public static final String DISJOINT_NULL_POINTER = PATH_VARIABLE + "temp_simple.ttl";
 	public static final String TEST = PATH_VARIABLE + "test.ttl";
 	public static final String TEST_FULL_ONTOBENCH = PATH_VARIABLE + "fullontobench.ttl";
+	public static final String TEST_ALLVALUES = PATH_VARIABLE + "allvalues.ttl";
 
 	// External
 	public static final String EXT_GEONAMES = "http://www.geonames.org/ontology/ontology_v3.1.rdf";

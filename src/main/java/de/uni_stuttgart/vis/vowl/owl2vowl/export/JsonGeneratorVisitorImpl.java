@@ -1,14 +1,10 @@
-/*
- * JsonGeneratorVisitor.java
- *
- */
-
 package de.uni_stuttgart.vis.vowl.owl2vowl.export;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.HasReference;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.*;
@@ -24,6 +20,7 @@ import org.semanticweb.owlapi.model.IRI;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 	private final VowlData vowlData;
@@ -42,7 +39,17 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		populateJsonRoot();
 	}
 
-	protected void populateJsonRoot() {
+	public static Map<String, String> getLabelsFromAnnotations(Collection<Annotation> annotations) {
+		Map<String, String> languageToValue = new HashMap<>();
+
+		for (Annotation annotation : annotations) {
+			languageToValue.put(annotation.getLanguage(), annotation.getValue());
+		}
+
+		return languageToValue;
+	}
+
+	private void populateJsonRoot() {
 		_class = new ArrayList<>();
 		classAttribute = new ArrayList<>();
 		datatype = new ArrayList<>();
@@ -57,13 +64,16 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		root.put("propertyAttribute", propertyAttributeList);
 	}
 
-	protected void addCommonFields(AbstractEntity entity, Map<String, Object> object, Map<String, Object> attributes) {
+	private void addCommonFields(AbstractEntity entity, Map<String, Object> object, Map<String, Object> attributes) {
 		object.put("id", vowlData.getIdForEntity(entity));
 		object.put("type", entity.getType());
 
 		attributes.put("id", vowlData.getIdForEntity(entity));
 
-		// In case of anonymous elements further fields are not needed!
+		addCommonNonAnonymAttributes(entity, attributes);
+	}
+
+	private void addCommonNonAnonymAttributes(AbstractEntity entity, Map<String, Object> attributes) {
 		if (!entity.getAttributes().contains(VowlAttribute.ANONYMOUS)) {
 			attributes.put("label", getLabelsFromAnnotations(entity.getAnnotations().getLabels()));
 			attributes.put("iri", entity.getIri().toString());
@@ -185,7 +195,12 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		addProperty(vowlDatatypeProperty);
 	}
 
-	protected void addProperty(AbstractProperty property) {
+	private void addProperty(AbstractProperty property) {
+		if (property instanceof HasReference) {
+			addReferenceProperty(property);
+			return;
+		}
+
 		if (property.getDomains().isEmpty() || property.getRanges().isEmpty()) {
 			logger.info("Domain or range is empty in property: " + property);
 			return;
@@ -205,6 +220,41 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		attributes.put("superproperty", getListWithIds(property.getSuperEntities()));
 		attributes.put("subproperty", getListWithIds(property.getSubEntities()));
 		attributes.put("equivalent", getListWithIds(property.getSortedEquivalents()));
+		attributes.put("minCardinality", getCardinality(property.getMinCardinality()));
+		attributes.put("maxCardinality", getCardinality(property.getMaxCardinality()));
+		attributes.put("cardinality", getCardinality(property.getExactCardinality()));
+
+		propertyList.add(object);
+		propertyAttributeList.add(attributes);
+	}
+
+	private void addReferenceProperty(AbstractProperty property) {
+		if (property.getDomains().isEmpty() || property.getRanges().isEmpty()) {
+			logger.info("Domain or range is empty in property: " + property);
+			return;
+		}
+
+		Map<String, Object> object = new HashMap<>();
+		Map<String, Object> attributes = new HashMap<>();
+		AbstractProperty reference = vowlData.getPropertyForIri(((HasReference) property).getReferenceIri());
+
+		object.put("id", vowlData.getIdForEntity(property));
+		object.put("type", property.getType());
+
+		attributes.put("id", vowlData.getIdForEntity(property));
+
+		addCommonNonAnonymAttributes(reference, attributes);
+
+		attributes.put("domain", vowlData.getIdForIri(property.getJsonDomain()));
+		attributes.put("range", vowlData.getIdForIri(property.getJsonRange()));
+		attributes.put("description", getLabelsFromAnnotations(reference.getAnnotations().getDescription()));
+		attributes.put("comment", getLabelsFromAnnotations(reference.getAnnotations().getComments()));
+		attributes.put("attributes", Stream.concat(property.getAttributes().stream(), reference.getAttributes().stream()).collect(Collectors.toSet()));
+		attributes.put("annotations", reference.getAnnotations().getIdentifierToAnnotation());
+		attributes.put("inverse", getIdForIri(reference.getInverse()));
+		attributes.put("superproperty", getListWithIds(reference.getSuperEntities()));
+		attributes.put("subproperty", getListWithIds(reference.getSubEntities()));
+		attributes.put("equivalent", getListWithIds(reference.getSortedEquivalents()));
 		attributes.put("minCardinality", getCardinality(property.getMinCardinality()));
 		attributes.put("maxCardinality", getCardinality(property.getMaxCardinality()));
 		attributes.put("cardinality", getCardinality(property.getExactCardinality()));
@@ -236,11 +286,11 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		propertyAttributeList.add(attributes);
 	}
 
-	protected List<String> getListWithIds(Collection<IRI> iriList) {
+	private List<String> getListWithIds(Collection<IRI> iriList) {
 		return iriList.stream().map(iri -> String.valueOf(vowlData.getIdForIri(iri))).collect(Collectors.toList());
 	}
 
-	protected String getIdForIri(IRI iri) {
+	private String getIdForIri(IRI iri) {
 		if (iri == null) {
 			return null;
 		}
@@ -248,20 +298,10 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		return vowlData.getIdForIri(iri);
 	}
 
-	public static Map<String, String> getLabelsFromAnnotations(Collection<Annotation> annotations) {
-		Map<String, String> languageToValue = new HashMap<>();
-
-		for (Annotation annotation : annotations) {
-			languageToValue.put(annotation.getLanguage(), annotation.getValue());
-		}
-
-		return languageToValue;
-	}
-
 	/**
 	 * @return Empty string if value is <= 0 else the value.
 	 */
-	protected String getCardinality(Integer value) {
+	private String getCardinality(Integer value) {
 		if (value <= 0) {
 			return StringUtils.EMPTY;
 		}
