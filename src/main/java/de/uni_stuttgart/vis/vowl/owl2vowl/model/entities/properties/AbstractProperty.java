@@ -19,6 +19,7 @@ import java.util.Set;
 public abstract class AbstractProperty extends AbstractEntity implements HasInverse, HasCardinality {
 	private Set<IRI> domains = new SetWithoutNull<>();
 	private Set<IRI> ranges = new SetWithoutNull<>();
+	private Set<IRI> referencedIris = new SetWithoutNull<>();
 
 	// Merged entities used only for json generation!
 	private IRI mergedDomain;
@@ -113,4 +114,12 @@ public abstract class AbstractProperty extends AbstractEntity implements HasInve
 	}
 
 	public abstract void accept(VowlPropertyVisitor visitor);
+
+	public Set<IRI> getReferencedIris() {
+		return referencedIris;
+	}
+
+	public void addReferencedProperty(IRI reference) {
+		referencedIris.add(reference);
+	}
 }

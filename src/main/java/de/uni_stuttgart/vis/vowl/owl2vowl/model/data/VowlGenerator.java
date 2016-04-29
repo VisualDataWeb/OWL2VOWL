@@ -1,5 +1,6 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.model.data;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.PropertyAllSomeValue;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.PropertyType;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
@@ -8,10 +9,8 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.DatatypeReference;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.LiteralReference;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.*;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProperty;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
 import org.semanticweb.owlapi.model.IRI;
 
@@ -133,6 +132,34 @@ public class VowlGenerator {
 		DatatypeReference reference1 = new DatatypeReference(vowlData.getNewIri(), reference);
 		reference1.setGenerated(VowlGenerationEnum.MANUALLY);
 		vowlData.addDatatype(reference1);
+
+		return reference1;
+	}
+
+	public ObjectValueReference generateObjectValueReference(IRI reference, PropertyAllSomeValue value) {
+		if (reference == null) {
+			throw new IllegalArgumentException("Parameters should not be null!");
+		}
+
+		ObjectValueReference reference1 = new ObjectValueReference(vowlData.getNewIri(), reference);
+		reference1.setGenerated(VowlGenerationEnum.MANUALLY);
+		reference1.setValue(value);
+		vowlData.addObjectProperty(reference1);
+		vowlData.getPropertyForIri(reference).addReferencedProperty(reference1.getIri());
+
+		return reference1;
+	}
+
+	public DatatypeValueReference generateDatatypeValueReference(IRI reference, PropertyAllSomeValue value) {
+		if (reference == null) {
+			throw new IllegalArgumentException("Parameters should not be null!");
+		}
+
+		DatatypeValueReference reference1 = new DatatypeValueReference(vowlData.getNewIri(), reference);
+		reference1.setGenerated(VowlGenerationEnum.MANUALLY);
+		reference1.setValue(value);
+		vowlData.addDatatypeProperty(reference1);
+		vowlData.getPropertyForIri(reference).addReferencedProperty(reference1.getIri());
 
 		return reference1;
 	}

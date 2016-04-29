@@ -82,6 +82,11 @@ public class JsonGenerator {
 	protected <V extends AbstractEntity> void convertEntities(Map<IRI, V> entityMap) {
 		for (Map.Entry<IRI, V> irivEntry : entityMap.entrySet()) {
 			V entity = irivEntry.getValue();
+
+			if (!entity.isExportToJson()) {
+				continue;
+			}
+
 			entity.accept(visitor);
 		}
 	}

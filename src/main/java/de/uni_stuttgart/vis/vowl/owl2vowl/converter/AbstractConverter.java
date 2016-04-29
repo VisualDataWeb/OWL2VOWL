@@ -7,6 +7,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.EntityCreationVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.*;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes.GenericClassAxiomVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes.HasKeyAxiomParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes.OwlClassAxiomVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.DataPropertyVisitor;
@@ -24,7 +25,6 @@ import org.semanticweb.owlapi.util.OWLOntologyWalker;
 import java.util.Collection;
 
 public abstract class AbstractConverter implements Converter {
-
 	private static final Logger logger = LogManager.getLogger(AbstractConverter.class);
 	protected final JsonGenerator jsonGenerator = new JsonGenerator();
 	protected String loadedOntologyPath;
@@ -33,7 +33,7 @@ public abstract class AbstractConverter implements Converter {
 	protected OWLOntology ontology;
 	protected boolean initialized = false;
 
-	public void preLoadOntology() {
+	private void preLoadOntology() {
 		initApi();
 
 		try {
@@ -58,6 +58,7 @@ public abstract class AbstractConverter implements Converter {
 		processObjectProperties(ontology, vowlData);
 		processDataProperties(ontology, vowlData);
 		processIndividuals(ontology, vowlData, manager);
+		processGenericAxioms();
 	}
 
 	private void processIndividuals(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
@@ -104,12 +105,16 @@ public abstract class AbstractConverter implements Converter {
 		}
 	}
 
+	private void processGenericAxioms() {
+		ontology.getGeneralClassAxioms().forEach(owlClassAxiom -> owlClassAxiom.accept(new GenericClassAxiomVisitor(vowlData)));
+	}
+
 	private void parseAnnotations(VowlData vowlData, OWLOntologyManager manager) {
 		AnnotationParser annotationParser = new AnnotationParser(vowlData, manager);
 		annotationParser.parse();
 	}
 
-	public void setCorrectType(Collection<AbstractEntity> entities) {
+	private void setCorrectType(Collection<AbstractEntity> entities) {
 		for (AbstractEntity entity : entities) {
 			entity.accept(new TypeSetter());
 		}
@@ -126,7 +131,7 @@ public abstract class AbstractConverter implements Converter {
 		new BaseIriCollector(vowlData).execute();
 	}
 
-	protected void initApi() {
+	private void initApi() {
 		manager = OWLManager.createOWLOntologyManager();
 	}
 

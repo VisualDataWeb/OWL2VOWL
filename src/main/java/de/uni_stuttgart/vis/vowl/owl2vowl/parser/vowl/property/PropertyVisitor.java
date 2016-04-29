@@ -8,6 +8,7 @@ import org.semanticweb.owlapi.model.OWLProperty;
 import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;
 
 /**
+ * Top class for property visitors.
  * @author Eduard
  */
 public class PropertyVisitor extends OWLObjectVisitorAdapter {

@@ -1,6 +1,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.HasReference;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
@@ -15,6 +16,7 @@ import java.util.Collection;
 import java.util.Set;
 
 /**
+ * Class which is responsible to fill the Domain/Range of properties regarding the VOWL specification.
  * @author Eduard
  */
 public class DomainRangeFiller implements VowlPropertyVisitor {
@@ -32,11 +34,18 @@ public class DomainRangeFiller implements VowlPropertyVisitor {
 		mergeMulti();
 	}
 
-	protected void fillEmpty() {
-		values.forEach(element -> element.accept(this));
+	private void fillEmpty() {
+		values.forEach(element -> {
+			if (element instanceof HasReference) {
+				//Ignore references cause they do not need generated Domain/Range
+				return;
+			}
+
+			element.accept(this);
+		});
 	}
 
-	protected VowlThing searchForConnectedThing(Set<IRI> value) {
+	private VowlThing searchForConnectedThing(Set<IRI> value) {
 		if (value.size() != 1) {
 			return null;
 		}
@@ -44,7 +53,7 @@ public class DomainRangeFiller implements VowlPropertyVisitor {
 		return vowlData.getThingProvider().getConnectedThing(value.iterator().next());
 	}
 
-	protected void mergeMulti() {
+	private void mergeMulti() {
 		for (AbstractProperty value : values) {
 			// TODO rethink validity of in/out going edges in the nodes! Probably remap
 			if (value.getRanges().size() > 1) {
@@ -65,25 +74,30 @@ public class DomainRangeFiller implements VowlPropertyVisitor {
 	}
 
 	@Override
-	public void visit(VowlDatatypeProperty vowlDatatypeProperty) {
-		if (vowlDatatypeProperty.getDomains().isEmpty() && vowlDatatypeProperty.getRanges().isEmpty()) {
+	public void visit(VowlDatatypeProperty property) {
+		if (property.getDomains().isEmpty() && property.getRanges().isEmpty()) {
+			if (!property.getReferencedIris().isEmpty()) {
+				property.setExportToJson(false);
+				return;
+			}
+
 			VowlThing disconnectedThing = vowlData.getThingProvider().getDisconnectedThing();
 			VowlLiteral vowlLiteral = vowlData.getGenerator().generateLiteral();
-			disconnectedThing.addOutGoingProperty(vowlDatatypeProperty.getIri());
-			vowlLiteral.addInGoingProperty(vowlDatatypeProperty.getIri());
-			vowlDatatypeProperty.addDomain(disconnectedThing.getIri());
-			vowlDatatypeProperty.addRange(vowlLiteral.getIri());
-		} else if (vowlDatatypeProperty.getDomains().isEmpty()) {
-			VowlThing connectedThing = searchForConnectedThing(vowlDatatypeProperty.getRanges());
+			disconnectedThing.addOutGoingProperty(property.getIri());
+			vowlLiteral.addInGoingProperty(property.getIri());
+			property.addDomain(disconnectedThing.getIri());
+			property.addRange(vowlLiteral.getIri());
+		} else if (property.getDomains().isEmpty()) {
+			VowlThing connectedThing = searchForConnectedThing(property.getRanges());
 			if (connectedThing == null) {
 				connectedThing = vowlData.getThingProvider().getDisconnectedThing();
 			}
-			connectedThing.addOutGoingProperty(vowlDatatypeProperty.getIri());
-			vowlDatatypeProperty.addDomain(connectedThing.getIri());
-		} else if (vowlDatatypeProperty.getRanges().isEmpty()) {
+			connectedThing.addOutGoingProperty(property.getIri());
+			property.addDomain(connectedThing.getIri());
+		} else if (property.getRanges().isEmpty()) {
 			VowlLiteral vowlLiteral = vowlData.getGenerator().generateLiteral();
-			vowlLiteral.addInGoingProperty(vowlDatatypeProperty.getIri());
-			vowlDatatypeProperty.addRange(vowlLiteral.getIri());
+			vowlLiteral.addInGoingProperty(property.getIri());
+			property.addRange(vowlLiteral.getIri());
 		}
 	}
 
@@ -92,8 +106,13 @@ public class DomainRangeFiller implements VowlPropertyVisitor {
 		classBehaviour(typeOfProperty);
 	}
 
-	protected void classBehaviour(AbstractProperty property) {
+	private void classBehaviour(AbstractProperty property) {
 		if (property.getDomains().isEmpty() && property.getRanges().isEmpty()) {
+			if (!property.getReferencedIris().isEmpty()) {
+				property.setExportToJson(false);
+				return;
+			}
+
 			VowlThing disconnectedThing = vowlData.getThingProvider().getDisconnectedThing();
 			disconnectedThing.addOutGoingProperty(property.getIri());
 			disconnectedThing.addInGoingProperty(property.getIri());

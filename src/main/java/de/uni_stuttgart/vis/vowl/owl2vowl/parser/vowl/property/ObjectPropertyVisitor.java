@@ -1,14 +1,8 @@
-/*
- * ObjectPropertyVisitor.java
- *
- */
-
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.NullClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
@@ -16,9 +10,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
 
-/**
- *
- */
 public class ObjectPropertyVisitor extends PropertyVisitor {
 	private Logger logger = LogManager.getLogger(ObjectPropertyVisitor.class);
 

@@ -1,10 +1,13 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes;
 
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.PropertyAllSomeValue;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.AbstractClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.DatatypeValueReference;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.ObjectValueReference;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -122,11 +125,6 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 	}
 
 	@Override
-	public void visit(OWLDataAllValuesFrom ce) {
-		logger.info(ce + " not supported yet.");
-	}
-
-	@Override
 	public void visit(OWLDataExactCardinality ce) {
 		OWLDataPropertyExpression property = ce.getProperty();
 
@@ -166,8 +164,28 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 	}
 
 	@Override
+	public void visit(OWLDataAllValuesFrom ce) {
+		processDataValueRestriction(ce, PropertyAllSomeValue.ALL);
+	}
+
+	@Override
 	public void visit(OWLDataSomeValuesFrom ce) {
-		logger.info(ce + " not supported yet.");
+		processDataValueRestriction(ce, PropertyAllSomeValue.SOME);
+	}
+
+	private void processDataValueRestriction(OWLQuantifiedDataRestriction ce, PropertyAllSomeValue value) {
+		if (!ce.getFiller().isDatatype()) {
+			// TODO no datatype
+			logger.info("DataValue range is not a datatype: " + ce);
+			return;
+		}
+
+
+		OWLDatatype range = ce.getFiller().asOWLDatatype();
+		OWLDataProperty restrictedProperty = ce.getProperty().asOWLDataProperty();
+		DatatypeValueReference valueReference = vowlData.getGenerator().generateDatatypeValueReference(restrictedProperty.getIRI(), value);
+		valueReference.addRange(vowlData.getGenerator().generateDatatypeReference(range.getIRI()).getIri());
+		valueReference.addDomain(owlClass.getIRI());
 	}
 
 	@Override
@@ -177,12 +195,26 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLObjectAllValuesFrom ce) {
-		logger.info(ce + " not supported yet.");
+		processObjectValueRestriction(ce, PropertyAllSomeValue.ALL);
 	}
 
 	@Override
 	public void visit(OWLObjectSomeValuesFrom ce) {
-		logger.info(ce + " not supported yet.");
+		processObjectValueRestriction(ce, PropertyAllSomeValue.SOME);
+	}
+
+	private void processObjectValueRestriction(OWLQuantifiedObjectRestriction ce, PropertyAllSomeValue value) {
+		if (ce.getFiller().isAnonymous()) {
+			// TODO anonymous
+			logger.info("ObjectAllValuesFrom range class is anonymous: " + ce);
+			return;
+		}
+
+		OWLClass rangeClass = ce.getFiller().asOWLClass();
+		OWLObjectProperty restrictedProperty = ce.getProperty().getNamedProperty();
+		ObjectValueReference objectValueReference = vowlData.getGenerator().generateObjectValueReference(restrictedProperty.getIRI(), value);
+		objectValueReference.addRange(rangeClass.getIRI());
+		objectValueReference.addDomain(owlClass.getIRI());
 	}
 
 	@Override
@@ -210,6 +242,7 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 		AbstractProperty vowlProperty = vowlData.getPropertyForIri(property.getIRI());
 		vowlProperty.setExactCardinality(ce.getCardinality());
 	}
+
 	@Override
 	public void visit(OWLObjectUnionOf ce) {
 		Set<OWLClassExpression> operands = ce.getOperands();
@@ -260,9 +293,7 @@ public class OwlClassAxiomVisitor extends OWLObjectVisitorAdapter {
 
 	@Override
 	public void visit(OWLObjectOneOf ce) {
-		AbstractClass oneOfClass = vowlData.getClassForIri(owlClass.getIRI());
-		ce.getIndividuals().forEach(owlIndividual -> {
-			owlIndividual.accept(new IndividualsVisitor(vowlData, owlIndividual, owlClass, vowlData.getOwlManager()));
-		});
+		ce.getIndividuals().forEach(owlIndividual -> owlIndividual.accept(new IndividualsVisitor(vowlData, owlIndividual, owlClass, vowlData
+				.getOwlManager())));
 	}
 }

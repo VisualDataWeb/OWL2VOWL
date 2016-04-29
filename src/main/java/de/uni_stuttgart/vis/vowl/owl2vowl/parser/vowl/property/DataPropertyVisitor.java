@@ -1,8 +1,3 @@
-/*
- * DataPropertyVisitor.java
- *
- */
-
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.VowlAttribute;
@@ -12,14 +7,10 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.NullClass
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.DatatypeReference;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
 
-/**
- *
- */
 public class DataPropertyVisitor extends PropertyVisitor {
 	private Logger logger = LogManager.getLogger(DataPropertyVisitor.class);
 
