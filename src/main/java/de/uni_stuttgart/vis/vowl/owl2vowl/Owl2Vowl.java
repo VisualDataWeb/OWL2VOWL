@@ -1,8 +1,3 @@
-/*
- * Owl2Vowl.java
- *
- */
-
 package de.uni_stuttgart.vis.vowl.owl2vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.converter.Converter;
@@ -59,7 +54,7 @@ public class Owl2Vowl {
 		try {
 			converter.export(exporter);
 		} catch (Exception e) {
-			throw new IllegalStateException("Problems during export happend. ", e);
+			throw new IllegalStateException(e);
 		}
 
 		return exporter.getConvertedJson();
@@ -69,7 +64,7 @@ public class Owl2Vowl {
 		try {
 			converter.export(new FileExporter(file));
 		} catch (Exception e) {
-			throw new IllegalStateException("Problems during export happend. ", e);
+			throw new IllegalStateException(e);
 		}
 
 	}
