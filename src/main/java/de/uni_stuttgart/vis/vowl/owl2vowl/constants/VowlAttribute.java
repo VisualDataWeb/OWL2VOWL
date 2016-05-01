@@ -22,7 +22,9 @@ public enum VowlAttribute {
 	IMPORTED("external"),
 	ANONYMOUS("anonymous"),
 	DISJOINTUNION("disjointUnion"),
-	KEY("key");
+	KEY("key"),
+	ALL_VALUES("allValues"),
+	SOME_VALUES("someValues");
 
 	private final String value;
 
