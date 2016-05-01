@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Eduard
@@ -49,8 +50,8 @@ public class AnnotationVisitor implements VowlElementVisitor {
 		return allAnnotations;
 	}
 
-	protected Set<Annotation> mapOwlAnnotationsToVowlAnnotations(Collection<OWLAnnotation> annotations) {
-		return annotations.stream().map(this::getVowlAnnotation).collect(Collectors.toSet());
+	protected Set<Annotation> mapOwlAnnotationsToVowlAnnotations(Stream<OWLAnnotation> annotations) {
+		return annotations.map(this::getVowlAnnotation).collect(Collectors.toSet());
 	}
 
 	protected Annotation getVowlAnnotation(OWLAnnotation annotation) {

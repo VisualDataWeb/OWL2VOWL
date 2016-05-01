@@ -323,7 +323,7 @@
 		<dependency>
 			<groupId>net.sourceforge.owlapi</groupId>
 			<artifactId>owlapi-distribution</artifactId>
-			<version>4.2.3</version>
+			<version>5.0.1</version>
 		</dependency>
 
 		<dependency>

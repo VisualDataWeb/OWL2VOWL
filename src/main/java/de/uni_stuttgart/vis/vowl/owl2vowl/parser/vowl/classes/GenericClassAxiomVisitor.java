@@ -3,15 +3,14 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.semanticweb.owlapi.model.OWLObject;
+import org.semanticweb.owlapi.model.OWLObjectVisitor;
 import org.semanticweb.owlapi.model.OWLSubClassOfAxiom;
-import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;
 
 /**
  * Class which handles the correct parsing for generic axioms which are not directly related to any class.
  * The referencing classes have to be retrieved here.
  */
-public class GenericClassAxiomVisitor extends OWLObjectVisitorAdapter {
+public class GenericClassAxiomVisitor implements OWLObjectVisitor {
 
 	private VowlData vowlData;
 	private Logger logger = LogManager.getLogger(GenericClassAxiomVisitor.class);
@@ -21,8 +20,8 @@ public class GenericClassAxiomVisitor extends OWLObjectVisitorAdapter {
 	}
 
 	@Override
-	protected void handleDefault(OWLObject axiom) {
-		logger.info("Unsupported generic class axiom: " + axiom);
+	public void doDefault(Object object) {
+		logger.info("Unsupported generic class axiom: " + object);
 	}
 
 	@Override

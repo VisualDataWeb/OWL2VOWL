@@ -9,7 +9,6 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLObjectVisitorExAdapter;
 
 import javax.annotation.Nonnull;
 import java.util.HashSet;
@@ -18,22 +17,21 @@ import java.util.Set;
 /**
  * @author Eduard
  */
-public class DomainRangeVisitor extends OWLObjectVisitorExAdapter<AbstractNode> {
+public class DomainRangeVisitor implements OWLObjectVisitorEx<AbstractNode> {
 	private final OWLProperty owlObjectProperty;
 	private final VowlData vowlData;
 	private Logger logger = LogManager.getLogger(DomainRangeVisitor.class);
 
 	public DomainRangeVisitor(OWLProperty owlObjectProperty, VowlData vowlData) {
-		super(new NullClass());
 		this.owlObjectProperty = owlObjectProperty;
 		this.vowlData = vowlData;
 	}
 
 	@Nonnull
 	@Override
-	protected AbstractNode doDefault(@Nonnull OWLObject object) {
+	public AbstractNode doDefault(@Nonnull Object object) {
 		logger.info("Missed object for domain/range: " + object);
-		return super.doDefault(object);
+		return (AbstractNode) object;
 	}
 
 	@Nonnull
