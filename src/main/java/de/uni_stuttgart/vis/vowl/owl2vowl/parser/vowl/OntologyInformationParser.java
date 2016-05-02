@@ -1,11 +1,5 @@
-/*
- * OntologyInformationParser.java
- *
- */
-
 package de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl;
 
-import com.google.common.base.Optional;
 import de.uni_stuttgart.vis.vowl.owl2vowl.constants.OntologyInformationEnum;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.annotation.Annotation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
@@ -15,6 +9,7 @@ import org.semanticweb.owlapi.model.OWLOntology;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**

@@ -8,9 +8,8 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLit
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import org.semanticweb.owlapi.model.*;
-import org.semanticweb.owlapi.util.OWLObjectVisitorAdapter;
 
-public class EntityCreationVisitor extends OWLObjectVisitorAdapter {
+public class EntityCreationVisitor implements OWLObjectVisitor {
 
 	private VowlData vowlData;
 

@@ -1,9 +1,6 @@
 OWL2VOWL converter [![Build Status](https://travis-ci.org/VisualDataWeb/OWL2VOWL.svg)](https://travis-ci.org/VisualDataWeb/OWL2VOWL)
 ==================
 
-- Update to JDK 8 (JDK 6 and 7 already outdated and owlapi 4 needs at least JDK 7)
-- Update to owlapi 4
-
 Requirements
 ------------
 *   Java 8 (or higher)
@@ -57,4 +54,3 @@ This war can be execute like a jar file to start a local server.
 It would be a pain always building the jar only to test some new implemented stuff. We included a possiblity to run the conversion directly with the IDE. For this you need to change the `ConverterImpl.java` class.
 
 To run a Spring Server directly from the IDE you have to start the `ServerMain.java` class.
-
