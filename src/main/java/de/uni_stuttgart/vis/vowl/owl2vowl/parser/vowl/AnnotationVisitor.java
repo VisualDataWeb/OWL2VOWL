@@ -36,7 +36,7 @@ public class AnnotationVisitor implements VowlElementVisitor {
 	}
 
 	public Set<Annotation> getOntologyAnnotations(OWLOntology ontology) {
-		return ontology.getAnnotations().stream().map(this::getVowlAnnotation).collect(Collectors.toSet());
+		return ontology.annotations().map(this::getVowlAnnotation).collect(Collectors.toSet());
 	}
 
 	protected Set<Annotation> getAnnotations(OWLEntity entity) {
@@ -61,21 +61,17 @@ public class AnnotationVisitor implements VowlElementVisitor {
 			OWLLiteral val = (OWLLiteral) annotation.getValue();
 			String language;
 
-			if (val.isRDFPlainLiteral()) {
-				if (val.getLang().isEmpty()) {
-					language = Vowl_Lang.LANG_UNSET;
-					vowlData.addLanguage(Vowl_Lang.LANG_UNSET);
-				} else {
-					language = val.getLang();
-					vowlData.addLanguage(val.getLang());
-				}
-				anno = new Annotation(annotation.getProperty().toString(), val.getLiteral());
-				anno.setLanguage(language);
-				anno.setType(Annotation.TYPE_LABEL);
+			if (val.hasLang()) {
+				language = val.getLang();
+				vowlData.addLanguage(val.getLang());
 			} else {
-				anno = new Annotation(annotation.getProperty().toString(), val.getLiteral());
-				anno.setType(Annotation.TYPE_LABEL);
+				language = Vowl_Lang.LANG_UNSET;
+				vowlData.addLanguage(Vowl_Lang.LANG_UNSET);
 			}
+
+			anno = new Annotation(annotation.getProperty().toString(), val.getLiteral());
+			anno.setType(Annotation.TYPE_LABEL);
+			anno.setLanguage(language);
 		} else if (annotation.getValue() instanceof IRI) {
 			anno = new Annotation(annotation.getProperty().toString(), annotation.getValue().toString());
 			anno.setType(Annotation.TYPE_IRI);
