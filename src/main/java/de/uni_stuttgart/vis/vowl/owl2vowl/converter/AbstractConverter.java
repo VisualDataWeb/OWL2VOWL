@@ -25,6 +25,10 @@ import org.semanticweb.owlapi.util.OWLOntologyWalker;
 
 import java.util.Collection;
 
+/**
+ * Abstract converter which processes the most part of the converting.
+ * The sub classes can specify the source of the ontology or to some additional processing if necessary.
+ */
 public abstract class AbstractConverter implements Converter {
 	private static final Logger logger = LogManager.getLogger(AbstractConverter.class);
 	protected final JsonGenerator jsonGenerator = new JsonGenerator();
@@ -139,6 +143,12 @@ public abstract class AbstractConverter implements Converter {
 	/**
 	 * Executes the complete conversion to the webvowl compatible json format.
 	 * Normally is only called ones during export. But if a new conversion is required just call this method before exporting.
+	 * <p>
+	 *     The parsing is separated in three steps: The pre parsing -> normal parsing -> post parsing.
+	 *     This is necessary because we can access some properties of the entities only if we have the corresponding entity.
+	 *     For this example the pre parsing can be used to retrieve all entities without any additional special components.
+	 *     After that we can access the more special properties of the entity with helper classes like {@link EntitySearcher}.
+	 * </p>
 	 */
 	public void convert() {
 		if (!initialized) {
@@ -147,8 +157,8 @@ public abstract class AbstractConverter implements Converter {
 
 		vowlData = new VowlData();
 		vowlData.setOwlManager(manager);
-
-		// TODO Vielleicht mithilfe von Klassenannotationen Unterteilung schaffen und dann die on the fly die annotierten Klassen holen und ausführen
+		// TODO Probably the parsing could be automatized via class annotation and annotation parsing.
+		// e.q. @PreParsing, @Parsing, @PostParsing just as an idea for improvement
 		preParsing(ontology, vowlData, manager);
 		parsing(ontology, vowlData, manager);
 		postParsing(ontology, vowlData, manager);
