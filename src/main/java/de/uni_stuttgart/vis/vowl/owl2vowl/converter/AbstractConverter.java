@@ -4,6 +4,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.JsonGenerator;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.EntityCreationVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.*;
@@ -151,6 +152,13 @@ public abstract class AbstractConverter implements Converter {
 		preParsing(ontology, vowlData, manager);
 		parsing(ontology, vowlData, manager);
 		postParsing(ontology, vowlData, manager);
+		processMetrics();
+	}
+
+	private void processMetrics() {
+		OntologyMetric metrics = new OntologyMetric(ontology);
+		metrics.calculate(vowlData);
+		vowlData.setMetrics(metrics);
 	}
 
 	/**

@@ -10,6 +10,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitorImpl;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyInformation;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.util.ProjectInformations;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
@@ -92,18 +93,11 @@ public class JsonGenerator {
 	}
 
 	public void processMetrics(VowlData vowlData) {
-		int classCount = vowlData.getClassMap().size();
-		int datatypeCount = vowlData.getDatatypeMap().size();
-		int objectPropertyCounts = vowlData.getObjectPropertyMap().size();
-		int dataPropertyCount = vowlData.getDatatypePropertyMap().size();
-
-		metrics.put("classCount", classCount);
-		metrics.put("datatypeCount", datatypeCount);
-		metrics.put("objectPropertyCount", objectPropertyCounts);
-		metrics.put("datatypePropertyCount", dataPropertyCount);
-		metrics.put("propertyCount", objectPropertyCounts + dataPropertyCount + vowlData.getTypeOfPropertyMap().size());
-		metrics.put("nodeCount", classCount + datatypeCount);
-		metrics.put("individualCount", vowlData.getIndividualMap().size());
+		OntologyMetric metrics = vowlData.getMetrics();
+		this.metrics.put("classCount", metrics.getClasses());
+		this.metrics.put("objectPropertyCount", metrics.getObjectProperties());
+		this.metrics.put("datatypePropertyCount", metrics.getDatatypeProperties());
+		this.metrics.put("individualCount", metrics.getIndividuals());
 	}
 
 
