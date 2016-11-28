@@ -279,6 +279,9 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		Map<String, Object> attributes = new HashMap<>();
 
 		addCommonFields(typeOfProperty, object, attributes);
+		// Special property which should not have a own iri
+		attributes.remove("iri");
+		attributes.remove("baseIri");
 		attributes.put("domain", vowlData.getIdForIri(typeOfProperty.getJsonDomain()));
 		attributes.put("range", vowlData.getIdForIri(typeOfProperty.getJsonRange()));
 

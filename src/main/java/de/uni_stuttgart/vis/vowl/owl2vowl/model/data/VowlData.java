@@ -13,6 +13,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatype
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyInformation;
+import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyMetric;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
@@ -42,6 +43,7 @@ public class VowlData {
 	private VowlIriGenerator iriGenerator = new VowlIriGenerator();
 	private VowlGenerator generator;
 	private VowlThingProvider thingProvider;
+	private OntologyMetric metrics;
 
 	public VowlData() {
 		searcher = new VowlSearcher(this);
@@ -234,6 +236,14 @@ public class VowlData {
 		concat.addAll(objectPropertyMap.values());
 
 		return Collections.unmodifiableSet(concat);
+	}
+
+	public OntologyMetric getMetrics() {
+		return metrics;
+	}
+
+	public void setMetrics(OntologyMetric metrics) {
+		this.metrics = metrics;
 	}
 
 	private class VowlIriGenerator {
