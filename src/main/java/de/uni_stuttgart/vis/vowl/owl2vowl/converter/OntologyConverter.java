@@ -22,20 +22,19 @@ public class OntologyConverter extends AbstractConverter {
 
 	@Override
 	protected void loadOntology() throws OWLOntologyCreationException {
-
 		logger.info("Converting Ontolgy...");
 		logger.info("Loading ontology ... [" + ontology + "]");
 
-
-		String logOntoName = "Anonymous";
+		manager = ontology.getOWLOntologyManager();
 		loadedOntologyPath = "Direct ontology";
 
+		String logOntoName;
 		if (!ontology.isAnonymous()) {
 			logOntoName = ontology.getOntologyID().getOntologyIRI().get().toString();
 		} else {
+			logOntoName = "Anonymous";
 			logger.info("Ontology IRI is anonymous.");
 		}
-
 		logger.info("Ontologies loaded! Main Ontology: " + logOntoName);
 	}
 }

@@ -7,6 +7,7 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Collections;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 
 /**
  *
@@ -28,21 +29,23 @@ public class InputStreamConverter extends AbstractConverter {
 	@Override
 	protected void loadOntology() throws OWLOntologyCreationException {
 		logger.info("Converting input streams...");
+		
+		manager = OWLManager.createOWLOntologyManager();
 
 		for (InputStream depdencyOntology : depdencyOntologies) {
 			manager.loadOntologyFromOntologyDocument(depdencyOntology);
 		}
 
 		ontology = manager.loadOntologyFromOntologyDocument(mainOntology);
-		String logOntoName = "Anonymous";
 		loadedOntologyPath = "file upload";
 
+		String logOntoName;
 		if (!ontology.isAnonymous()) {
 			logOntoName = ontology.getOntologyID().getOntologyIRI().get().toString();
 		} else {
+			logOntoName = "Anonymous";
 			logger.info("Ontology IRI is anonymous. Use loaded URI/IRI instead.");
 		}
-
 		logger.info("Ontologies loaded! Main Ontology: " + logOntoName);
 	}
 }

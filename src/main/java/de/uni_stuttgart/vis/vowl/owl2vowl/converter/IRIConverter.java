@@ -7,6 +7,7 @@ import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
 import java.util.Collection;
 import java.util.Collections;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 
 public class IRIConverter extends AbstractConverter {
 	protected IRI mainOntology;
@@ -26,6 +27,8 @@ public class IRIConverter extends AbstractConverter {
 	protected void loadOntology() throws OWLOntologyCreationException {
 		logger.info("Converting IRIs...");
 		logger.info("Loading ontologies ... [" + mainOntology + ",  " + depdencyOntologies + "]");
+		
+		manager = OWLManager.createOWLOntologyManager();
 
 		if (!depdencyOntologies.isEmpty()) {
 			for (IRI externalIRI : depdencyOntologies) {
@@ -35,15 +38,15 @@ public class IRIConverter extends AbstractConverter {
 		}
 
 		ontology = manager.loadOntology(mainOntology);
-		String logOntoName = mainOntology.toString();
 		loadedOntologyPath = mainOntology.toString();
 
+		String logOntoName;
 		if (!ontology.isAnonymous()) {
 			logOntoName = ontology.getOntologyID().getOntologyIRI().get().toString();
 		} else {
+			logOntoName = mainOntology.toString();
 			logger.info("Ontology IRI is anonymous. Use loaded URI/IRI instead.");
 		}
-
 		logger.info("Ontologies loaded! Main Ontology: " + logOntoName);
 	}
 }
