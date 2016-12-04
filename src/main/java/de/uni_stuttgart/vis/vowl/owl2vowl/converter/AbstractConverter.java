@@ -17,7 +17,6 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.ObjectPropertyVis
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.VowlSubclassPropertyGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.search.EntitySearcher;
@@ -39,8 +38,6 @@ public abstract class AbstractConverter implements Converter {
 	protected boolean initialized = false;
 
 	private void preLoadOntology() {
-		initApi();
-
 		try {
 			loadOntology();
 		} catch (OWLOntologyCreationException e) {
@@ -134,10 +131,6 @@ public abstract class AbstractConverter implements Converter {
 		vowlData.getEntityMap().values().forEach(entity -> entity.accept(new EquivalentSorter(ontology.getOntologyID().getOntologyIRI().orElse(IRI
 				.create(loadedOntologyPath)), vowlData)));
 		new BaseIriCollector(vowlData).execute();
-	}
-
-	private void initApi() {
-		manager = OWLManager.createOWLOntologyManager();
 	}
 
 	/**
