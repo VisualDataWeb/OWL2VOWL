@@ -52,7 +52,11 @@ public class ConsoleMain {
 		if (line.hasOption(FILE_OPTION_NAME)) {
 			ontologyIri = IRI.create(new File(line.getOptionValue(FILE_OPTION_NAME)));
 		} else {
-			ontologyIri = IRI.create(line.getOptionValue(IRI_OPTION_NAME));
+			// rename the file here
+			String iriName=line.getOptionValue(IRI_OPTION_NAME);
+			String out=iriName.replace(" ","%20");
+			//ontologyIri = IRI.create(line.getOptionValue(IRI_OPTION_NAME));
+			ontologyIri = IRI.create(out);
 		}
 
 		if (line.hasOption(DEPENDENCIES_OPTION_NAME)) {
@@ -120,6 +124,11 @@ public class ConsoleMain {
 			filename = filePath;
 		} else {
 			filename = FilenameUtils.removeExtension(ontologyIri.getRemainder().get()) + ".json";
+			String iriName=ontologyIri.toString();
+			// NOTE  : THIS IS JUST FOR HOT FIX TESTING !!!!
+			String outputFilename = iriName.substring(iriName.lastIndexOf("/")+1,iriName.lastIndexOf("."));
+			outputFilename=outputFilename.replace("%20"," ");
+			filename=outputFilename+".json";
 		}
 
 		return new FileExporter(new File(filename));
