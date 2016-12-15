@@ -75,12 +75,12 @@ public class Owl2VowlController {
 	@RequestMapping(value = СONVERT_MAPPING, method = RequestMethod.GET)
 	public String convertIRI(@RequestParam("iri") String iri) throws IOException, OWLOntologyCreationException {
 		String jsonAsString;
-
+		String out=iri.replace(" ","%20");
 		try {
-			Owl2Vowl owl2Vowl = new Owl2Vowl(IRI.create(iri));
+			Owl2Vowl owl2Vowl = new Owl2Vowl(IRI.create(out));
 			jsonAsString = owl2Vowl.getJsonAsString();
 		} catch (Exception e) {
-			conversionLogger.info(iri + " " + 1);
+			conversionLogger.info(out + " " + 1);
 			throw e;
 		}
 
