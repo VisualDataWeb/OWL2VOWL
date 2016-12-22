@@ -124,11 +124,6 @@ public class ConsoleMain {
 			filename = filePath;
 		} else {
 			filename = FilenameUtils.removeExtension(ontologyIri.getRemainder().get()) + ".json";
-			String iriName=ontologyIri.toString();
-			// NOTE  : THIS IS JUST FOR HOT FIX TESTING !!!!
-			String outputFilename = iriName.substring(iriName.lastIndexOf("/")+1,iriName.lastIndexOf("."));
-			outputFilename=outputFilename.replace("%20"," ");
-			filename=outputFilename+".json";
 		}
 
 		return new FileExporter(new File(filename));
