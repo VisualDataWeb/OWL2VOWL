@@ -184,6 +184,7 @@
 					<value>standalone</value>
 				</property>
 			</activation>
+
 			<build>
 				<plugins>
 					<plugin>
@@ -204,7 +205,7 @@
 								</manifest>
 								<manifestEntries>
 									<Version>${project.version}</Version>
-									<Authors>Vincent Link, Steffen Lohmann, Eduard Marbach</Authors>
+									<Authors>Vincent Link, Steffen Lohmann, Eduard Marbach, Vitalis Wiens</Authors>
 								</manifestEntries>
 							</archive>
 							<finalName>owl2vowl</finalName>
