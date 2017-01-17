@@ -30,12 +30,18 @@ public class ImportedChecker implements OWLNamedObjectVisitor {
 	}
 
 	public void execute() {
-		Set<OWLOntology> imports = manager.getImports(loadedOntology);
-		imports.forEach(owlOntology -> {
-			owlOntology.getSignature().forEach(element -> {
-				element.accept(this);
-			});
-		});
+//		Set<OWLOntology> imports = manager.getImports(loadedOntology);
+//		imports.forEach(owlOntology -> {
+//			owlOntology.getSignature().forEach(element -> {
+//				element.accept(this);
+//			});
+//		});
+
+//		Stream<OWLOntology> imports = manager.imports(loadedOntology);
+//		System.out.println("THE STREAM \n "+imports);
+//		List<String> strings = imports.map(Object::toString)
+//				.collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
+//		System.out.println("Strings \n "+strings);
 
 		vowlData.getEntityMap().values().forEach(abstractEntity -> {
 			IRI entityIri = abstractEntity.getIri();

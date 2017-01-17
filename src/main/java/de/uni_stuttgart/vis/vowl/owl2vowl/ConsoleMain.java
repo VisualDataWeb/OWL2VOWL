@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class ConsoleMain {
 	private static final String IRI_OPTION_NAME = "iri";
@@ -123,7 +124,16 @@ public class ConsoleMain {
 		if (filePath != null) {
 			filename = filePath;
 		} else {
-			filename = FilenameUtils.removeExtension(ontologyIri.getRemainder().get()) + ".json";
+			// catch empty remainder
+			try {
+				filename = FilenameUtils.removeExtension(ontologyIri.getRemainder().get()) + ".json";
+			} catch (Exception e){
+				System.out.println("Failed to extract filename from iri");
+				System.out.println("Reason: "+e);
+				String defaultName="default.json";
+				System.out.println("Writing to '"+defaultName+"'");
+				filename=defaultName;
+			}
 		}
 
 		return new FileExporter(new File(filename));

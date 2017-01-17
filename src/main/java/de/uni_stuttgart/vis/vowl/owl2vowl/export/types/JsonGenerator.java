@@ -87,8 +87,23 @@ public class JsonGenerator {
 			if (!entity.isExportToJson()) {
 				continue;
 			}
-
-			entity.accept(visitor);
+			try {
+				entity.accept(visitor);
+			}
+			catch (Exception e){
+				IRI key =irivEntry.getKey();
+				System.out.println("WARNING! ");
+				System.out.println("*******************************");
+				System.out.println("Failed to Accept!");
+				System.out.println("Entity   "+entity);
+				System.out.println("Key      "+key);
+				System.out.println("Visitor  "+visitor);
+				System.out.println("Reason : "+e);
+				Class cls = entity.getClass();
+				System.out.println("The type of the object is: " + cls.getName());
+				System.out.println("*** SKIPPING THIS ***");
+				continue;
+			}
 		}
 	}
 

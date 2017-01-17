@@ -3,6 +3,8 @@ package de.uni_stuttgart.vis.vowl.owl2vowl.server;
 import de.uni_stuttgart.vis.vowl.owl2vowl.Owl2Vowl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.commons.io.IOUtils;
+
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.springframework.http.HttpStatus;
@@ -14,12 +16,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URL;
+import java.io.StringWriter;
 
 @RestController
 public class Owl2VowlController {
 
 	private static final Logger conversionLogger = LogManager.getLogger("conversion");
 	private static final String СONVERT_MAPPING = "/convert";
+	private static final String READ_JSON = "/read";
 
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Parameter not correct")
 	@ExceptionHandler(IllegalArgumentException.class)
@@ -87,4 +92,54 @@ public class Owl2VowlController {
 		conversionLogger.info(iri + " " + 0);
 		return jsonAsString;
 	}
+
+	// adding some proxy functionallity
+
+	@RequestMapping(value = READ_JSON, method = RequestMethod.POST)
+	public String uploadJSON(@RequestParam("ontology") MultipartFile[] files) throws IOException,
+			OWLOntologyCreationException {
+		if (files == null || files.length == 0) {
+			throw new IllegalArgumentException("No file uploaded!");
+		}
+
+		if (files.length > 1) {
+			throw new IllegalArgumentException("Please upload only the main ontology!");
+		}
+
+		List<InputStream> inputStreams = new ArrayList<>();
+
+		String jsonAsString="";
+		for (MultipartFile file : files) {
+			inputStreams.add(file.getInputStream());
+		}
+
+		try {
+			jsonAsString=IOUtils.toString(inputStreams.get(0));
+		}
+		catch (Exception e){
+			System.out.println("Something went wrong");
+			conversionLogger.error("Something went wrong " + e.getMessage());
+		}
+
+		return jsonAsString;
+	}
+
+	@RequestMapping(value = READ_JSON, method = RequestMethod.GET)
+	public String readJsons(@RequestParam("json") String json) throws IOException, OWLOntologyCreationException {
+		String jsonAsString="";
+		try {
+			InputStream input = new URL(json).openStream();
+			try {
+				jsonAsString=IOUtils.toString(input);
+			} finally {
+				IOUtils.closeQuietly(input);
+			}
+		}
+		catch (Exception e){
+			System.out.println("Something went wrong");
+			conversionLogger.error("Something went wrong " + e.getMessage());
+		}
+		return jsonAsString;
+	}
+
 }

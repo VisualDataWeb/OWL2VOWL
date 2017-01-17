@@ -40,8 +40,14 @@ public class DomainRangeFiller implements VowlPropertyVisitor {
 				//Ignore references cause they do not need generated Domain/Range
 				return;
 			}
-
-			element.accept(this);
+			try {
+				element.accept(this);
+			} catch (Exception e){
+				System.out.println("          DomainRange Filler faild to accept element");
+				System.out.println("          Element: "+element);
+				System.out.println("          Reason: "+e);
+				System.out.println("          SKIPPING THIS ELEMENT *****");
+			}
 		});
 	}
 

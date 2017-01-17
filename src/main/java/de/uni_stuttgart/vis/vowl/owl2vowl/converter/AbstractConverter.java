@@ -51,7 +51,16 @@ public abstract class AbstractConverter implements Converter {
 
 	private void preParsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
 		OWLOntologyWalker walker = new OWLOntologyWalker(ontology.getImportsClosure());
-		walker.walkStructure(new EntityCreationVisitor(vowlData));
+		EntityCreationVisitor ecv = new EntityCreationVisitor(vowlData);
+		
+		try {
+			walker.walkStructure(ecv);
+		} catch (Exception e) {
+			System.out.println("@WORKAROUND WalkSturcture Failed!");
+			System.out.println("Exception: " + e);
+			System.out.println("Exit without export result, Sorry!");
+			System.exit(-1);
+		}
 		new OntologyInformationParser(vowlData, ontology).execute();
 	}
 
@@ -76,7 +85,14 @@ public abstract class AbstractConverter implements Converter {
 	private void processObjectProperties(OWLOntology ontology, VowlData vowlData) {
 		for (OWLObjectProperty owlObjectProperty : ontology.getObjectPropertiesInSignature(Imports.INCLUDED)) {
 			for (OWLObjectPropertyAxiom owlObjectPropertyAxiom : ontology.getAxioms(owlObjectProperty, Imports.INCLUDED)) {
-				owlObjectPropertyAxiom.accept(new ObjectPropertyVisitor(vowlData, owlObjectProperty));
+				try {
+					owlObjectPropertyAxiom.accept(new ObjectPropertyVisitor(vowlData, owlObjectProperty));
+				} catch (Exception e){
+					System.out.println("          @WORKAROUND: Failed to accept property with HAS_VALUE OR  SubObjectPropertyOf ... SKIPPING THIS"  );
+					System.out.println("          propertyName: "+owlObjectProperty);
+					System.out.println("          propertyAxiom: "+owlObjectPropertyAxiom);
+					continue;
+				}
 			}
 		}
 	}
@@ -147,7 +163,6 @@ public abstract class AbstractConverter implements Converter {
 		if (!initialized) {
 			preLoadOntology();
 		}
-
 		vowlData = new VowlData();
 		vowlData.setOwlManager(manager);
 		// TODO Probably the parsing could be automatized via class annotation and annotation parsing.
