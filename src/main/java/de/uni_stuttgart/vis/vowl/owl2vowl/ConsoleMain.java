@@ -90,7 +90,7 @@ public class ConsoleMain {
 		options.addOption(Option.builder(DEPENDENCIES_OPTION_NAME).argName("PATHS").hasArgs().desc("paths to dependencies of a local ontology").build());
 
 		OptionGroup outputOptions = new OptionGroup();
-		outputOptions.addOption(Option.builder(HELP_OPTION_NAME).desc("prints the converted ontology on the console").build());
+		outputOptions.addOption(Option.builder(ECHO_OPTION_NAME).desc("prints the converted ontology on the console").build());
 		outputOptions.addOption(Option.builder(OUTPUT_OPTION_NAME).argName("PATH").hasArg().desc("specify the path for the desired output location").build());
 
 		options.addOptionGroup(inputOptions);
