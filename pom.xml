@@ -1,12 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.visualdataweb.vowl.owl2vowl</groupId>
 	<artifactId>OWL2VOWL</artifactId>
-	<version>0.3.0</version>
+	<version>0.3.0-SNAPSHOT</version>
 	<packaging>${packaging.type}</packaging>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Owl2Vowl is an ontology converter used to convert the given ontology to a json
@@ -22,10 +20,6 @@
 		<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.ConsoleMain</mainClass>
 		<packaging.type>jar</packaging.type>
 	</properties>
-
-	<prerequisites>
-		<maven>3.0.4</maven>
-	</prerequisites>
 
 	<developers>
 		<developer>
@@ -120,7 +114,32 @@
 
 	<profiles>
 
-		<!-- LIBRARY PROFILE -->
+		<!-- NEXUS RELEASE PROFILE (in progress) -->
+		<profile>
+			<id>nexus</id>
+			<properties>
+				<packaging.type>jar</packaging.type>
+			</properties>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-source-plugin</artifactId>
+						<version>2.4</version>
+						<executions>
+							<execution>
+								<id>attach-sources</id>
+								<goals>
+									<goal>jar-no-fork</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+
+		<!-- LIBRARY PROFILE (with signing) -->
 		<profile>
 			<id>release</id>
 			<properties>
@@ -224,9 +243,7 @@
 								<id>default-cli</id>
 								<configuration>
 									<tasks>
-										<copy file="${project.build.directory}\owl2vowl.zip"
-										      toFile="${project.basedir}\release\owl2vowl.zip"
-										      overwrite="true"/>
+										<copy file="${project.build.directory}\owl2vowl.zip" toFile="${project.basedir}\release\owl2vowl.zip" overwrite="true" />
 									</tasks>
 								</configuration>
 								<goals>
