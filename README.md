@@ -1,4 +1,7 @@
-OWL2VOWL converter [![Build Status](https://travis-ci.org/VisualDataWeb/OWL2VOWL.svg)](https://travis-ci.org/VisualDataWeb/OWL2VOWL)
+[![Build Status](https://travis-ci.org/VisualDataWeb/OWL2VOWL.svg)](https://travis-ci.org/VisualDataWeb/OWL2VOWL)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.visualdataweb.vowl.owl2vowl/OWL2VOWL/badge.svg?style=plastic)](https://mvnrepository.com/artifact/org.visualdataweb.vowl.owl2vowl/OWL2VOWL)
+
+OWL2VOWL converter 
 ==================
 
 Requirements
