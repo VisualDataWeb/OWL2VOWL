@@ -1,8 +1,3 @@
-/*
- * ServerMain.java
- *
- */
-
 package de.uni_stuttgart.vis.vowl.owl2vowl;
 
 import org.springframework.boot.SpringApplication;
