@@ -233,55 +233,7 @@
 							</dependency>
 						</dependencies>
 						<configuration>
-							<minimizeJar>true</minimizeJar>
-							<shadedArtifactAttached>true</shadedArtifactAttached>
-							<shadedClassifierName>shaded</shadedClassifierName>
 
-							<transformers>
-								<!-- necessary spring configuration -->
-								<transformer
-										implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-									<resource>META-INF/spring.handlers</resource>
-								</transformer>
-								<transformer
-										implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-									<resource>META-INF/spring.schemas</resource>
-								</transformer>
-								<transformer
-										implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-									<resource>META-INF/spring.factories</resource>
-								</transformer>
-								<!-- add Main-Class to manifest file -->
-								<transformer
-										implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-									<manifestEntries>
-										<Main-Class>${mainClass}</Main-Class>
-									</manifestEntries>
-								</transformer>
-							</transformers>
-
-							<artifactSet>
-								<excludes>
-									<exclude>org.springframework:*</exclude>
-									<exclude>org.springframework.*</exclude>
-									<exclude>org.apache.tomcat.*</exclude>
-								</excludes>
-							</artifactSet>
-
-							<filters>
-								<filter>
-									<artifact>*:*</artifact>
-									<excludes>
-										<exclude>META-INF/license/**</exclude>
-										<exclude>META-INF/*</exclude>
-										<exclude>META-INF/maven/**</exclude>
-										<exclude>LICENSE</exclude>
-										<exclude>NOTICE</exclude>
-										<exclude>/*.txt</exclude>
-										<exclude>build.properties</exclude>
-									</excludes>
-								</filter>
-							</filters>
 						</configuration>
 						<executions>
 							<execution>
@@ -290,6 +242,79 @@
 									<goal>shade</goal>
 								</goals>
 								<configuration>
+									<minimizeJar>true</minimizeJar>
+									<shadedArtifactAttached>true</shadedArtifactAttached>
+									<shadedClassifierName>shaded</shadedClassifierName>
+
+									<transformers>
+										<!-- necessary spring configuration -->
+										<transformer
+												implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+											<resource>META-INF/spring.handlers</resource>
+										</transformer>
+										<transformer
+												implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+											<resource>META-INF/spring.schemas</resource>
+										</transformer>
+										<transformer
+												implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+											<resource>META-INF/spring.factories</resource>
+										</transformer>
+										<!-- add Main-Class to manifest file -->
+										<transformer
+												implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+											<manifestEntries>
+												<Main-Class>${mainClass}</Main-Class>
+											</manifestEntries>
+										</transformer>
+									</transformers>
+
+									<artifactSet>
+										<excludes>
+											<exclude>org.springframework:*</exclude>
+											<exclude>org.springframework.*</exclude>
+											<exclude>org.apache.tomcat.*</exclude>
+										</excludes>
+									</artifactSet>
+
+									<filters>
+										<filter>
+											<artifact>net.sourceforge.owlapi:*</artifact>
+											<includes>
+												<include>**</include>
+											</includes>
+										</filter>
+										<filter>
+											<artifact>org.openrdf.sesame:*</artifact>
+											<includes>
+												<include>**</include>
+											</includes>
+										</filter>
+										<filter>
+											<artifact>commons-io:commons-io</artifact>
+											<includes>
+												<include>**</include>
+											</includes>
+										</filter>
+										<filter>
+											<artifact>com.google.guava:*</artifact>
+											<includes>
+												<include>**</include>
+											</includes>
+										</filter>
+										<filter>
+											<artifact>*:*</artifact>
+											<excludes>
+												<exclude>META-INF/license/**</exclude>
+												<exclude>META-INF/*</exclude>
+												<exclude>META-INF/maven/**</exclude>
+												<exclude>LICENSE</exclude>
+												<exclude>NOTICE</exclude>
+												<exclude>/*.txt</exclude>
+												<exclude>build.properties</exclude>
+											</excludes>
+										</filter>
+									</filters>
 								</configuration>
 							</execution>
 						</executions>
