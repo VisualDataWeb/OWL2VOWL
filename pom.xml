@@ -261,6 +261,12 @@
 												implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
 											<resource>META-INF/spring.factories</resource>
 										</transformer>
+										<transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+											<resource>META-INF/LICENSE</resource>
+											<file>LICENSE.txt</file>
+										</transformer>
+										<transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer">
+										</transformer>
 										<!-- add Main-Class to manifest file -->
 										<transformer
 												implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
