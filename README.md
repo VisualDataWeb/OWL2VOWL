@@ -54,3 +54,14 @@ This war can be execute like a jar file to start a local server.
 It would be a pain always building the jar only to test some new implemented stuff. We included a possiblity to run the conversion directly with the IDE. For this you need to change the `ConverterImpl.java` class.
 
 To run a Spring Server directly from the IDE you have to start the `ServerMain.java` class.
+
+FAQ
+==================
+
+## I want to log information, errors, etc to files. Is there a default configuration?
+If you want to use logging to files there is log4j2 configuration provided under ```src/main/resources/log4j2-spring-file.xml```.
+
+- JAR/IDE: To load it you have to provide a JVM argument. For example if you have the JAR you have to exeecute:
+       ```java -Dlog4j.configurationFile=path/to/log4j2-spring-file.xml -jar ...```
+- WAR: Uncomment the line in ```src/main/resources/application.properties```        
+  
