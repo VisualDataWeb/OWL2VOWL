@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
@@ -19,6 +20,7 @@
 		<sprint.boot.version>1.3.2.RELEASE</sprint.boot.version>
 		<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.ConsoleMain</mainClass>
 		<packaging.type>jar</packaging.type>
+		<authors>Vincent Link, Steffen Lohmann, Eduard Marbach, Vitalis Wiens</authors>
 	</properties>
 
 	<developers>
@@ -60,6 +62,20 @@
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
 		</repository>
 	</distributionManagement>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<!-- Import dependency management from Spring Boot -->
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>1.5.3.RELEASE</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
 
 	<build>
 		<resources>
@@ -207,48 +223,113 @@
 			<build>
 				<plugins>
 					<plugin>
-						<artifactId>maven-assembly-plugin</artifactId>
-						<version>2.6</version>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-shade-plugin</artifactId>
+						<version>3.0.0</version>
+						<dependencies>
+							<dependency>
+								<groupId>org.springframework.boot</groupId>
+								<artifactId>spring-boot-maven-plugin</artifactId>
+								<version>1.5.3.RELEASE</version>
+							</dependency>
+						</dependencies>
+						<configuration>
+
+						</configuration>
 						<executions>
 							<execution>
 								<phase>package</phase>
 								<goals>
-									<goal>single</goal>
+									<goal>shade</goal>
 								</goals>
-							</execution>
-						</executions>
-						<configuration>
-							<archive>
-								<manifest>
-									<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.ConsoleMain</mainClass>
-								</manifest>
-								<manifestEntries>
-									<Version>${project.version}</Version>
-									<Authors>Vincent Link, Steffen Lohmann, Eduard Marbach, Vitalis Wiens</Authors>
-								</manifestEntries>
-							</archive>
-							<finalName>owl2vowl</finalName>
-							<appendAssemblyId>false</appendAssemblyId>
-							<descriptors>
-								<descriptor>src/assembly/jar-with-dependencies.xml</descriptor>
-								<descriptor>src/assembly/release_version.xml</descriptor>
-							</descriptors>
-						</configuration>
-					</plugin>
-					<plugin>
-						<artifactId>maven-antrun-plugin</artifactId>
-						<version>1.8</version>
-						<executions>
-							<execution>
-								<id>default-cli</id>
 								<configuration>
-									<tasks>
-										<copy file="${project.build.directory}\owl2vowl.zip" toFile="${project.basedir}\release\owl2vowl.zip" overwrite="true" />
-									</tasks>
+									<minimizeJar>true</minimizeJar>
+									<shadedArtifactAttached>true</shadedArtifactAttached>
+									<shadedClassifierName>shaded</shadedClassifierName>
+
+									<transformers>
+										<!-- necessary spring configuration -->
+										<transformer
+												implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+											<resource>META-INF/spring.handlers</resource>
+										</transformer>
+										<transformer
+												implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+											<resource>META-INF/spring.schemas</resource>
+										</transformer>
+										<transformer
+												implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+											<resource>META-INF/spring.factories</resource>
+										</transformer>
+										<transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+											<resource>META-INF/LICENSE</resource>
+											<file>LICENSE.txt</file>
+										</transformer>
+										<transformer implementation="org.apache.maven.plugins.shade.resource.ApacheLicenseResourceTransformer">
+										</transformer>
+										<!-- add Main-Class to manifest file -->
+										<transformer
+												implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+											<manifestEntries>
+												<Main-Class>${mainClass}</Main-Class>
+												<Build-Version>${project.version}</Build-Version>
+												<Authors>${authors}</Authors>
+											</manifestEntries>
+										</transformer>
+									</transformers>
+
+									<artifactSet>
+										<excludes>
+											<exclude>org.springframework:*</exclude>
+											<exclude>org.springframework.*</exclude>
+											<exclude>org.apache.tomcat.*</exclude>
+										</excludes>
+									</artifactSet>
+
+									<filters>
+										<filter>
+											<artifact>net.sourceforge.owlapi:*</artifact>
+											<includes>
+												<include>**</include>
+											</includes>
+										</filter>
+										<filter>
+											<artifact>org.openrdf.sesame:*</artifact>
+											<includes>
+												<include>**</include>
+											</includes>
+										</filter>
+										<filter>
+											<artifact>commons-io:commons-io</artifact>
+											<includes>
+												<include>**</include>
+											</includes>
+										</filter>
+										<filter>
+											<artifact>com.google.guava:*</artifact>
+											<includes>
+												<include>**</include>
+											</includes>
+										</filter>
+										<filter>
+											<artifact>org.apache.logging.log4j:*</artifact>
+											<includes>
+												<include>**</include>
+											</includes>
+										</filter>
+										<filter>
+											<artifact>*:*</artifact>
+											<excludes>
+												<exclude>META-INF/license/**</exclude>
+												<exclude>META-INF/maven/**</exclude>
+												<exclude>LICENSE</exclude>
+												<exclude>NOTICE</exclude>
+												<exclude>/*.txt</exclude>
+												<exclude>build.properties</exclude>
+											</excludes>
+										</filter>
+									</filters>
 								</configuration>
-								<goals>
-									<goal>run</goal>
-								</goals>
 							</execution>
 						</executions>
 					</plugin>
@@ -324,6 +405,29 @@
 	</profiles>
 
 	<dependencies>
+		<!-- For local booting required -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-log4j2</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -351,15 +455,51 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.5</version>
+		</dependency>
+
+		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
-			<version>2.4</version>
+			<version>2.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.7</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-core</artifactId>
-			<version>2.4.1</version>
+			<version>2.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j-impl</artifactId>
+			<version>2.7</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>1.7.25</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jul-to-slf4j</artifactId>
+			<version>1.7.25</version>
 		</dependency>
 
 		<dependency>
@@ -369,75 +509,9 @@
 		</dependency>
 
 		<dependency>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<artifactId>slf4j-nop</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>slf4j-jdk14</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-release-plugin</artifactId>
-			<version>2.5.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>jcl-over-slf4j</artifactId>
-			<version>1.7.0</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.0</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.7.0</version>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.14</version>
-			<scope>runtime</scope>
-		</dependency>
-
-
-
-		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>1.9.13</version>
-		</dependency>
-
-		<!-- For local booting required -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<exclusions>
-				<exclusion>
-					<artifactId>logback-classic</artifactId>
-					<groupId>ch.qos.logback</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>log4j-over-slf4j</artifactId>
-					<groupId>org.slf4j</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 
 		<dependency>
@@ -462,18 +536,6 @@
 		</dependency>
 	</dependencies>
 
-	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>1.3.2.RELEASE</version>
-	</parent>
-
-	<repositories>
-		<repository>
-			<id>spring-releases</id>
-			<url>https://repo.spring.io/libs-release</url>
-		</repository>
-	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
 			<id>spring-releases</id>
