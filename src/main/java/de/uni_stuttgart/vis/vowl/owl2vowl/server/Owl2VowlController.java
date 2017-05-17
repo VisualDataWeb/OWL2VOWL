@@ -1,6 +1,7 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl.server;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.Owl2Vowl;
+import de.uni_stuttgart.vis.vowl.owl2vowl.constants.LoggingConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.commons.io.IOUtils;
@@ -22,7 +23,7 @@ import java.io.StringWriter;
 @RestController
 public class Owl2VowlController {
 
-	private static final Logger conversionLogger = LogManager.getLogger("conversion");
+	private static final Logger conversionLogger = LogManager.getLogger(LoggingConstants.CONVERSION_LOGGER);
 	private static final String СONVERT_MAPPING = "/convert";
 	private static final String READ_JSON = "/read";
 
