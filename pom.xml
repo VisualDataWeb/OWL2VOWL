@@ -5,7 +5,7 @@
 
 	<groupId>org.visualdataweb.vowl.owl2vowl</groupId>
 	<artifactId>OWL2VOWL</artifactId>
-	<version>0.3.1-SNAPSHOT</version>
+	<version>0.3.2-SNAPSHOT</version>
 	<packaging>${packaging.type}</packaging>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Owl2Vowl is an ontology converter used to convert the given ontology to a json
@@ -130,29 +130,15 @@
 
 	<profiles>
 
-		<!-- NEXUS RELEASE PROFILE (in progress) -->
+		<!-- Deactivate the strong JDoc linting which often breaks the mvn lifecycle -->
 		<profile>
-			<id>nexus</id>
+			<id>disable-java8-doclint</id>
+			<activation>
+				<jdk>[1.8,)</jdk>
+			</activation>
 			<properties>
-				<packaging.type>jar</packaging.type>
+				<additionalparam>-Xdoclint:none</additionalparam>
 			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-source-plugin</artifactId>
-						<version>2.4</version>
-						<executions>
-							<execution>
-								<id>attach-sources</id>
-								<goals>
-									<goal>jar-no-fork</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
 		</profile>
 
 		<!-- LIBRARY PROFILE (with signing) -->
@@ -163,6 +149,13 @@
 			</properties>
 			<build>
 				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-deploy-plugin</artifactId>
+						<configuration>
+							<updateReleaseInfo>true</updateReleaseInfo>
+						</configuration>
+					</plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
