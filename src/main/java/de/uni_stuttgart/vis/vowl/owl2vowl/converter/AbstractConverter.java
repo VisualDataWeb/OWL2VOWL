@@ -52,14 +52,15 @@ public abstract class AbstractConverter implements Converter {
 	private void preParsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
 		OWLOntologyWalker walker = new OWLOntologyWalker(ontology.getImportsClosure());
 		EntityCreationVisitor ecv = new EntityCreationVisitor(vowlData);
-		
+		walker.walkStructure(ecv);
 		try {
 			walker.walkStructure(ecv);
+			System.out.println("WalkStructure Success!");
 		} catch (Exception e) {
 			System.out.println("@WORKAROUND WalkSturcture Failed!");
 			System.out.println("Exception: " + e);
-			System.out.println("Exit without export result, Sorry!");
-			System.exit(-1);
+//			System.out.println("Exit without export result, Sorry!");
+//			System.exit(-1);
 		}
 		new OntologyInformationParser(vowlData, ontology).execute();
 	}
@@ -76,8 +77,17 @@ public abstract class AbstractConverter implements Converter {
 		// TODO check all classes
 		ontology.getClassesInSignature(Imports.INCLUDED).forEach(owlClass -> {
 			for (OWLOntology owlOntology : manager.getOntologies()) {
-				EntitySearcher.getIndividuals(owlClass, owlOntology).forEach(owlIndividual -> owlIndividual.accept(new IndividualsVisitor(vowlData,
-						owlIndividual, owlClass, manager)));
+				try {
+					EntitySearcher.getIndividuals(owlClass, owlOntology).forEach(owlIndividual -> owlIndividual.accept(new IndividualsVisitor(vowlData,
+							owlIndividual, owlClass, manager)));
+				}
+				catch (Exception e){
+					System.out.println("@WORKAROUND: Failed to accept some individuals ... SKIPPING THIS"  );
+					System.out.println("Exception: "+e);
+					System.out.println("----------- Continue Process --------");
+					continue;
+				}
+
 			}
 		});
 	}
