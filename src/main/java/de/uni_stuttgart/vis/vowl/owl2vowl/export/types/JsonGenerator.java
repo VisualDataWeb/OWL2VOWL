@@ -12,6 +12,9 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.util.ProjectInformations;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.SerializationConfig;
 import org.semanticweb.owlapi.model.IRI;
@@ -23,6 +26,9 @@ import java.util.stream.Collectors;
  *
  */
 public class JsonGenerator {
+
+	private static final Logger logger = LogManager.getLogger(JsonGenerator.class);
+
 	private final String VERSION_INFORMATION = "Created with OWL2VOWL (version " + ProjectInformations.getVersion()
 			+ "), http://vowl.visualdataweb.org";
 	private Map<String, Object> root;
@@ -92,16 +98,16 @@ public class JsonGenerator {
 			}
 			catch (Exception e){
 				IRI key =irivEntry.getKey();
-				System.out.println("WARNING! ");
-				System.out.println("*******************************");
-				System.out.println("Failed to Accept!");
-				System.out.println("Entity   "+entity);
-				System.out.println("Key      "+key);
-				System.out.println("Visitor  "+visitor);
-				System.out.println("Reason : "+e);
+				logger.info("WARNING! ");
+				logger.info("*******************************");
+				logger.info("Failed to Accept!");
+				logger.info("Entity   "+entity);
+				logger.info("Key      "+key);
+				logger.info("Visitor  "+visitor);
+				logger.info("Reason : "+e);
 				Class cls = entity.getClass();
-				System.out.println("The type of the object is: " + cls.getName());
-				System.out.println("*** SKIPPING THIS ***");
+				logger.info("The type of the object is: " + cls.getName());
+				logger.info("*** SKIPPING THIS ***");
 				continue;
 			}
 		}

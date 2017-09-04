@@ -13,24 +13,16 @@ public class ProjectInformations {
 	private static String version;
 
 	static {
-		Properties properties = new Properties();
-		InputStream inputStream = ProjectInformations.class.getResourceAsStream(VERSION_PROPERTIES_FILE);
 
-		try {
+		try (InputStream inputStream =
+						 ProjectInformations.class.getResourceAsStream(VERSION_PROPERTIES_FILE)) {
+			Properties properties = new Properties();
 			properties.load(inputStream);
+			version = properties.getProperty("version", "");
 		} catch (IOException e) {
 			System.err.println(VERSION_PROPERTIES_FILE + " not found.");
-		} finally {
-			try {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-			} catch (IOException e) {
-				// Do nothing
-			}
 		}
 
-		version = properties.getProperty("version", "");
 	}
 
 	public static String getVersion() {
