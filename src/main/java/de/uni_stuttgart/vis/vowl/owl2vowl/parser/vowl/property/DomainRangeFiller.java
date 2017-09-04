@@ -10,6 +10,9 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProper
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.visitor.VowlPropertyVisitor;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.Collection;
@@ -20,6 +23,8 @@ import java.util.Set;
  * @author Eduard
  */
 public class DomainRangeFiller implements VowlPropertyVisitor {
+
+	private static final Logger logger = LogManager.getLogger(DomainRangeFiller.class);
 
 	private final VowlData vowlData;
 	private final Collection<? extends AbstractProperty> values;
@@ -43,10 +48,10 @@ public class DomainRangeFiller implements VowlPropertyVisitor {
 			try {
 				element.accept(this);
 			} catch (Exception e){
-				System.out.println("          DomainRange Filler faild to accept element");
-				System.out.println("          Element: "+element);
-				System.out.println("          Reason: "+e);
-				System.out.println("          SKIPPING THIS ELEMENT *****");
+				logger.info("          DomainRange Filler faild to accept element");
+				logger.info("          Element: "+element);
+				logger.info("          Reason: "+e);
+				logger.info("          SKIPPING THIS ELEMENT *****");
 			}
 		});
 	}
