@@ -1,8 +1,33 @@
 [![Build Status](https://travis-ci.org/VisualDataWeb/OWL2VOWL.svg)](https://travis-ci.org/VisualDataWeb/OWL2VOWL)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/org.visualdataweb.vowl.owl2vowl/OWL2VOWL/badge.svg)](https://mvnrepository.com/artifact/org.visualdataweb.vowl.owl2vowl/OWL2VOWL)
+[![](https://jitpack.io/v/VisualDataWeb/OWL2VOWL.svg)](https://jitpack.io/#VisualDataWeb/OWL2VOWL)
 
 OWL2VOWL converter 
 ==================
+
+Dev Dependency
+--------------
+We have a release repo in maven central but the version there is and will not be updated frequently.
+Therefore i suggest to use [Jitpack OWL2VOWL](https://jitpack.io/#VisualDataWeb/OWL2VOWL) in order to pull the latest release version (in example master branch or the available tags).
+
+For instructions how to include the dependency click the above link or as a example for maven projects:
+
+```
+	<repositories>
+		<repository>
+		    <id>jitpack.io</id>
+		    <url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+       ....
+       <dependency>
+	    <groupId>com.github.VisualDataWeb</groupId>
+	    <artifactId>OWL2VOWL</artifactId>
+	    <version>master-SNAPSHOT</version>
+	</dependency>
+       
+```
+
 
 Requirements
 ------------
