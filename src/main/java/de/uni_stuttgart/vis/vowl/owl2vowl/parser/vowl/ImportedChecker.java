@@ -17,6 +17,9 @@ import java.util.Set;
  *
  */
 public class ImportedChecker implements OWLNamedObjectVisitor {
+
+//	private static final Logger logger = LogManager.getLogger(ImportedChecker.class);
+
 	private final VowlData vowlData;
 	private final OWLOntologyManager manager;
 	private OWLOntology loadedOntology;
@@ -38,10 +41,10 @@ public class ImportedChecker implements OWLNamedObjectVisitor {
 //		});
 
 //		Stream<OWLOntology> imports = manager.imports(loadedOntology);
-//		System.out.println("THE STREAM \n "+imports);
+//		logger.info("THE STREAM \n "+imports);
 //		List<String> strings = imports.map(Object::toString)
 //				.collect(ArrayList::new, ArrayList::add, ArrayList::addAll);
-//		System.out.println("Strings \n "+strings);
+//		logger.info("Strings \n "+strings);
 
 		vowlData.getEntityMap().values().forEach(abstractEntity -> {
 			IRI entityIri = abstractEntity.getIri();

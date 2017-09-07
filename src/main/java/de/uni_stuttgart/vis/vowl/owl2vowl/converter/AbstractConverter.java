@@ -7,7 +7,12 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.EntityCreationVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
-import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.*;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.BaseIriCollector;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.EquivalentSorter;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.ImportedChecker;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.OntologyInformationParser;
+import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.TypeSetter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes.GenericClassAxiomVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes.HasKeyAxiomParser;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.classes.OwlClassAxiomVisitor;
@@ -15,9 +20,19 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.DataPropertyVisit
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.DomainRangeFiller;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.ObjectPropertyVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.VowlSubclassPropertyGenerator;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.semanticweb.owlapi.model.*;
+import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLClassAxiom;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDataPropertyAxiom;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectPropertyAxiom;
+import org.semanticweb.owlapi.model.OWLOntology;
+import org.semanticweb.owlapi.model.OWLOntologyCreationException;
+import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
@@ -29,7 +44,9 @@ import java.util.Collection;
  * The sub classes can specify the source of the ontology or to some additional processing if necessary.
  */
 public abstract class AbstractConverter implements Converter {
+
 	private static final Logger logger = LogManager.getLogger(AbstractConverter.class);
+
 	protected final JsonGenerator jsonGenerator = new JsonGenerator();
 	protected String loadedOntologyPath;
 	protected OWLOntologyManager manager;
@@ -50,17 +67,16 @@ public abstract class AbstractConverter implements Converter {
 	protected abstract void loadOntology() throws OWLOntologyCreationException;
 
 	private void preParsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
+
 		OWLOntologyWalker walker = new OWLOntologyWalker(ontology.getImportsClosure());
 		EntityCreationVisitor ecv = new EntityCreationVisitor(vowlData);
-		walker.walkStructure(ecv);
+
 		try {
 			walker.walkStructure(ecv);
-			System.out.println("WalkStructure Success!");
+			logger.info("WalkStructure Success!");
 		} catch (Exception e) {
-			System.out.println("@WORKAROUND WalkSturcture Failed!");
-			System.out.println("Exception: " + e);
-//			System.out.println("Exit without export result, Sorry!");
-//			System.exit(-1);
+			logger.info("@WORKAROUND WalkStructure Failed!");
+			logger.info("Exception: " + e);
 		}
 		new OntologyInformationParser(vowlData, ontology).execute();
 	}
@@ -82,10 +98,9 @@ public abstract class AbstractConverter implements Converter {
 							owlIndividual, owlClass, manager)));
 				}
 				catch (Exception e){
-					System.out.println("@WORKAROUND: Failed to accept some individuals ... SKIPPING THIS"  );
-					System.out.println("Exception: "+e);
-					System.out.println("----------- Continue Process --------");
-					continue;
+					logger.info("@WORKAROUND: Failed to accept some individuals ... SKIPPING THIS"  );
+					logger.info("Exception: "+e);
+					logger.info("----------- Continue Process --------");
 				}
 
 			}
@@ -98,10 +113,9 @@ public abstract class AbstractConverter implements Converter {
 				try {
 					owlObjectPropertyAxiom.accept(new ObjectPropertyVisitor(vowlData, owlObjectProperty));
 				} catch (Exception e){
-					System.out.println("          @WORKAROUND: Failed to accept property with HAS_VALUE OR  SubObjectPropertyOf ... SKIPPING THIS"  );
-					System.out.println("          propertyName: "+owlObjectProperty);
-					System.out.println("          propertyAxiom: "+owlObjectPropertyAxiom);
-					continue;
+					logger.info("          @WORKAROUND: Failed to accept property with HAS_VALUE OR  SubObjectPropertyOf ... SKIPPING THIS"  );
+					logger.info("          propertyName: "+owlObjectProperty);
+					logger.info("          propertyAxiom: "+owlObjectPropertyAxiom);
 				}
 			}
 		}
@@ -126,7 +140,13 @@ public abstract class AbstractConverter implements Converter {
 	private void processClasses(OWLOntology ontology, VowlData vowlData) {
 		for (OWLClass owlClass : ontology.getClassesInSignature(Imports.INCLUDED)) {
 			for (OWLClassAxiom owlClassAxiom : ontology.getAxioms(owlClass, Imports.INCLUDED)) {
-				owlClassAxiom.accept(new OwlClassAxiomVisitor(vowlData, owlClass));
+				OwlClassAxiomVisitor temp=new OwlClassAxiomVisitor(vowlData, owlClass);
+				try {
+					owlClassAxiom.accept(temp);
+				} catch (Exception e){
+					logger.info("ProcessClasses : Failed to accept owlClassAxiom -> Skipping");
+					//System.out.print("ProcessClasses : Failed to accept owlClassAxiom -> Skipping");
+				}
 			}
 
 			HasKeyAxiomParser.parse(ontology, owlClass, vowlData);
