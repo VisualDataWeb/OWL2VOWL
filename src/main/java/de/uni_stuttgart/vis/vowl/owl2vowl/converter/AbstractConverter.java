@@ -126,7 +126,13 @@ public abstract class AbstractConverter implements Converter {
 	private void processClasses(OWLOntology ontology, VowlData vowlData) {
 		for (OWLClass owlClass : ontology.getClassesInSignature(Imports.INCLUDED)) {
 			for (OWLClassAxiom owlClassAxiom : ontology.getAxioms(owlClass, Imports.INCLUDED)) {
-				owlClassAxiom.accept(new OwlClassAxiomVisitor(vowlData, owlClass));
+				OwlClassAxiomVisitor temp=new OwlClassAxiomVisitor(vowlData, owlClass);
+				try {
+					owlClassAxiom.accept(temp);
+				} catch (Exception e){
+					System.out.print("ProcessClasses : Failed to accept owlClassAxiom -> Skipping");
+					continue;
+				}
 			}
 
 			HasKeyAxiomParser.parse(ontology, owlClass, vowlData);

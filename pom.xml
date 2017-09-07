@@ -5,7 +5,7 @@
 
 	<groupId>org.visualdataweb.vowl.owl2vowl</groupId>
 	<artifactId>OWL2VOWL</artifactId>
-	<version>0.3.2-SNAPSHOT</version>
+	<version>0.3.3-SNAPSHOT</version>
 	<packaging>${packaging.type}</packaging>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Owl2Vowl is an ontology converter used to convert the given ontology to a json
