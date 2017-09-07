@@ -101,7 +101,6 @@ public abstract class AbstractConverter implements Converter {
 					logger.info("@WORKAROUND: Failed to accept some individuals ... SKIPPING THIS"  );
 					logger.info("Exception: "+e);
 					logger.info("----------- Continue Process --------");
-					continue; // FIXME unnecessary continue, can be removed
 				}
 
 			}
@@ -117,7 +116,6 @@ public abstract class AbstractConverter implements Converter {
 					logger.info("          @WORKAROUND: Failed to accept property with HAS_VALUE OR  SubObjectPropertyOf ... SKIPPING THIS"  );
 					logger.info("          propertyName: "+owlObjectProperty);
 					logger.info("          propertyAxiom: "+owlObjectPropertyAxiom);
-					continue; // FIXME unnecessary continue, can be removed
 				}
 			}
 		}
@@ -146,8 +144,8 @@ public abstract class AbstractConverter implements Converter {
 				try {
 					owlClassAxiom.accept(temp);
 				} catch (Exception e){
-					System.out.print("ProcessClasses : Failed to accept owlClassAxiom -> Skipping");
-					continue;
+					logger.info("ProcessClasses : Failed to accept owlClassAxiom -> Skipping");
+					//System.out.print("ProcessClasses : Failed to accept owlClassAxiom -> Skipping");
 				}
 			}
 
