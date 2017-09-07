@@ -23,6 +23,8 @@ import java.io.StringWriter;
 @RestController
 public class Owl2VowlController {
 
+	private static final Logger logger = LogManager.getLogger(Owl2VowlController.class);
+
 	private static final Logger conversionLogger = LogManager.getLogger(LoggingConstants.CONVERSION_LOGGER);
 	private static final String СONVERT_MAPPING = "/convert";
 	private static final String READ_JSON = "/read";
@@ -30,21 +32,21 @@ public class Owl2VowlController {
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Parameter not correct")
 	@ExceptionHandler(IllegalArgumentException.class)
 	public void parameterExceptionHandler(Exception e) {
-		System.out.println("--- Parameter exception: " + e.getMessage());
+		logger.info("--- Parameter exception: " + e.getMessage());
 		conversionLogger.error("Problems with parameters: " + e.getMessage());
 	}
 
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Ontology could not be created")
 	@ExceptionHandler(OWLOntologyCreationException.class)
 	public void ontologyCreationExceptionHandler(Exception e) {
-		System.out.println("--- Ontology creation exception: " + e.getMessage());
+		logger.info("--- Ontology creation exception: " + e.getMessage());
 		conversionLogger.error("Problems in ontology creation process: " + e.getMessage());
 	}
 
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Problems while generating uploaded file on server.")
 	@ExceptionHandler(IOException.class)
 	public void fileExceptionHandler(Exception e) {
-		System.out.println("--- IO exception: " + e.getMessage());
+		logger.info("--- IO exception: " + e.getMessage());
 		conversionLogger.error("IO exception while generating file on server: " + e.getMessage());
 	}
 
@@ -118,7 +120,7 @@ public class Owl2VowlController {
 			jsonAsString=IOUtils.toString(inputStreams.get(0));
 		}
 		catch (Exception e){
-			System.out.println("Something went wrong");
+			logger.info("Something went wrong");
 			conversionLogger.error("Something went wrong " + e.getMessage());
 		}
 
@@ -137,7 +139,7 @@ public class Owl2VowlController {
 			}
 		}
 		catch (Exception e){
-			System.out.println("Something went wrong");
+			logger.info("Something went wrong");
 			conversionLogger.error("Something went wrong " + e.getMessage());
 		}
 		return jsonAsString;
