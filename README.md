@@ -72,7 +72,7 @@ OWL2VOWL has been developed to work with Java 8, so `JDK 8` has to be used for c
 
 ### Build the jar
 To build the jar file, simply execute `mvn package`. The built `jar` only contains the compiled source code. 
-To build a jar file that can be executed standalone, you have to use the package option with parameter: `mvn package -Denv=standalone` or `mvn package -P standalone-release`. This will build the file `owl2vowl.jar` containing all dependencies needed to be executable. There will also be a `zip` file created containing the `owl2vowl.jar`, README and the license files.
+To build a jar file that can be executed standalone, you have to use the package option with parameter: `mvn package -Denv=standalone` or `mvn package -P standalone-release`. This will build the file `...-shaded.jar` containing all dependencies needed to be executable.
 
 ### Build the war
 To build the war file, simply execute `mvn package -P war-release`. This will generate a war file.
