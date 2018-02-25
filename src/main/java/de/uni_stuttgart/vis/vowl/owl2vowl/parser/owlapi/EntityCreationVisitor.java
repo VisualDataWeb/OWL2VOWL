@@ -7,11 +7,19 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlDat
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.VowlLiteral;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
-import org.semanticweb.owlapi.model.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.semanticweb.owlapi.model.OWLClass;
+import org.semanticweb.owlapi.model.OWLDataProperty;
+import org.semanticweb.owlapi.model.OWLDatatype;
+import org.semanticweb.owlapi.model.OWLLiteral;
+import org.semanticweb.owlapi.model.OWLObjectProperty;
+import org.semanticweb.owlapi.model.OWLObjectVisitor;
 
 public class EntityCreationVisitor implements OWLObjectVisitor {
 
 	private VowlData vowlData;
+	private Logger logger = LogManager.getLogger(EntityCreationVisitor.class);
 
 	public EntityCreationVisitor(VowlData vowlData) {
 		this.vowlData = vowlData;
@@ -28,6 +36,7 @@ public class EntityCreationVisitor implements OWLObjectVisitor {
 			clazz = new VowlClass(ce.getIRI());
 		} else {
 			// TODO Anonymous behaviour undefined
+			logger.info("Anonymous OWLClass " + ce);
 			return;
 		}
 
@@ -52,10 +61,11 @@ public class EntityCreationVisitor implements OWLObjectVisitor {
 	public void visit(OWLObjectProperty property) {
 		VowlObjectProperty prop;
 
-		if(!property.isAnonymous()) {
+		if (!property.isAnonymous()) {
 			prop = new VowlObjectProperty(property.getIRI());
 		} else {
 			// TODO anonymous behaviour
+			logger.info("Anonymous OWLObjectProperty " + property);
 			return;
 		}
 
@@ -66,10 +76,11 @@ public class EntityCreationVisitor implements OWLObjectVisitor {
 	public void visit(OWLDataProperty property) {
 		VowlDatatypeProperty prop;
 
-		if(!property.isAnonymous()) {
+		if (!property.isAnonymous()) {
 			prop = new VowlDatatypeProperty(property.getIRI());
 		} else {
 			// TODO anonymous behaviour
+			logger.info("Anonymous OWLDataProperty " + property);
 			return;
 		}
 

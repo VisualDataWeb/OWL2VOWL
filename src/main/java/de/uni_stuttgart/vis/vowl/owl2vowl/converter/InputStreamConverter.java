@@ -18,7 +18,7 @@ public class InputStreamConverter extends AbstractConverter {
 	private static final Logger logger = LogManager.getLogger(InputStreamConverter.class);
 
 	public InputStreamConverter(InputStream ontology) {
-		this(ontology, Collections.<InputStream>emptyList());
+		this(ontology, Collections.emptyList());
 	}
 
 	public InputStreamConverter(InputStream ontology, Collection<InputStream> necessaryExternals) {
