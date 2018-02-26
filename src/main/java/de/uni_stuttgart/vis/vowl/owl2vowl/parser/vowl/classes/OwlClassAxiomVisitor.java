@@ -285,7 +285,7 @@ public class OwlClassAxiomVisitor implements OWLObjectVisitor {
 				node.addAttribute(VowlAttribute.INTERSECTION);
 			} else {
 				// TODO Anonymous undefined behaviour
-				logger.info("Anonymous exists in intersections.");
+				logger.info("Anonymous exists in intersections. " + operand);
 			}
 		}
 	}

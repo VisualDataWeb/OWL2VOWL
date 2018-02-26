@@ -7,9 +7,10 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
+		ComparisonHelperTest.class,
 		ConsoleMainTest.class,
 		OntobenchTest.class,
-		ComparisonHelperTest.class
+		PropertyTest.class
 })
 public class CompleteTestSuite extends TestSuite {
 

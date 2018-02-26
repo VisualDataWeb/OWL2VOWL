@@ -10,16 +10,15 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.TypeOfProper
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.visitor.VowlPropertyVisitor;
-
+import java.util.Collection;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.IRI;
 
-import java.util.Collection;
-import java.util.Set;
-
 /**
  * Class which is responsible to fill the Domain/Range of properties regarding the VOWL specification.
+ *
  * @author Eduard
  */
 public class DomainRangeFiller implements VowlPropertyVisitor {
@@ -37,23 +36,28 @@ public class DomainRangeFiller implements VowlPropertyVisitor {
 	public void execute() {
 		fillEmpty();
 		mergeMulti();
+		processInverseProperties();
 	}
 
 	private void fillEmpty() {
-		values.forEach(element -> {
-			if (element instanceof HasReference) {
-				//Ignore references cause they do not need generated Domain/Range
-				return;
-			}
-			try {
-				element.accept(this);
-			} catch (Exception e){
-				logger.info("          DomainRange Filler faild to accept element");
-				logger.info("          Element: "+element);
-				logger.info("          Reason: "+e);
-				logger.info("          SKIPPING THIS ELEMENT *****");
-			}
-		});
+		values.stream()
+				// Only process props which have empty domain/range
+				.filter(property -> property.getDomains().isEmpty() || property.getRanges().isEmpty())
+				// skip inverse properties
+				.filter(property -> property.getInverse() == null)
+				.forEach(this::processProperty);
+	}
+
+	private void processProperty(AbstractProperty property) {
+		if (property instanceof HasReference) {
+			//Ignore references cause they do not need generated Domain/Range
+			return;
+		}
+		try {
+			property.accept(this);
+		} catch (Exception e) {
+			logger.error("Exception during processing property: " + e + " with message: " + e.getMessage() + " | Skip");
+		}
 	}
 
 	private VowlThing searchForConnectedThing(Set<IRI> value) {
@@ -76,6 +80,29 @@ public class DomainRangeFiller implements VowlPropertyVisitor {
 				VowlClass domainUnion = vowlData.getGenerator().generateUnion(value.getDomains());
 				value.setMergedDomain(domainUnion.getIri());
 			}
+		}
+	}
+
+	private void processInverseProperties() {
+		values.stream()
+				.filter(property -> property.getInverse() != null)
+				.filter(property -> property.getDomains().isEmpty() || property.getRanges().isEmpty())
+				.peek(this::fillWithInverse)
+				.filter(property -> property.getDomains().isEmpty() || property.getRanges().isEmpty())
+				.forEach(this::processProperty);
+	}
+
+	private void fillWithInverse(AbstractProperty property) {
+		AbstractProperty inverse = vowlData.getPropertyForIri(property.getInverse());
+
+		if (property.getDomains().isEmpty() && inverse.getJsonRange() != null) {
+			property.getDomains().add(inverse.getJsonRange());
+			logger.debug("Filled inverse property domain " + property + " with " + inverse.getJsonRange());
+		}
+
+		if (property.getRanges().isEmpty() && inverse.getJsonDomain() != null) {
+			property.getRanges().add(inverse.getJsonDomain());
+			logger.debug("Filled inverse property range " + property + " with " + inverse.getJsonDomain());
 		}
 	}
 
