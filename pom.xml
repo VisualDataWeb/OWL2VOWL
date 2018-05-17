@@ -399,6 +399,7 @@
 				</dependency>
 			</dependencies>
 			<build>
+				<finalName>owl2vowl</finalName>
 
 				<plugins>
 					<plugin>
