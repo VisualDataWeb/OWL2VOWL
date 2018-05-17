@@ -83,6 +83,13 @@ It would be a pain always building the jar only to test some new implemented stu
 
 To run a Spring Server directly from the IDE you have to start the `ServerMain.java` class.
 
+### Building docker image
+With the provided `Dockerfile` you can easily build the docker image of the server version on the exposed port `8080`.
+Just run `docker build -t owl2vowl/owl2vowl .`
+After that you can run the image `docker run --rm -d -p 8080:8080 owlv2vowl/owl2vowl`.
+OWL2VOWL is now reachable on `localhost:8080`.
+
+
 FAQ
 ==================
 
