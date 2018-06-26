@@ -11,7 +11,6 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.helper.ComparisonHelper;
 import org.semanticweb.owlapi.model.*;
 
 import javax.annotation.Nonnull;
-import java.util.Set;
 
 /**
  *
@@ -21,6 +20,7 @@ public class ImportedChecker implements OWLNamedObjectVisitor {
 //	private static final Logger logger = LogManager.getLogger(ImportedChecker.class);
 
 	private final VowlData vowlData;
+	@SuppressWarnings("unused")
 	private final OWLOntologyManager manager;
 	private OWLOntology loadedOntology;
 	private String loadPath;

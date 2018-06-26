@@ -4,9 +4,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.SetWithoutNull;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
 import org.semanticweb.owlapi.model.IRI;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 public abstract class AbstractClass extends AbstractNode implements HasDisjointUnion, HasIndividuals {

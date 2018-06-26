@@ -10,7 +10,6 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.JsonGeneratorVisitorImpl;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyInformation;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.util.ProjectInformations;
 
 import org.apache.logging.log4j.LogManager;
@@ -33,7 +32,7 @@ public class JsonGenerator {
 			+ "), http://vowl.visualdataweb.org";
 	private Map<String, Object> root;
 	private Map<String, Object> header;
-	private Map<String, Object> metrics;
+//	private Map<String, Object> metrics;
 	private List<Object> namespace;
 	private JsonGeneratorVisitor visitor;
 
@@ -44,13 +43,13 @@ public class JsonGenerator {
 	private void initialize() {
 		root = new LinkedHashMap<>();
 		header = new LinkedHashMap<>();
-		metrics = new LinkedHashMap<>();
+//		metrics = new LinkedHashMap<>();
 		namespace = new ArrayList<>();
 
 		root.put("_comment", VERSION_INFORMATION);
 		root.put("header", header);
 		root.put("namespace", namespace);
-		root.put("metrics", metrics);
+//		root.put("metrics", metrics);
 
 		// TODO For WebVOWL needed but currently not used
 		namespace.add(new HashMap<>());
@@ -58,7 +57,8 @@ public class JsonGenerator {
 
 	public void execute(VowlData vowlData) throws Exception {
 		processHeader(vowlData);
-		processMetrics(vowlData);
+		// removed metrics from json file --> webvowl will handle this
+		//processMetrics(vowlData);
 
 		visitor = new JsonGeneratorVisitorImpl(vowlData, root);
 		convertEntities(vowlData.getEntityMap());
@@ -105,21 +105,22 @@ public class JsonGenerator {
 				logger.info("Key      "+key);
 				logger.info("Visitor  "+visitor);
 				logger.info("Reason : "+e);
-				Class cls = entity.getClass();
-				logger.info("The type of the object is: " + cls.getName());
+				logger.info("The type of the object is: " + entity.getClass().getName());
 				logger.info("*** SKIPPING THIS ***");
 				continue;
 			}
 		}
 	}
-
-	public void processMetrics(VowlData vowlData) {
-		OntologyMetric metrics = vowlData.getMetrics();
-		this.metrics.put("classCount", metrics.getClasses());
-		this.metrics.put("objectPropertyCount", metrics.getObjectProperties());
-		this.metrics.put("datatypePropertyCount", metrics.getDatatypeProperties());
-		this.metrics.put("individualCount", metrics.getIndividuals());
-	}
+	
+//removed Metrics Process >> WebVOWL computes the statistics
+//	public void processMetrics(VowlData vowlData) {
+//		
+//		OntologyMetric metrics = vowlData.getMetrics();
+//		this.metrics.put("classCount", metrics.getClasses());
+//		this.metrics.put("objectPropertyCount", metrics.getObjectProperties());
+//		this.metrics.put("datatypePropertyCount", metrics.getDatatypeProperties());
+//		this.metrics.put("individualCount", metrics.getIndividuals());
+//	}
 
 
 	/**

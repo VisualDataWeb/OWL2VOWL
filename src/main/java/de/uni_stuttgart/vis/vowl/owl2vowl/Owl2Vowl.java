@@ -21,6 +21,7 @@ public class Owl2Vowl {
 
 	public Owl2Vowl(OWLOntology ontology) {
 		converter = new OntologyConverter(ontology);
+		converter.clearLoadingMsg();
 	}
 
 	public Owl2Vowl(OWLOntology ontology, String ontologyIri) {
@@ -29,20 +30,34 @@ public class Owl2Vowl {
 
 	public Owl2Vowl(IRI ontologyIri) {
 		converter = new IRIConverter(ontologyIri);
+		converter.clearLoadingMsg();
 	}
 
 	public Owl2Vowl(IRI ontologyIri, Collection<IRI> dependencies) {
 		converter = new IRIConverter(ontologyIri, dependencies);
+		converter.clearLoadingMsg();
 	}
 
 	public Owl2Vowl(InputStream ontology) {
 		converter = new InputStreamConverter(ontology);
+		converter.clearLoadingMsg();
 	}
 
 	public Owl2Vowl(InputStream ontology, Collection<InputStream> dependencies) {
 		converter = new InputStreamConverter(ontology, dependencies);
+		converter.clearLoadingMsg();
 	}
 
+	public String getLoadingMsg() {
+		return converter.getLoadingInfoString();
+	}
+	public void appendLoadingIndicatorPoint() {
+		if (converter.getCurrentlyLoadingFlag()) {
+			converter.addLoadingInfoToParentLine(".");
+		}
+	}
+
+	
 	/**
 	 * Converts the ontology to the webvowl compatible format and returns the usable json as string.
 	 *

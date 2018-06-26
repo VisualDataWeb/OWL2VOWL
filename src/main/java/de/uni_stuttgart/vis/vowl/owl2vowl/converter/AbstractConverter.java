@@ -4,7 +4,6 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.Exporter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.JsonGenerator;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.data.VowlData;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.AbstractEntity;
-import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyMetric;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.EntityCreationVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.owlapi.IndividualsVisitor;
 import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.AnnotationParser;
@@ -38,6 +37,8 @@ import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
 
 import java.util.Collection;
+import java.util.Set;
+
 
 /**
  * Abstract converter which processes the most part of the converting.
@@ -49,11 +50,84 @@ public abstract class AbstractConverter implements Converter {
 
 	protected final JsonGenerator jsonGenerator = new JsonGenerator();
 	protected String loadedOntologyPath;
+	protected String loadingInfoString="";
+	protected boolean missingImports=false;
 	protected OWLOntologyManager manager;
 	protected VowlData vowlData;
 	protected OWLOntology ontology;
 	protected boolean initialized = false;
+	protected OWLAPI_MissingImportsListener missingListener=null; 
+	protected boolean currentlyLoading=false;
+	protected String parentLine="";
+	public void setCurrentlyLoadingFlag(boolean val) {
+		this.parentLine="";
+		currentlyLoading=val;}
+	
+	public void setCurrentlyLoadingFlag(String parentLine, boolean val) {
+		//Line where to append to
+		this.parentLine=parentLine;
+		currentlyLoading=val;
+	}
+	public boolean getCurrentlyLoadingFlag() {return currentlyLoading;}
+	
+	public void clearLoadingMsg() {
+		loadingInfoString="";
+	}
+	
+	public String msgForWebVOWL(String stackTrace) {
+		// converts the < and > tags to html string so no html injection is created
+		String s1= stackTrace.replaceAll("<", "&lt;");
+		String s2= s1.replaceAll(">", "&gt;");
+		return s2;
+	}
+	
+	public boolean ontologyHasMissingImports() {
+		return missingImports;
+	}
+	public void setOntologyHasMissingImports(boolean val) {
+		missingImports=val;
+	}
+	
+	public String getLoadingInfoString() {
+		return loadingInfoString;
+	}
+	
+	public void addLoadingInfo(String msg) {
+		loadingInfoString+=msg;
+	}
+	
 
+	
+	public void addLoadingInfoToLine(String parent,String msg) {
+		// find parent line in msg;
+		if (loadingInfoString.length()>0) {
+			String tokens[]=loadingInfoString.split("\n");
+			for (int i=0;i<tokens.length;i++) {
+				if (tokens[i].contains(parent)){
+					tokens[i]+=msg;
+				}
+			}
+			// replace loading msg;
+			loadingInfoString="";
+			for (int i=0;i<tokens.length-1;i++) {
+				if (tokens[i].length()>0) {
+					loadingInfoString+=tokens[i]+"\n";
+				}
+			}
+			loadingInfoString+=tokens[tokens.length-1]+"\n";
+		}
+	};
+	
+	
+	
+	public void addLoadingInfoToParentLine(String msg) {
+		if (this.parentLine.length()>0){
+			addLoadingInfoToLine(this.parentLine,msg);
+		}
+	}
+	
+	
+	
 	private void preLoadOntology() {
 		try {
 			loadOntology();
@@ -67,7 +141,6 @@ public abstract class AbstractConverter implements Converter {
 	protected abstract void loadOntology() throws OWLOntologyCreationException;
 
 	private void preParsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
-
 		OWLOntologyWalker walker = new OWLOntologyWalker(ontology.getImportsClosure());
 		EntityCreationVisitor ecv = new EntityCreationVisitor(vowlData);
 
@@ -91,6 +164,12 @@ public abstract class AbstractConverter implements Converter {
 
 	private void processIndividuals(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
 		// TODO check all classes
+		
+		// TODO updating to stream method (OWL API )
+//		Stream<OWLClass> stream = ontology.classesInSignature();
+//		Set<OWLClass> set = ontology.classesInSignature().collect(Collectors.toSet());
+//		OWLClass[] array = ontology.classesInSignature().toArray(OWLClass[]::new);
+		
 		ontology.getClassesInSignature(Imports.INCLUDED).forEach(owlClass -> {
 			for (OWLOntology owlOntology : manager.getOntologies()) {
 				try {
@@ -145,7 +224,6 @@ public abstract class AbstractConverter implements Converter {
 					owlClassAxiom.accept(temp);
 				} catch (Exception e){
 					logger.info("ProcessClasses : Failed to accept owlClassAxiom -> Skipping");
-					//System.out.print("ProcessClasses : Failed to accept owlClassAxiom -> Skipping");
 				}
 			}
 
@@ -197,17 +275,34 @@ public abstract class AbstractConverter implements Converter {
 		vowlData.setOwlManager(manager);
 		// TODO Probably the parsing could be automatized via class annotation and annotation parsing.
 		// e.q. @PreParsing, @Parsing, @PostParsing just as an idea for improvement
-		preParsing(ontology, vowlData, manager);
-		parsing(ontology, vowlData, manager);
-		postParsing(ontology, vowlData, manager);
-		processMetrics();
+		
+		this.addLoadingInfo("* Generating ontology graph " );
+		this.setCurrentlyLoadingFlag("* Generating ontology graph ",true);
+		try {
+			preParsing(ontology, vowlData, manager);
+			parsing(ontology, vowlData, manager);
+			postParsing(ontology, vowlData, manager);
+			this.addLoadingInfoToParentLine("... done" );
+			this.setCurrentlyLoadingFlag(false);
+			
+			
+		} catch (Exception e) {
+			this.addLoadingInfoToParentLine("... <span style='color:red;'>failed</span>" );
+			this.addLoadingInfoToParentLine("\n  <span style='color:red;'>Error :</span>\n");
+			this.addLoadingInfoToParentLine(msgForWebVOWL(e.getMessage()));
+			this.setCurrentlyLoadingFlag(false);
+		}
+			// removed Metrics Process >> WebVOWL computes the statistics
+			//  processMetrics();
+		
 	}
 
-	private void processMetrics() {
-		OntologyMetric metrics = new OntologyMetric(ontology);
-		metrics.calculate(vowlData);
-		vowlData.setMetrics(metrics);
-	}
+// removed Metrics Process >> WebVOWL computes the statistics
+//	private void processMetrics() {
+//		OntologyMetric metrics = new OntologyMetric(ontology);
+//		metrics.calculate(vowlData);
+//		vowlData.setMetrics(metrics);
+//	}
 
 	/**
 	 * Exports the generated data according to the implemented {@link Exporter}.
@@ -219,7 +314,6 @@ public abstract class AbstractConverter implements Converter {
 		if (vowlData == null) {
 			convert();
 		}
-
 		jsonGenerator.execute(vowlData);
 		jsonGenerator.export(exporter);
 	}

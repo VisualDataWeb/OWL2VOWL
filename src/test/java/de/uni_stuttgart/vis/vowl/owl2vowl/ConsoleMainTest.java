@@ -1,7 +1,6 @@
 package de.uni_stuttgart.vis.vowl.owl2vowl;
 
 import de.uni_stuttgart.vis.vowl.owl2vowl.converter.AbstractConverter;
-import de.uni_stuttgart.vis.vowl.owl2vowl.converter.Converter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.converter.IRIConverter;
 import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.FileExporter;
 import org.junit.Test;

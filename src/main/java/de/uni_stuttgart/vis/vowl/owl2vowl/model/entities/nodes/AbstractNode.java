@@ -6,7 +6,6 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.VowlThing
 import org.semanticweb.owlapi.model.IRI;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 public abstract class AbstractNode extends AbstractEntity implements HasUnions, HasIntersections, HasComplement {

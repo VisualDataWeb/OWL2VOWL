@@ -29,6 +29,10 @@ public class OntologyInformation {
 	public OntologyInformation() {
 	}
 
+	public Logger getLogger() {
+		return logger;
+	}
+	
 	public List<Annotation> getTitles() {
 		return titles;
 	}

@@ -32,9 +32,7 @@ public class VowlData {
 	private Map<IRI, AbstractDatatype> datatypeMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, VowlObjectProperty> objectPropertyMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, VowlDatatypeProperty> datatypePropertyMap = new AllEntityMap<>(entityMap);
-	// Vielleicht generalisieren
 	private Map<IRI, TypeOfProperty> typeOfPropertyMap = new AllEntityMap<IRI, TypeOfProperty>(entityMap);
-	// TODO vielleicht zu allen entities hinzunehmen?
 	private Map<IRI, VowlIndividual> individualMap = new HashMap<>();
 	private OntologyInformation ontologyInformation = new OntologyInformation();
 	private Set<String> languages = new HashSet<>();

@@ -5,8 +5,6 @@
 
 package de.uni_stuttgart.vis.vowl.owl2vowl.export.types;
 
-import org.apache.commons.io.FilenameUtils;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,12 +22,9 @@ public class FileExporter implements Exporter {
 
 	@Override
 	public void write(String text) throws IOException {
-		int i = 0;
-
 		while (destinationFile.exists()) {
 			destinationFile.delete();
 		}
-
 		FileWriter writer = new FileWriter(destinationFile);
 		writer.write(text);
 		writer.close();

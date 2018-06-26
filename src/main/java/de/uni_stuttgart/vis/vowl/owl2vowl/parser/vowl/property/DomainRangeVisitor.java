@@ -18,6 +18,7 @@ import java.util.Set;
  * @author Eduard
  */
 public class DomainRangeVisitor implements OWLObjectVisitorEx<AbstractNode> {
+	@SuppressWarnings("unused")
 	private final OWLProperty owlObjectProperty;
 	private final VowlData vowlData;
 	private Logger logger = LogManager.getLogger(DomainRangeVisitor.class);

@@ -17,7 +17,6 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.visitor.VowlElementVisitor;
 import org.semanticweb.owlapi.model.*;
 import org.semanticweb.owlapi.search.EntitySearcher;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
