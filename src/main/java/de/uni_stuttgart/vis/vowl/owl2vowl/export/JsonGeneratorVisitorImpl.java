@@ -223,7 +223,6 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		attributes.put("minCardinality", getCardinality(property.getMinCardinality()));
 		attributes.put("maxCardinality", getCardinality(property.getMaxCardinality()));
 		attributes.put("cardinality", getCardinality(property.getExactCardinality()));
-
 		propertyList.add(object);
 		propertyAttributeList.add(attributes);
 	}

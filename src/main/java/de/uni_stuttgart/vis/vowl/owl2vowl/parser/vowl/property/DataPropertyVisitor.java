@@ -7,6 +7,9 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.NullClass
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.datatypes.DatatypeReference;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlDatatypeProperty;
+
+import java.util.stream.Collectors;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
@@ -50,7 +53,6 @@ public class DataPropertyVisitor extends PropertyVisitor {
 	public void visit(OWLDataPropertyDomainAxiom axiom) {
 		VowlDatatypeProperty prop = vowlData.getDatatypePropertyForIri(owlObjectProperty.getIRI());
 		IRI domainIri;
-
 		if (axiom.getDomain().isAnonymous()){
 			AbstractNode anonymClass = axiom.getDomain().accept(new DomainRangeVisitor(owlObjectProperty, vowlData));
 			if (!(anonymClass instanceof NullClass)) {
@@ -66,7 +68,6 @@ public class DataPropertyVisitor extends PropertyVisitor {
 
 			domainIri = axiom.getDomain().asOWLClass().getIRI();
 		}
-
 		prop.addDomain(domainIri);
 		vowlData.getClassForIri(domainIri).addOutGoingProperty(prop.getIri());
 	}
@@ -74,15 +75,34 @@ public class DataPropertyVisitor extends PropertyVisitor {
 	@Override
 	public void visit(OWLSubDataPropertyOfAxiom axiom) {
 		logger.info("Sub Data property axiom not supported yet.");
+
+//		logger.info("Sub Data property axiom experimentally supported.");
+//		OWLDataPropertyExpression subProperty = axiom.getSubProperty();
+//		OWLDataPropertyExpression superProperty = axiom.getSuperProperty();
+//		if (subProperty.isAnonymous()) {
+//			logger.info("Anonym sub property:" + subProperty);
+//			return;
+//		}
+//
+//		if (superProperty.isAnonymous()) {
+//			// TODO anonymous behavior
+//			logger.info("Anonym super property:" + superProperty);
+//			return;
+//		}
+//
+//		AbstractProperty subVowl = vowlData.getPropertyForIri(subProperty.asOWLDataProperty().getIRI());
+//		AbstractProperty superVowl = vowlData.getPropertyForIri(superProperty.asOWLDataProperty().getIRI());
+//		subVowl.addSuperEntity(superVowl.getIri());
+//		superVowl.addSubEntity(subVowl.getIri());
 	}
 
 	@Override
 	public void visit(OWLEquivalentDataPropertiesAxiom axiom) {
 		AbstractProperty base = vowlData.getPropertyForIri(owlObjectProperty.getIRI());
 
-		for (OWLDataPropertyExpression expr : axiom.getProperties()) {
+		for (OWLDataPropertyExpression expr : axiom.properties().collect(Collectors.toSet())) {
 			if (expr.isAnonymous()) {
-				// TODO anonymous behaviour
+				// TODO anonymous behavior
 				logger.info("Anonysmous equivalent prop: " + expr);
 				continue;
 			}

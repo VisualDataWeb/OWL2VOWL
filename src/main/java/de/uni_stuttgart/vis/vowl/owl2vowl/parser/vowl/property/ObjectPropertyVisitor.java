@@ -6,6 +6,9 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.AbstractNode;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.nodes.classes.NullClass;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.AbstractProperty;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectProperty;
+
+import java.util.stream.Collectors;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.*;
@@ -95,13 +98,13 @@ public class ObjectPropertyVisitor extends PropertyVisitor {
 		OWLObjectPropertyExpression secondProperty = axiom.getSecondProperty();
 
 		if (firstProperty.isAnonymous()) {
-			// TODO anonym behaviour
+			// TODO anonymous behavior
 			logger.info("Anonym first property:" + firstProperty);
 			return;
 		}
 
 		if (secondProperty.isAnonymous()) {
-			// TODO anonym behaviour
+			// TODO anonymous behavior
 			logger.info("Anonym second property:" + secondProperty);
 			return;
 		}
@@ -119,13 +122,13 @@ public class ObjectPropertyVisitor extends PropertyVisitor {
 		OWLObjectPropertyExpression superProperty = axiom.getSuperProperty();
 
 		if (subProperty.isAnonymous()) {
-			// TODO anonym behaviour
+			// TODO anonymous behavior
 			logger.info("Anonym sub property:" + subProperty);
 			return;
 		}
 
 		if (superProperty.isAnonymous()) {
-			// TODO anonym behaviour
+			// TODO anonymous behavior
 			logger.info("Anonym super property:" + superProperty);
 			return;
 		}
@@ -140,9 +143,9 @@ public class ObjectPropertyVisitor extends PropertyVisitor {
 	public void visit(OWLEquivalentObjectPropertiesAxiom axiom) {
 		AbstractProperty base = vowlData.getPropertyForIri(owlObjectProperty.getIRI());
 
-		for (OWLObjectPropertyExpression expr : axiom.getProperties()) {
+		for (OWLObjectPropertyExpression expr : axiom.properties().collect(Collectors.toSet())) {
 			if (expr.isAnonymous()) {
-				// TODO anonymous behaviour
+				// TODO anonymous behavior
 				logger.info("Anonysmous equivalent prop: " + expr);
 				continue;
 			}

@@ -7,5 +7,5 @@ import java.util.Set;
 public interface HasIntersections {
 	void addElementToIntersection(IRI iri);
 
-	Set getElementOfIntersection();
+	Set<IRI> getElementOfIntersection();
 }

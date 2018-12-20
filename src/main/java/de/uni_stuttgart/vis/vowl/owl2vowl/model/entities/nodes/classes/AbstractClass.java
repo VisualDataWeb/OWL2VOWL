@@ -56,4 +56,17 @@ public abstract class AbstractClass extends AbstractNode implements HasDisjointU
 	public void addKey(IRI keyIri) {
 		keys.add(keyIri);
 	}
+	
+	@Override
+	public void releaseMemory() {
+		if ( disjointUnion	!= null) disjointUnion.clear();
+		if ( instances		!= null) instances.clear();
+		if ( individuals	!= null) individuals.clear();
+		if ( keys			!= null) keys.clear();
+		
+		disjointUnion=null;
+		instances=null;
+		individuals=null;
+		keys=null;
+	}
 }

@@ -6,10 +6,11 @@ import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.MissingImportHandlingStrategy;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+
 import java.util.Collection;
 import java.util.Collections;
+
+
 import org.semanticweb.owlapi.apibinding.OWLManager;
 
 public class IRIConverter extends AbstractConverter {
@@ -50,11 +51,13 @@ public class IRIConverter extends AbstractConverter {
 			manager.getOntologyConfigurator().setMissingImportHandlingStrategy(MissingImportHandlingStrategy.SILENT);
 			manager.getOntologyConfigurator().setFollowRedirects(true);
 			manager.getOntologyConfigurator().setConnectionTimeout(100000);
-			// not sure here;
+
 			manager.getOntologyConfigurator().setAcceptingHTTPCompression(true);
 			manager.getOntologyConfigurator().withRepairIllegalPunnings(false);
-//			
+		
 			ontology = manager.loadOntology(mainOntology);
+			
+			
 			this.addLoadingInfoToParentLine("... done " );
 			this.setCurrentlyLoadingFlag(false);
 			if (this.ontologyHasMissingImports()==true) {

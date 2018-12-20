@@ -19,7 +19,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.net.URL;
+import java.text.NumberFormat;
+
+
+
 
 
 @RestController
@@ -34,6 +40,8 @@ public class Owl2VowlController {
 	private static final String LOADING_STATUS = "/loadingStatus";
 	private static final String SERVER_TIMESTAMP = "/serverTimeStamp";
 	private static final String CONVERSION_DONE = "/conversionDone";
+	private static final String DIRECT_INPUT = "/directInput";
+	private static final String GIZMO_INPUT = "/gizMOInput";
 	
 	public  static       String loadingStatusMsg="";
 	private static Boolean needConversionID=true;
@@ -46,6 +54,50 @@ public class Owl2VowlController {
 		String s2= s1.replaceAll(">", "&gt;");
 		return s2;
 	}
+	
+	public void timed_provideMemoryReleaseHintForGC(String sessionId, String msg, Timer t ) {
+		t.cancel();
+		t.purge();
+		t=null;
+		provideMemoryReleaseHintForGC(sessionId, msg);
+	}
+	
+	public void provideMemoryReleaseHintForGC(String sessionId, String msg) {
+		Owl2Vowl conversionInstace= conversionSessionMap.get(sessionId);
+		if (conversionInstace!=null) {
+			Runtime runtime = Runtime.getRuntime();
+			NumberFormat format = NumberFormat.getInstance();
+			long allocatedMemory = runtime.totalMemory();
+			long freeMemory = runtime.freeMemory();
+
+			conversionSessionMap.remove(sessionId);
+			conversionInstace=null;
+			System.gc();
+			System.runFinalization();
+			System.out.println("Cleaning up Memory for session Id "+ sessionId+ " << closed Session ");
+			System.out.println("Conversion Finished "+msg+" ");
+		
+			// create some statistics
+			format = NumberFormat.getInstance();
+			long after_allocatedMemory = runtime.totalMemory();
+			long after_freeMemory = runtime.freeMemory();
+			System.out.println("-> USED MEMORY " + format.format((allocatedMemory - freeMemory) / 1024)      + "  ->    "+format.format( (after_allocatedMemory- after_freeMemory) / 1024)+"  ");
+		    
+		}
+	}
+	
+	synchronized public void evaluateLifeCycleOfConversionObject(String sessionId, long numOfMiliSeconds) { 
+		Owl2Vowl conversionInstace= conversionSessionMap.get(sessionId);
+		if (conversionInstace!=null) {
+			 final Timer timer = new Timer();
+			    timer.schedule(new TimerTask() {
+		        @Override
+			        public void run() {
+		        	timed_provideMemoryReleaseHintForGC(sessionId, " -> Live cycle evaluation request", timer);
+		        	}
+			    },numOfMiliSeconds,numOfMiliSeconds);
+		}
+   }
 	
 	@ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "Parameter not correct")
 	@ExceptionHandler(IllegalArgumentException.class)
@@ -97,13 +149,7 @@ public class Owl2VowlController {
 	// cleanup memory by garbage collector the wise 
 	@RequestMapping(value = CONVERSION_DONE, method = RequestMethod.GET)
 	public void conversionFinished(@RequestParam("sessionId") String sessionId){
-		Owl2Vowl conversionInstace= conversionSessionMap.get(sessionId);
-		if (conversionInstace!=null) {
-			conversionSessionMap.remove(sessionId);
-			conversionInstace=null;
-			System.gc();
-			System.out.println("Cleaning up Memory for session Id "+ sessionId);
-		}
+		provideMemoryReleaseHintForGC(sessionId,"-> Requested by WebVOWL");
 	}
 	
 	// adding session id to owl2vowl;
@@ -112,11 +158,32 @@ public class Owl2VowlController {
 		  needConversionID=true;
 	  	  Date currentTime=new Date();
     	  long SystemTimeStamp=currentTime.getTime();
+    	  
     	  String value=String.valueOf(SystemTimeStamp);
-    	  System.out.println("Requested Server TimeStamp:"+value);
     	  loadingStatusMsg="";
+    	  System.out.println("Requested session Id:             "+ value);
    		  return value;
 		}
+	
+	@RequestMapping(value = DIRECT_INPUT, method = RequestMethod.POST)
+	public String directInput(@RequestParam("input")String input, @RequestParam("sessionId") String sessionId) throws IOException,
+			OWLOntologyCreationException {
+		String jsonAsString;
+		try {
+			Owl2Vowl owl2Vowl = new Owl2Vowl(input);
+			conversionSessionMap.put(sessionId, owl2Vowl);
+			jsonAsString = owl2Vowl.getJsonAsString();
+		} catch (Exception e) {
+			conversionLogger.info("Error for direct Input  " + e.getMessage());
+			throw e;
+		}
+		finally {
+			evaluateLifeCycleOfConversionObject(sessionId,5000);
+		}
+	
+		return jsonAsString;
+	}
+	
 	
 	@RequestMapping(value = СONVERT_MAPPING, method = RequestMethod.POST)
 	public String uploadOntology(@RequestParam("ontology") MultipartFile[] files, @RequestParam("sessionId") String sessionId) throws IOException,
@@ -148,27 +215,67 @@ public class Owl2VowlController {
 			conversionLogger.info("Uploaded files " + files[0].getName() + ": " + 0);
 			throw e;
 		}
+		finally {
+			evaluateLifeCycleOfConversionObject(sessionId,5000);
+		}
 		return jsonAsString;
 	}
 	
+	@RequestMapping(value = GIZMO_INPUT, method = RequestMethod.POST)
+	public String uploadOntology(@RequestParam("ontology") MultipartFile[] files) throws IOException,
+			OWLOntologyCreationException {
+		if (files == null || files.length == 0) {
+			loadingStatusMsg+="* <span style='color:red;'>No file uploaded!</span>";
+			throw new IllegalArgumentException("No file uploaded!");
+		}
+
+		if (files.length > 1) {
+			loadingStatusMsg+="* <span style='color:red;'>Please upload only the main ontology!</span>";
+			throw new IllegalArgumentException("Please upload only the main ontology!");
+		}
+
+		List<InputStream> inputStreams = new ArrayList<>();
+
+		for (MultipartFile file : files) {
+			inputStreams.add(file.getInputStream());
+		}
+
+		String jsonAsString;
+
+		try {
+			Owl2Vowl owl2Vowl = new Owl2Vowl(inputStreams.get(0));
+			//conversionSessionMap.put(sessionId, owl2Vowl);
+			jsonAsString = owl2Vowl.getJsonAsString();
+		} catch (Exception e) {
+			conversionLogger.info("Uploaded files " + files[0].getName() + ": " + 0);
+			throw e;
+		}
+		finally {
+			//evaluateLifeCycleOfConversionObject(sessionId,5000);
+		}
+		return jsonAsString;
+	}
 
 
 	@RequestMapping(value = СONVERT_MAPPING, method = RequestMethod.GET)
 	public String convertIRI(@RequestParam("iri") String iri,@RequestParam("sessionId") String sessionId) throws IOException, OWLOntologyCreationException {
 		String jsonAsString;
 		String out=iri.replace(" ","%20");
-		
-		
 		loadingStatusMsg="";
 		try {
+		
 			Owl2Vowl owl2Vowl = new Owl2Vowl(IRI.create(out));
 			conversionSessionMap.put(sessionId, owl2Vowl);
-			jsonAsString = owl2Vowl.getJsonAsString();
+   		    jsonAsString =  owl2Vowl.getJsonAsString();
+		
+			conversionLogger.info(out + " " + 1);
 		} catch (Exception e) {
 			conversionLogger.info(out + " " + 1);
 			return e.getMessage();
 		}
-
+		finally {
+			evaluateLifeCycleOfConversionObject(sessionId,5000);
+		}
 		conversionLogger.info(iri + " " + 0);
 		return jsonAsString;
 	}

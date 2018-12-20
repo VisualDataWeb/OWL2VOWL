@@ -32,7 +32,8 @@ public class JsonGenerator {
 			+ "), http://vowl.visualdataweb.org";
 	private Map<String, Object> root;
 	private Map<String, Object> header;
-//	private Map<String, Object> metrics;
+	private Map<String, Object> prefixList;
+	private List<Object> gizmoAnnotations;
 	private List<Object> namespace;
 	private JsonGeneratorVisitor visitor;
 
@@ -43,23 +44,21 @@ public class JsonGenerator {
 	private void initialize() {
 		root = new LinkedHashMap<>();
 		header = new LinkedHashMap<>();
-//		metrics = new LinkedHashMap<>();
+		prefixList = new LinkedHashMap<>();
+		gizmoAnnotations= new ArrayList<>();
 		namespace = new ArrayList<>();
 
 		root.put("_comment", VERSION_INFORMATION);
 		root.put("header", header);
 		root.put("namespace", namespace);
-//		root.put("metrics", metrics);
-
-		// TODO For WebVOWL needed but currently not used
+		root.put("gizmoAnnotations", gizmoAnnotations);
+		
 		namespace.add(new HashMap<>());
 	}
 
 	public void execute(VowlData vowlData) throws Exception {
 		processHeader(vowlData);
-		// removed metrics from json file --> webvowl will handle this
-		//processMetrics(vowlData);
-
+		processGizmoAnnotations(vowlData);
 		visitor = new JsonGeneratorVisitorImpl(vowlData, root);
 		convertEntities(vowlData.getEntityMap());
 	}
@@ -76,6 +75,7 @@ public class JsonGenerator {
 		OntologyInformation ontologyInformation = vowlData.getOntologyInformation();
 		header.put("languages", vowlData.getLanguages());
 		header.put("baseIris", vowlData.getBaseIris().stream().map(IRI::toString).collect(Collectors.toSet()));
+		header.put("prefixList", prefixList);
 		header.put("title", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getTitles()));
 		header.put("iri", ontologyInformation.getIri());
 		header.put("version", ontologyInformation.getVersion());
@@ -84,6 +84,59 @@ public class JsonGenerator {
 		header.put("labels", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getAnnotations().getLabels()));
 		header.put("comments", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getAnnotations().getComments()));
 		header.put("other", ontologyInformation.getAnnotations().getIdentifierToAnnotation());
+		
+		Map<String, String> map = vowlData.getPrefixMap();
+		// adding prefix list to that thing;
+	    for (Map.Entry<String,String> entry : map.entrySet()) {
+	    	  String pr=entry.getKey();
+	            pr= pr.substring(0, pr.length() - 1);
+            prefixList.put(pr,entry.getValue());
+	    }
+	}
+	
+	
+protected void processGizmoAnnotations(VowlData vowlData) {
+		
+		Map<String, Map<String,String> >  annotationMap = vowlData.getAnnotationMap();
+		Map<String, String>   prefixMap = vowlData.getPrefixMap();
+		String gizmoRep=prefixMap.get("gizmo:");
+		if (gizmoRep==null) {
+			gizmoRep="empty";
+		}	
+		for (Map.Entry<String, Map<String , String > > entry : annotationMap.entrySet())
+		{
+			Map<String, Object> object = new HashMap<>();
+			object.put("iri", entry.getKey());
+			
+		    int numGizmoAnnotations=0;
+		    Map<String , String > bcMap=entry.getValue();
+		    Map<String, Object> renderingDescriptions= new HashMap<>();
+		    for (Map.Entry<String, String > annotationPV: bcMap.entrySet()){
+		    	IRI temp=IRI.create(annotationPV.getKey());
+		    	String ns= temp.getNamespace();
+		    	if (ns.compareTo(gizmoRep)==0) {
+		    		// this is a gizmo annotation 
+		    		String annotationKey=temp.getShortForm();
+		    		// just making sure we write only that which belongs here;
+		    		if (annotationPV.getValue().contains(";")) {
+		    			String[] sep=annotationPV.getValue().split(";");
+		    			Set<String> tempSet = new  HashSet<>();
+		    			for (int i=0;i<sep.length;i++) {
+		    				tempSet.add(sep[i]);
+		    			}
+		    			renderingDescriptions.put(annotationKey, tempSet);
+		    		} else {
+		    			renderingDescriptions.put(annotationKey, annotationPV.getValue());
+		    		}
+		    		numGizmoAnnotations++;
+		    	}
+		    }
+		    if (numGizmoAnnotations>0) {
+		    	object.put("annotations", renderingDescriptions);
+		    	// only when we have > 0 annotations we add this to the object
+		    	gizmoAnnotations.add(object);
+		    }
+		}
 	}
 
 	protected <V extends AbstractEntity> void convertEntities(Map<IRI, V> entityMap) {

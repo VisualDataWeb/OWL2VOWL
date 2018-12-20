@@ -12,10 +12,11 @@ import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.IRI;
 
 import java.io.File;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+
 
 public class ConsoleMain {
 	private static final String IRI_OPTION_NAME = "iri";
@@ -71,12 +72,32 @@ public class ConsoleMain {
 			Converter converter = new IRIConverter(ontologyIri, dependencies);
 			converter.convert();
 			converter.export(createExporterFromOption(line, ontologyIri));
+			converter=null;
+			line=null;
+			ontologyIri=null;
+			dependencies.clear();
+			dependencies=null;
 		} catch (Exception e) {
 			logger.error("FAILED TO LOAD " + Arrays.toString(args));
 			System.err.println(e.getClass().getName());
 			System.err.println(e.getMessage());
 			System.exit(1);
 		}
+		Runtime runtime = Runtime.getRuntime();
+		NumberFormat format = NumberFormat.getInstance();
+		long allocatedMemory = runtime.totalMemory();
+		long freeMemory = runtime.freeMemory();
+	
+		System.gc();
+		System.runFinalization();
+		System.out.println("Cleaning up Memory for session of console converseion  << closed Session ");
+		System.out.println("Conversion Finished ");
+	
+		// create some statistics
+		format = NumberFormat.getInstance();
+		long after_allocatedMemory = runtime.totalMemory();
+		long after_freeMemory = runtime.freeMemory();
+		System.out.println("-> USED MEMORY " + format.format((allocatedMemory - freeMemory) / 1024)      + "  ->    "+format.format( (after_allocatedMemory- after_freeMemory) / 1024)+"  ");
 	}
 
 	protected Options createOptions() {

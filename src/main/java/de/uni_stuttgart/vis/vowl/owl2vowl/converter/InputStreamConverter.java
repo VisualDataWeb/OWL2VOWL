@@ -13,8 +13,7 @@ import org.semanticweb.owlapi.apibinding.OWLManager;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+
 /**
  *
  */
@@ -71,7 +70,7 @@ public class InputStreamConverter extends AbstractConverter {
 			if (this.ontologyHasMissingImports()==true) {
 				this.addLoadingInfoToLine("* Parsing ontology with OWL API ","<span style='color:yellow;'>(with warnings)</span>" );
 			}
-		
+			copyOfInputBuffer=null;
 		} catch (Exception e ) {
 			this.setCurrentlyLoadingFlag(false);
 			this.addLoadingInfoToLine("* Parsing ontology with OWL API ","... <span style='color:red;'>failed</span>" );
@@ -79,7 +78,7 @@ public class InputStreamConverter extends AbstractConverter {
 		}
 		
 		loadedOntologyPath = "file upload";
-
+		copiedOntologyContent="";
 		String logOntoName;
 		if (!ontology.isAnonymous()) {
 			logOntoName = ontology.getOntologyID().getOntologyIRI().get().toString();

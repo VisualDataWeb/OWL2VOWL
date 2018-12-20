@@ -72,7 +72,7 @@ public class VowlGenerator {
 		return thing;
 	}
 
-	public AbstractProperty generateDisjointProperty(IRI domain, IRI range) {
+	public void generateDisjointProperty(IRI domain, IRI range) {
 		if (domain == null || range == null) {
 			throw new IllegalArgumentException("Parameters should not be null!");
 		}
@@ -84,7 +84,7 @@ public class VowlGenerator {
 		property.setType(PropertyType.DISJOINT);
 		vowlData.addObjectProperty(property);
 
-		return property;
+		return;
 	}
 
 	public AbstractProperty generateSubclassProperty(IRI domain, IRI range) {

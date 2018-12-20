@@ -112,6 +112,20 @@ public abstract class AbstractProperty extends AbstractEntity implements HasInve
 		minCardinality = value;
 	}
 
+	
+	@Override
+	public void releaseMemory() {
+		if (domains!=null) domains.clear();
+		if (ranges!=null) ranges.clear();
+		if (referencedIris!=null) referencedIris.clear();
+		
+		
+		domains 		= null;
+		ranges			= null;
+		referencedIris	= null;
+		
+	}
+	
 	public abstract void accept(VowlPropertyVisitor visitor);
 
 	public Set<IRI> getReferencedIris() {

@@ -13,6 +13,7 @@ import org.semanticweb.owlapi.model.*;
 import javax.annotation.Nonnull;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Eduard
@@ -38,7 +39,7 @@ public class DomainRangeVisitor implements OWLObjectVisitorEx<AbstractNode> {
 	@Nonnull
 	@Override
 	public AbstractNode visit(@Nonnull OWLObjectIntersectionOf ce) {
-		Set<OWLClassExpression> operands = ce.getOperands();
+		Set<OWLClassExpression> operands = ce.operands().collect(Collectors.toSet());
 		Set<IRI> iriList = new HashSet<>();
 
 		for (OWLClassExpression operand : operands) {
@@ -59,13 +60,18 @@ public class DomainRangeVisitor implements OWLObjectVisitorEx<AbstractNode> {
 			intersection = vowlData.getGenerator().generateIntersection(iriList);
 		}
 
+		
+		// memCleaner;
+		iriList.clear();
+		iriList=null;
+		operands=null;
 		return intersection;
 	}
 
 	@Nonnull
 	@Override
 	public AbstractNode visit(OWLObjectUnionOf ce) {
-		Set<OWLClassExpression> operands = ce.getOperands();
+		Set<OWLClassExpression> operands = ce.operands().collect(Collectors.toSet());
 		Set<IRI> iriList = new HashSet<>();
 
 		for (OWLClassExpression operand : operands) {
@@ -87,6 +93,11 @@ public class DomainRangeVisitor implements OWLObjectVisitorEx<AbstractNode> {
 			intersection = vowlData.getGenerator().generateUnion(iriList);
 		}
 
+		// memCleaners
+		iriList.clear();
+		iriList=null;
+		operands=null;
+		
 		return intersection;
 	}
 
@@ -113,7 +124,7 @@ public class DomainRangeVisitor implements OWLObjectVisitorEx<AbstractNode> {
 	public AbstractNode visit(OWLObjectOneOf ce) {
 		VowlClass oneOfClass = vowlData.getGenerator().generateAnonymousClass();
 
-		ce.getIndividuals().forEach(owlIndividual -> {
+		ce.individuals().collect(Collectors.toSet()).forEach(owlIndividual -> {
 			owlIndividual.accept(new IndividualsVisitor(vowlData, vowlData.getOwlManager(), oneOfClass.getIri()));
 		});
 

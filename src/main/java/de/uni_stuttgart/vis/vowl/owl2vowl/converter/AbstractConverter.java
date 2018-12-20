@@ -23,21 +23,33 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.parser.vowl.property.VowlSubclassPrope
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.semanticweb.owlapi.model.IRI;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationProperty;
+import org.semanticweb.owlapi.model.OWLAnnotationPropertyRangeAxiom;
+import org.semanticweb.owlapi.model.OWLAnnotationValue;
+import org.semanticweb.owlapi.model.OWLAxiom;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLClassAxiom;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLDataPropertyAxiom;
+import org.semanticweb.owlapi.model.OWLLiteral;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLObjectPropertyAxiom;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
+import org.semanticweb.owlapi.formats.PrefixDocumentFormat;
+
 import org.semanticweb.owlapi.model.parameters.Imports;
 import org.semanticweb.owlapi.search.EntitySearcher;
 import org.semanticweb.owlapi.util.OWLOntologyWalker;
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -62,6 +74,17 @@ public abstract class AbstractConverter implements Converter {
 	public void setCurrentlyLoadingFlag(boolean val) {
 		this.parentLine="";
 		currentlyLoading=val;}
+	
+	
+	public void releaseMemory() {
+		manager.removeMissingImportListener(missingListener);
+		manager.removeOntology(ontology);
+		vowlData.Destructore();
+		vowlData=null;
+		missingListener=null;
+		manager=null;
+		ontology=null;	
+	}
 	
 	public void setCurrentlyLoadingFlag(String parentLine, boolean val) {
 		//Line where to append to
@@ -141,9 +164,45 @@ public abstract class AbstractConverter implements Converter {
 	protected abstract void loadOntology() throws OWLOntologyCreationException;
 
 	private void preParsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
-		OWLOntologyWalker walker = new OWLOntologyWalker(ontology.getImportsClosure());
+		OWLOntologyWalker walker = new OWLOntologyWalker(ontology.importsClosure().collect(Collectors.toSet()));
 		EntityCreationVisitor ecv = new EntityCreationVisitor(vowlData);
-
+		// this is a set of annotation assertions;
+		Set<OWLAxiom> ax=ontology.axioms(Imports.INCLUDED).collect(Collectors.toSet());
+		for(OWLAxiom entry : ax) {
+			try {
+				// try to cast this as assertion axiom and add ot to VOWL Data 
+				OWLAnnotationAssertionAxiom castedEntry=(OWLAnnotationAssertionAxiom)entry;
+				String subject=castedEntry.getSubject().asIRI().get().toString();
+				String property=castedEntry.getProperty().getIRI().toString();
+				String value="";
+				if (castedEntry.getProperty().getIRI().getShortForm().toString().compareTo("targetElement")    == 0 ||
+					castedEntry.getProperty().getIRI().getShortForm().toString().compareTo("subjectElement")   == 0 ||
+					castedEntry.getProperty().getIRI().getShortForm().toString().compareTo("predicateElement") == 0 ||
+					castedEntry.getProperty().getIRI().getShortForm().toString().compareTo("providesNotation") == 0 ||
+							
+					castedEntry.getProperty().getIRI().getShortForm().toString().compareTo("subjectDescription")   == 0 ||
+					castedEntry.getProperty().getIRI().getShortForm().toString().compareTo("predicateDescription") == 0 ||
+					castedEntry.getProperty().getIRI().getShortForm().toString().compareTo("objectDescription") == 0 ||
+							
+					castedEntry.getProperty().getIRI().getShortForm().toString().compareTo("providesView") == 0 ||
+					castedEntry.getProperty().getIRI().getShortForm().toString().compareTo("viewUsesNotation") == 0 ||
+					castedEntry.getProperty().getIRI().getShortForm().toString().compareTo("objectElement")    == 0   )  
+				{
+					 value=castedEntry.getValue().toString();
+				}else {
+				
+				OWLAnnotationValue le_val=castedEntry.getValue();
+				OWLLiteral le_literal= le_val.asLiteral().get();
+				 value=le_literal.getLiteral();
+				
+				}
+			    vowlData.addBaseConstructorAnnotation(subject, property, value);
+			} catch (Exception e) {
+				// we dont care 
+				// this is a declaration axiom and not an assertion axiom , we are interessted in assertion to baseConstructors
+			}
+		}
+		
 		try {
 			walker.walkStructure(ecv);
 			logger.info("WalkStructure Success!");
@@ -151,27 +210,24 @@ public abstract class AbstractConverter implements Converter {
 			logger.info("@WORKAROUND WalkStructure Failed!");
 			logger.info("Exception: " + e);
 		}
+		vowlData.showBaseConstructorAnnotations();
+		
 		new OntologyInformationParser(vowlData, ontology).execute();
 	}
 
 	private void parsing(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
+		processAnnotationProperties(ontology, vowlData);
 		processClasses(ontology, vowlData);
 		processObjectProperties(ontology, vowlData);
 		processDataProperties(ontology, vowlData);
 		processIndividuals(ontology, vowlData, manager);
+		
 		processGenericAxioms();
 	}
 
 	private void processIndividuals(OWLOntology ontology, VowlData vowlData, OWLOntologyManager manager) {
-		// TODO check all classes
-		
-		// TODO updating to stream method (OWL API )
-//		Stream<OWLClass> stream = ontology.classesInSignature();
-//		Set<OWLClass> set = ontology.classesInSignature().collect(Collectors.toSet());
-//		OWLClass[] array = ontology.classesInSignature().toArray(OWLClass[]::new);
-		
-		ontology.getClassesInSignature(Imports.INCLUDED).forEach(owlClass -> {
-			for (OWLOntology owlOntology : manager.getOntologies()) {
+		ontology.classesInSignature(Imports.INCLUDED).collect(Collectors.toSet()).forEach(owlClass -> {
+			for (OWLOntology owlOntology : manager.ontologies().collect(Collectors.toSet())) {
 				try {
 					EntitySearcher.getIndividuals(owlClass, owlOntology).forEach(owlIndividual -> owlIndividual.accept(new IndividualsVisitor(vowlData,
 							owlIndividual, owlClass, manager)));
@@ -187,8 +243,8 @@ public abstract class AbstractConverter implements Converter {
 	}
 
 	private void processObjectProperties(OWLOntology ontology, VowlData vowlData) {
-		for (OWLObjectProperty owlObjectProperty : ontology.getObjectPropertiesInSignature(Imports.INCLUDED)) {
-			for (OWLObjectPropertyAxiom owlObjectPropertyAxiom : ontology.getAxioms(owlObjectProperty, Imports.INCLUDED)) {
+		for (OWLObjectProperty owlObjectProperty : ontology.objectPropertiesInSignature(Imports.INCLUDED).collect(Collectors.toSet())) {
+			for (OWLObjectPropertyAxiom owlObjectPropertyAxiom : ontology.axioms(owlObjectProperty, Imports.INCLUDED).collect(Collectors.toSet())) {
 				try {
 					owlObjectPropertyAxiom.accept(new ObjectPropertyVisitor(vowlData, owlObjectProperty));
 				} catch (Exception e){
@@ -201,8 +257,8 @@ public abstract class AbstractConverter implements Converter {
 	}
 
 	private void processDataProperties(OWLOntology ontology, VowlData vowlData) {
-		for (OWLDataProperty property : ontology.getDataPropertiesInSignature(Imports.INCLUDED)) {
-			for (OWLDataPropertyAxiom propertyAxiom : ontology.getAxioms(property, Imports.INCLUDED)) {
+		for (OWLDataProperty property : ontology.dataPropertiesInSignature(Imports.INCLUDED).collect(Collectors.toSet())) {
+			for (OWLDataPropertyAxiom propertyAxiom : ontology.axioms(property, Imports.INCLUDED).collect(Collectors.toSet())) {
 				propertyAxiom.accept(new DataPropertyVisitor(vowlData, property));
 			}
 		}
@@ -217,22 +273,43 @@ public abstract class AbstractConverter implements Converter {
 	}
 
 	private void processClasses(OWLOntology ontology, VowlData vowlData) {
-		for (OWLClass owlClass : ontology.getClassesInSignature(Imports.INCLUDED)) {
-			for (OWLClassAxiom owlClassAxiom : ontology.getAxioms(owlClass, Imports.INCLUDED)) {
+		// use classExpressions;
+		
+		for (OWLClass owlClass : ontology.classesInSignature(Imports.INCLUDED).collect(Collectors.toSet())) {
+			for (OWLClassAxiom owlClassAxiom : ontology.axioms(owlClass, Imports.INCLUDED).collect(Collectors.toSet())) {
 				OwlClassAxiomVisitor temp=new OwlClassAxiomVisitor(vowlData, owlClass);
 				try {
 					owlClassAxiom.accept(temp);
+					temp.Destrucotre();
+					temp=null;
 				} catch (Exception e){
 					logger.info("ProcessClasses : Failed to accept owlClassAxiom -> Skipping");
 				}
 			}
-
 			HasKeyAxiomParser.parse(ontology, owlClass, vowlData);
+			owlClass=null;
 		}
 	}
+	
+	private void processAnnotationProperties(OWLOntology ontology, VowlData vowlData) {
+		for (OWLAnnotationProperty owlAnnotationProperty : ontology.annotationPropertiesInSignature(Imports.INCLUDED).collect(Collectors.toSet())) {
+			for (OWLAnnotationAxiom owlAnnotationAxiom : ontology.axioms(owlAnnotationProperty, Imports.INCLUDED).collect(Collectors.toSet())) {
+				try {
+					String subject=owlAnnotationProperty.getIRI().toString();
+					String property="http://visualdataweb.org/ontologies/gizmo-core#assertionDatatypeValue";
+					OWLAnnotationPropertyRangeAxiom ra= (OWLAnnotationPropertyRangeAxiom)owlAnnotationAxiom;
+					String value=ra.getRange().toString();
+				    vowlData.addBaseConstructorAnnotation(subject, property, value);
+				} catch (Exception e) {
+					// not interesting			
+				}
+			}
+		}
+	}
+	
 
 	private void processGenericAxioms() {
-		ontology.getGeneralClassAxioms().forEach(owlClassAxiom -> owlClassAxiom.accept(new GenericClassAxiomVisitor(vowlData)));
+		ontology.generalClassAxioms().collect(Collectors.toSet()).forEach(owlClassAxiom -> owlClassAxiom.accept(new GenericClassAxiomVisitor(vowlData)));
 	}
 
 	private void parseAnnotations(VowlData vowlData, OWLOntologyManager manager) {
@@ -255,6 +332,25 @@ public abstract class AbstractConverter implements Converter {
 		vowlData.getEntityMap().values().forEach(entity -> entity.accept(new EquivalentSorter(ontology.getOntologyID().getOntologyIRI().orElse(IRI
 				.create(loadedOntologyPath)), vowlData)));
 		new BaseIriCollector(vowlData).execute();
+		
+		
+		PrefixDocumentFormat pm = (PrefixDocumentFormat) manager.getOntologyFormat(ontology);
+		Map<String, String> prefixName2PrefixMap = pm.getPrefixName2PrefixMap();
+		// adding prefix list to that thing;
+	    for (Map.Entry<String,String> entry : prefixName2PrefixMap.entrySet()) {
+            vowlData.addPrefix(entry.getKey(),entry.getValue());          
+	    }
+	    
+	    // get the importedOntologies;
+	    Stream<OWLOntology> imported=ontology.imports();
+		for (OWLOntology importedOntology : imported.collect(Collectors.toSet())) {
+			PrefixDocumentFormat i_pm = (PrefixDocumentFormat) manager.getOntologyFormat(importedOntology);
+			Map<String, String> i_prefixName2PrefixMap = i_pm.getPrefixName2PrefixMap();
+			// adding prefix list to that thing;
+		    for (Map.Entry<String,String> entry : i_prefixName2PrefixMap.entrySet()) {
+	            vowlData.addPrefix(entry.getKey(),entry.getValue());
+		    }	
+		}
 	}
 
 	/**
@@ -273,7 +369,7 @@ public abstract class AbstractConverter implements Converter {
 		}
 		vowlData = new VowlData();
 		vowlData.setOwlManager(manager);
-		// TODO Probably the parsing could be automatized via class annotation and annotation parsing.
+		// TODO Probably the parsing could be automated via class annotation and annotation parsing.
 		// e.q. @PreParsing, @Parsing, @PostParsing just as an idea for improvement
 		
 		this.addLoadingInfo("* Generating ontology graph " );
@@ -283,18 +379,13 @@ public abstract class AbstractConverter implements Converter {
 			parsing(ontology, vowlData, manager);
 			postParsing(ontology, vowlData, manager);
 			this.addLoadingInfoToParentLine("... done" );
-			this.setCurrentlyLoadingFlag(false);
-			
-			
+			this.setCurrentlyLoadingFlag(false);		
 		} catch (Exception e) {
 			this.addLoadingInfoToParentLine("... <span style='color:red;'>failed</span>" );
 			this.addLoadingInfoToParentLine("\n  <span style='color:red;'>Error :</span>\n");
 			this.addLoadingInfoToParentLine(msgForWebVOWL(e.getMessage()));
 			this.setCurrentlyLoadingFlag(false);
 		}
-			// removed Metrics Process >> WebVOWL computes the statistics
-			//  processMetrics();
-		
 	}
 
 // removed Metrics Process >> WebVOWL computes the statistics
@@ -316,5 +407,6 @@ public abstract class AbstractConverter implements Converter {
 		}
 		jsonGenerator.execute(vowlData);
 		jsonGenerator.export(exporter);
+		releaseMemory();
 	}
 }

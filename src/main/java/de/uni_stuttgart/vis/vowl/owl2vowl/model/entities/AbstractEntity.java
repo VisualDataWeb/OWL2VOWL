@@ -115,4 +115,22 @@ public abstract class AbstractEntity extends AbstractVowlObject implements HasEq
 	public void setExportToJson(boolean exportToJson) {
 		this.exportToJson = exportToJson;
 	}
+	
+	// Memory Handler required? 
+	
+	public void releaseMemory() {
+		attributes.clear();
+		equivalents.clear();
+		sortedEquivalents.clear();
+		subEntities.clear();
+		superEntities.clear();
+		
+		attributes        = null;
+		equivalents       = null;
+		sortedEquivalents = null;
+		subEntities       = null;
+		superEntities     = null;
+
+	}
+	
 }

@@ -41,7 +41,7 @@ public class AnnotationVisitor implements VowlElementVisitor {
 	protected Set<Annotation> getAnnotations(OWLEntity entity) {
 		Set<Annotation> allAnnotations = new HashSet<>();
 
-		for (OWLOntology ontology : manager.getOntologies()) {
+		for (OWLOntology ontology : manager.ontologies().collect(Collectors.toSet())) {
 			Set<Annotation> currentAnnotations = mapOwlAnnotationsToVowlAnnotations(EntitySearcher.getAnnotations(entity, ontology));
 			allAnnotations.addAll(currentAnnotations);
 		}

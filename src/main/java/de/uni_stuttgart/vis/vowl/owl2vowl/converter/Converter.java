@@ -21,6 +21,7 @@ public interface Converter {
 	void addLoadingInfoToParentLine(String msg);
 	void clearLoadingMsg();
 	void convert();
+	void releaseMemory();
 
 	void export(Exporter exporter) throws Exception;
 }

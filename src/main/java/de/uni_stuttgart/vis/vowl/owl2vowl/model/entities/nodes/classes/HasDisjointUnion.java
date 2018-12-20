@@ -13,6 +13,6 @@ import java.util.Set;
  * Interface to enable disjoint union functionality in classes.
  */
 public interface HasDisjointUnion {
-	Set getDisjointUnion();
+	Set<IRI> getDisjointUnion();
 	void addDisjointUnion(IRI disjointIri);
 }

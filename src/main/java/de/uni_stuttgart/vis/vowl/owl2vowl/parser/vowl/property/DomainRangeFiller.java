@@ -120,11 +120,14 @@ public class DomainRangeFiller implements VowlPropertyVisitor {
 			}
 
 			VowlThing disconnectedThing = vowlData.getThingProvider().getDisconnectedThing();
+			
 			VowlLiteral vowlLiteral = vowlData.getGenerator().generateLiteral();
 			disconnectedThing.addOutGoingProperty(property.getIri());
 			vowlLiteral.addInGoingProperty(property.getIri());
 			property.addDomain(disconnectedThing.getIri());
 			property.addRange(vowlLiteral.getIri());
+			disconnectedThing=null;
+			
 		} else if (property.getDomains().isEmpty()) {
 			VowlThing connectedThing = searchForConnectedThing(property.getRanges());
 			if (connectedThing == null) {
@@ -156,6 +159,7 @@ public class DomainRangeFiller implements VowlPropertyVisitor {
 			disconnectedThing.addInGoingProperty(property.getIri());
 			property.addDomain(disconnectedThing.getIri());
 			property.addRange(disconnectedThing.getIri());
+			disconnectedThing=null;
 		} else if (property.getDomains().isEmpty()) {
 			VowlThing connectedThing = searchForConnectedThing(property.getRanges());
 			if (connectedThing == null) {

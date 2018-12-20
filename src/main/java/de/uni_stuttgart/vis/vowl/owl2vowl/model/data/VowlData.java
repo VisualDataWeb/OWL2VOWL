@@ -14,10 +14,12 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.model.entities.properties.VowlObjectPr
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.individuals.VowlIndividual;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyInformation;
 import de.uni_stuttgart.vis.vowl.owl2vowl.model.ontology.OntologyMetric;
+
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Contains all data WebVOWL needs.
@@ -34,6 +36,10 @@ public class VowlData {
 	private Map<IRI, VowlDatatypeProperty> datatypePropertyMap = new AllEntityMap<>(entityMap);
 	private Map<IRI, TypeOfProperty> typeOfPropertyMap = new AllEntityMap<IRI, TypeOfProperty>(entityMap);
 	private Map<IRI, VowlIndividual> individualMap = new HashMap<>();
+	private Map<String, String> prefixMap = new HashMap<>();
+	
+	private Map<String, Map<String , String > > baseConstructAnnotations= new HashMap<>();
+	
 	private OntologyInformation ontologyInformation = new OntologyInformation();
 	private Set<String> languages = new HashSet<>();
 	private Set<IRI> baseIris = new HashSet<>();
@@ -51,6 +57,65 @@ public class VowlData {
 		addDatatype(genericLiteral);
 	}
 
+	public void Destructore() {
+		for (Entry<AbstractEntity, String> entry : entityToId.entrySet()) {
+			entry.getKey().releaseMemory();
+			
+		}
+		for (Entry<IRI, AbstractEntity> entry : entityMap.entrySet()) {
+			entry.getValue().releaseMemory();
+		}
+		
+		
+		for (Entry<IRI, AbstractClass> entry : classMap.entrySet()) {
+			entry.getValue().releaseMemory();
+		}
+		for (Entry<IRI, AbstractDatatype> entry : datatypeMap.entrySet()) {
+			entry.getValue().releaseMemory();
+		}
+		
+		for (Entry<IRI, VowlObjectProperty> entry : objectPropertyMap.entrySet()) {
+			entry.getValue().releaseMemory();
+		}
+		
+		for (Entry<IRI, VowlDatatypeProperty> entry : datatypePropertyMap.entrySet()) {
+			entry.getValue().releaseMemory();
+		}
+		
+		
+		
+		entityToId.clear();
+		entityMap.clear();
+		classMap.clear();
+		datatypeMap.clear();
+		objectPropertyMap.clear();
+		datatypePropertyMap.clear();
+		typeOfPropertyMap.clear();
+		individualMap.clear();
+		languages.clear();
+		baseIris.clear();
+		
+		owlManager			= null;
+		entityToId			= null;
+		entityMap			= null;
+		classMap 			= null;
+		datatypeMap 		= null;
+		objectPropertyMap 	= null;
+		datatypePropertyMap = null;
+		typeOfPropertyMap 	= null;
+		individualMap 		= null;
+		ontologyInformation = null;
+		languages			= null;
+		baseIris			= null;
+		searcher			= null;
+		iriGenerator 		= null;
+		generator			= null;
+		thingProvider		= null;
+		metrics				= null;
+		
+		
+	}
+	
 	public OWLOntologyManager getOwlManager() {
 		return owlManager;
 	}
@@ -68,6 +133,45 @@ public class VowlData {
 			return;
 		}
 		baseIris.add(iri);
+	}
+	
+	
+	public void addBaseConstructorAnnotation(String baseConstructor, String property, String value) {
+		Map<String , String > bcMap=baseConstructAnnotations.get(baseConstructor);
+		if (bcMap==null) {
+			//create one for this construcor
+			bcMap= new HashMap<>();
+			baseConstructAnnotations.put(baseConstructor, bcMap);
+		}
+		String existsValue=bcMap.get(property);
+		if (existsValue!=null) {
+			bcMap.put(property, existsValue+";"+value);
+		}else {
+				bcMap.put(property, value);
+		}
+	}
+	
+	public void showBaseConstructorAnnotations() {
+		
+		
+		for (Map.Entry<String, Map<String , String > > entry : baseConstructAnnotations.entrySet())
+		{
+		    System.out.println("Element "+ entry.getKey()  + " has Annotations " );
+		    Map<String , String > bcMap=entry.getValue();
+		    for (Map.Entry<String, String > annotationPV: bcMap.entrySet()){
+		    	System.out.println("       Property "+ annotationPV.getKey()  + " value "+ annotationPV.getValue() );
+		    			    	
+		    }
+			    
+		}
+		
+		
+	};
+	
+	
+	
+	public void addPrefix(String prefix,String iri) {
+		prefixMap.put(prefix, iri);
 	}
 
 	public VowlLiteral getGenericLiteral() {
@@ -102,6 +206,10 @@ public class VowlData {
 		return searcher;
 	}
 
+	public  Map<String, Map<String , String > >  getAnnotationMap(){
+		return baseConstructAnnotations;
+	}
+	
 	public Map<IRI, AbstractEntity> getEntityMap() {
 		return Collections.unmodifiableMap(entityMap);
 	}
@@ -122,6 +230,10 @@ public class VowlData {
 		return Collections.unmodifiableMap(classMap);
 	}
 
+	public Map<String, String> getPrefixMap() {
+		return prefixMap;
+	}
+	
 	public AbstractClass getClassForIri(IRI iri) {
 		if (classMap.containsKey(iri)) {
 			return classMap.get(iri);

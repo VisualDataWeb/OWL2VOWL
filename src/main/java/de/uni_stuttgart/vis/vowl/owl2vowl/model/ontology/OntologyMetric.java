@@ -37,6 +37,7 @@ public class OntologyMetric {
     }
 
     public void calculate(VowlData vowlData) {
+    	System.out.println("this is never called and thats good so, -> Metrics calculated on the fly by visualization ");
         int classCount = vowlData.getClassMap().size();
         int datatypeCount = vowlData.getDatatypeMap().size();
         int objectPropertyCounts = vowlData.getObjectPropertyMap().size();

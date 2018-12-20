@@ -9,6 +9,7 @@ import de.uni_stuttgart.vis.vowl.owl2vowl.export.types.FileExporter;
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLOntology;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
@@ -40,6 +41,11 @@ public class Owl2Vowl {
 
 	public Owl2Vowl(InputStream ontology) {
 		converter = new InputStreamConverter(ontology);
+		converter.clearLoadingMsg();
+	}
+	public Owl2Vowl(String ontologyAsString) {
+		InputStream ontologyStream = new ByteArrayInputStream(ontologyAsString.getBytes());
+		converter = new InputStreamConverter(ontologyStream);
 		converter.clearLoadingMsg();
 	}
 

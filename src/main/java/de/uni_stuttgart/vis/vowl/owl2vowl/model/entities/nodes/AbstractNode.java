@@ -74,4 +74,20 @@ public abstract class AbstractNode extends AbstractEntity implements HasUnions, 
 	public void addOutGoingProperty(IRI property) {
 		outGoingProperties.add(property);
 	}
+	
+	@Override
+	public void releaseMemory() {
+		if (complements!=null) complements.clear();
+		if (intersectionElements!=null) intersectionElements.clear();
+		if (unionElements!=null) unionElements.clear();
+		if (inGoingProperties!=null) inGoingProperties.clear();
+		if (outGoingProperties!=null) outGoingProperties.clear();
+		
+		complements 		 = null;
+		intersectionElements = null;
+		unionElements		 = null;
+		inGoingProperties	 = null;
+		outGoingProperties	 = null;
+	}
+	
 }
