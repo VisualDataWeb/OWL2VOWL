@@ -210,7 +210,7 @@ public abstract class AbstractConverter implements Converter {
 			logger.info("@WORKAROUND WalkStructure Failed!");
 			logger.info("Exception: " + e);
 		}
-		vowlData.showBaseConstructorAnnotations();
+//		vowlData.showBaseConstructorAnnotations();
 		
 		new OntologyInformationParser(vowlData, ontology).execute();
 	}
