@@ -54,7 +54,7 @@ public class IRIConverter extends AbstractConverter {
 
 			manager.getOntologyConfigurator().setAcceptingHTTPCompression(true);
 			manager.getOntologyConfigurator().withRepairIllegalPunnings(false);
-		
+			
 			ontology = manager.loadOntology(mainOntology);
 			
 			

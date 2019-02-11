@@ -26,7 +26,7 @@ public class DataPropertyVisitor extends PropertyVisitor {
 		VowlDatatypeProperty prop = vowlData.getDatatypePropertyForIri(owlObjectProperty.getIRI());
 		prop.addAttribute(VowlAttribute.FUNCTIONAL);
 	}
-
+	
 	@Override
 	public void visit(OWLDataPropertyRangeAxiom axiom) {
 		VowlDatatypeProperty prop = vowlData.getDatatypePropertyForIri(owlObjectProperty.getIRI());
@@ -54,6 +54,7 @@ public class DataPropertyVisitor extends PropertyVisitor {
 		VowlDatatypeProperty prop = vowlData.getDatatypePropertyForIri(owlObjectProperty.getIRI());
 		IRI domainIri;
 		if (axiom.getDomain().isAnonymous()){
+			
 			AbstractNode anonymClass = axiom.getDomain().accept(new DomainRangeVisitor(owlObjectProperty, vowlData));
 			if (!(anonymClass instanceof NullClass)) {
 				domainIri = anonymClass.getIri();

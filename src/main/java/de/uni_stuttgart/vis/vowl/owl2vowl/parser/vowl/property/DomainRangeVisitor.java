@@ -130,4 +130,5 @@ public class DomainRangeVisitor implements OWLObjectVisitorEx<AbstractNode> {
 
 		return oneOfClass;
 	}
+
 }

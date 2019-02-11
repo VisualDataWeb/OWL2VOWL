@@ -259,7 +259,11 @@ public abstract class AbstractConverter implements Converter {
 	private void processDataProperties(OWLOntology ontology, VowlData vowlData) {
 		for (OWLDataProperty property : ontology.dataPropertiesInSignature(Imports.INCLUDED).collect(Collectors.toSet())) {
 			for (OWLDataPropertyAxiom propertyAxiom : ontology.axioms(property, Imports.INCLUDED).collect(Collectors.toSet())) {
-				propertyAxiom.accept(new DataPropertyVisitor(vowlData, property));
+				try {
+					propertyAxiom.accept(new DataPropertyVisitor(vowlData, property));
+				} catch(Exception e) {
+					logger.info("DataPropertyVisitor : Failed to accept OWLDataPropertyAxiom -> Skipping");
+				}
 			}
 		}
 	}

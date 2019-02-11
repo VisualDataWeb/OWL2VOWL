@@ -115,7 +115,6 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		attributes.put("complement", getListWithIds(vowlClass.getComplements()));
 		attributes.put("instances", vowlClass.getInstances().size());
 		attributes.put("individuals", createIndividualsJson(vowlClass.getIndividuals()));
-
 		_class.add(object);
 		classAttribute.add(attributes);
 	}
