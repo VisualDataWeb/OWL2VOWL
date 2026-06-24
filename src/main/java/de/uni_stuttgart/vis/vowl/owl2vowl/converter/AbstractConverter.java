@@ -343,6 +343,7 @@ public abstract class AbstractConverter implements Converter {
 	}
 
 	private void postParsing(OWLOntology loadedOntology, VowlData vowlData, OWLOntologyManager manager) {
+		vowlData.fixProperties();
 		setCorrectType(vowlData.getEntityMap().values());
 		parseAnnotations(vowlData, manager);
 		fillDomainRanges(vowlData);

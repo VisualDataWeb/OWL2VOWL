@@ -90,6 +90,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		Map<String, Object> attributes = new HashMap<>();
 
 		addCommonFields(vowlThing, object, attributes);
+		attributes.remove("baseIri");
 		attributes.put("iri", VowlThing.GENERIC_THING_IRI.toString());
 
 		_class.add(object);
@@ -171,14 +172,17 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		AbstractDatatype reference = vowlData.getDatatypeForIri(((DatatypeReference) vowlDatatype).getReferencedIri());
 		Map<String, Object> object = new HashMap<>();
 		Map<String, Object> attributes = new HashMap<>();
+		String iri = reference.getIri().toString();
 
 		object.put("id", vowlData.getIdForEntity(vowlDatatype));
 		object.put("type", reference.getType());
 
 		attributes.put("id", vowlData.getIdForEntity(vowlDatatype));
 		attributes.put("label", getLabelsFromAnnotations(reference.getAnnotations().getLabels()));
-		attributes.put("iri", reference.getIri().toString());
-		attributes.put("baseIri", reference.getBaseIri().toString());
+		attributes.put("iri", iri);
+
+		if(!iri.equals(VowlLiteral.LITERAL_IRI))
+			attributes.put("baseIri", reference.getBaseIri().toString());
 
 		_class.add(object);
 		classAttribute.add(attributes);

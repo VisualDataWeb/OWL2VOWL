@@ -113,7 +113,9 @@ public class ObjectPropertyVisitor extends PropertyVisitor {
 		OWLObjectProperty baseProperty = secondProperty.asOWLObjectProperty();
 
 		AbstractProperty inverseVowlProp = vowlData.getPropertyForIri(inverseProperty.getIRI());
+		AbstractProperty baseVowlProp = vowlData.getPropertyForIri(baseProperty.getIRI());
 		inverseVowlProp.addInverse(baseProperty.getIRI());
+		baseVowlProp.addInverse(inverseProperty.getIRI());
 	}
 
 	@Override

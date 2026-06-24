@@ -149,7 +149,7 @@ public class DomainRangeFiller implements VowlPropertyVisitor {
 
 	private void classBehaviour(AbstractProperty property) {
 		if (property.getDomains().isEmpty() && property.getRanges().isEmpty()) {
-			if (!property.getReferencedIris().isEmpty()) {
+			if (!property.getReferencedIris().isEmpty() && property.getInverse() == null) {
 				property.setExportToJson(false);
 				return;
 			}
