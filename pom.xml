@@ -62,6 +62,13 @@
 		</repository>
 	</distributionManagement>
 
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -319,7 +326,7 @@
 
 									<filters>
 										<filter>
-											<artifact>net.sourceforge.owlapi:*</artifact>
+											<artifact>com.github.Artemis-IA.owlapi:*</artifact>
 											<includes>
 												<include>**</include>
 											</includes>
@@ -451,9 +458,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>net.sourceforge.owlapi</groupId>
+			<groupId>com.github.Artemis-IA.owlapi</groupId>
 			<artifactId>owlapi-distribution</artifactId>
-			<version>5.1.1</version>
+			<version>c254f8e</version>
 		</dependency>
 
 		<dependency>
