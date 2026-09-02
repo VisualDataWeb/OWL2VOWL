@@ -15,7 +15,7 @@
 	<url>https://github.com/VisualDataWeb/OWL2VOWL</url>
 
 	<properties>
-		<java.version>1.8</java.version>
+		<java.version>11</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>de.uni_stuttgart.vis.vowl.owl2vowl.ConsoleMain</mainClass>
 		<packaging.type>jar</packaging.type>
@@ -62,6 +62,13 @@
 		</repository>
 	</distributionManagement>
 
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -99,8 +106,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.3</version>
 				<configuration>
-					<source>1.8</source>
-					<target>1.8</target>
+					<source>11</source>
+					<target>11</target>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -319,7 +326,7 @@
 
 									<filters>
 										<filter>
-											<artifact>net.sourceforge.owlapi:*</artifact>
+											<artifact>com.github.owlcs.owlapi:*</artifact>
 											<includes>
 												<include>**</include>
 											</includes>
@@ -406,8 +413,8 @@
 						<artifactId>maven-compiler-plugin</artifactId>
 						<version>3.1</version>
 						<configuration>
-							<source>1.8</source>
-							<target>1.8</target>
+							<source>11</source>
+							<target>11</target>
 						</configuration>
 					</plugin>
 					<plugin>
@@ -451,9 +458,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>net.sourceforge.owlapi</groupId>
+			<groupId>com.github.owlcs.owlapi</groupId>
 			<artifactId>owlapi-distribution</artifactId>
-			<version>5.1.1</version>
+			<version>d7e997a</version>
 		</dependency>
 
 		<dependency>
